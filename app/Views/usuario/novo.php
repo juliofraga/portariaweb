@@ -9,23 +9,23 @@
                 <hr class="divisor_horizontal">
                 <div id="formUserAdmin">
                     <?php 
-                        if(isset($_SESSION["dbg_rotina"]) and $_SESSION["dbg_tipo"] == 'success'){
+                        if(isset($_SESSION["pw_rotina"]) and $_SESSION["pw_tipo"] == 'success'){
                     ?>
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="alert alert-success" role="alert">
-                                <?= $_SESSION["dbg_mensagem"] ?>
+                                <?= $_SESSION["pw_mensagem"] ?>
                             </div>
                         </div>
                     </div>
                     <?php 
                         }
-                        if(isset($_SESSION["dbg_rotina"]) and $_SESSION["dbg_tipo"] == 'error'){
+                        if(isset($_SESSION["pw_rotina"]) and $_SESSION["pw_tipo"] == 'error'){
                     ?>
                     <div class="row mt-3">
                         <div class="col-12">
                             <div class="alert alert-danger" role="alert">
-                                <?= $_SESSION["dbg_mensagem"] ?>
+                                <?= $_SESSION["pw_mensagem"] ?>
                             </div>
                         </div>
                     </div>
@@ -45,6 +45,18 @@
                             <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="login" name="login" placeholder="Login*" required>
                                 <label for="login">Login*</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-floating mt-3">
+                                <select class="form-control" name="perfil" id="perfil" required>
+                                    <option value="" selected>Selecione...</option>
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="Operador">Operador</option>
+                                </select>
+                                <label for="perfil">Perfil*</label>
                             </div>
                         </div>
                     </div>
@@ -83,7 +95,7 @@
                         </div>
                     </div>
                     <?php 
-                        $_SESSION["dbg_rotina"] = null;
+                        $_SESSION["pw_rotina"] = null;
                     ?>
                 </div>
             </form>

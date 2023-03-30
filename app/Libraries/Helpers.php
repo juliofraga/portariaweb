@@ -10,9 +10,33 @@
             date_default_timezone_set('America/Sao_Paulo');   
         }
 
-        /*
+        public function sessionValidate(){
+            if(isset($_SESSION['pw_session_id'])){
+                $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+                $ip = $_SERVER['REMOTE_ADDR'];
+                $array = explode("-_-", $_SESSION['pw_ession_id']);
+                if(count($array) > 1){
+                    if($array[2] == md5(1) or $array[2] == md5(3) or $array[2] == md5(5)){
+                        if($array[1] == md5($hostname)){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }else{
+                        if($array[0] == md5($ip)){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }
+                }else{
+                    return false;
+                }
+            }else{
+                return false;   
+            }   
+        }
 
-        // Validar se os campos estão preenchidos
         public function validateFields($array, $attr = null){
             if($attr != null){
                 $atributos = explode(";", $attr);
@@ -33,9 +57,9 @@
         }
 
         public function setReturnMessage($tipo, $mensagem, $rotina){
-            $_SESSION["dbg_tipo"] = $tipo;
-            $_SESSION["dbg_mensagem"] = $mensagem;
-            $_SESSION["dbg_rotina"] = $rotina;
+            $_SESSION["pw_tipo"] = $tipo;
+            $_SESSION["pw_mensagem"] = $mensagem;
+            $_SESSION["pw_rotina"] = $rotina;
         }
 
         //return São Paulo date time
@@ -54,6 +78,21 @@
             if($valor1 == $valor2)
                 return "selected";
         }
+
+        public function redirectPage($url){
+            echo "<script>window.location.href='".URL."$url';</script>";
+        }
+
+        public function loginRedirect(){
+            $this->redirectPage("/login");
+        }
+
+        public function homeRedirect(){
+            $this->redirectPage("/home");
+        }
+
+        /*
+
 
         public function setMultiSelect($array = null, $valor){
             if($array != null){
@@ -94,79 +133,6 @@
                     return "<br>";
                 }
             }
-        }
-
-        // Verifica se o usuário está logado ou não
-        public function sessionValidate(){
-            if(isset($_SESSION['dbg_session_id'])){
-                $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-                $ip = $_SERVER['REMOTE_ADDR'];
-                $array = explode("-_-", $_SESSION['dbg_session_id']);
-                if(count($array) > 1){
-                    if($array[2] == md5(1) or $array[2] == md5(3) or $array[2] == md5(5)){
-                        if($array[1] == md5($hostname)){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    }else{
-                        if($array[0] == md5($ip)){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    }
-                }else{
-                    return false;
-                }
-            }else{
-                return false;   
-            }   
-        }
-
-        public function sessionValidateCliente(){
-            if(isset($_SESSION['dbg_session_id_cliente'])){
-                $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-                $ip = $_SERVER['REMOTE_ADDR'];
-                $array = explode("-_-", $_SESSION['dbg_session_id_cliente']);
-                if(count($array) > 1){
-                    if($array[2] == md5(1) or $array[2] == md5(3) or $array[2] == md5(5)){
-                        if($array[0] == md5($ip)){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    }else{
-                        if($array[1] == md5($hostname)){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    }
-                }else{
-                    return false;
-                }
-            }else{
-                return false;   
-            }   
-        }
-
-        // Redirecionar para a página home
-        public function homeRedirect(){
-            echo "<script>window.location.href='$this->url/index';</script>";
-        }
-        
-        public function homeRedirectCliente(){
-            echo "<script>window.location.href='$this->url/cliente/pedido';</script>";
-        }
-
-        // Redirecionar para a página home
-        public function loginRedirect(){
-            echo "<script>window.location.href='".$this->url."/login';</script>";
-        }
-
-        public function loginRedirectCliente(){
-            echo "<script>window.location.href='".$this->url."/cliente/login';</script>";
         }
 
         public function multiplicaFormata($v1, $v2){

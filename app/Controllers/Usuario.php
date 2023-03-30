@@ -14,10 +14,10 @@
 
         public function __construct()
         {
+            require "Configuracoes.php";
             $this->helper = new Helpers(); 
             $this->usuarioModel = $this->model('UsuarioModel');
             $this->log = new Logs();
-            require "Configuracoes.php";
             $this->configuracoes = new Configuracoes;
         }
 
@@ -25,7 +25,7 @@
             if($this->helper->sessionValidate()){
                 $this->view('pagenotfound');
             }else{
-                echo "<script>window.location.href='../login';</script>";
+                $this->helper->redirectPage('/login')
             }
         }
 
@@ -58,7 +58,7 @@
                                         'Usuário cadastrado com sucesso!',
                                         $this->rotinaCad
                                     );
-                                    $this->log->registraLog($_SESSION['dbg_id'], "Usuário", $lastInsertId, 0, $dateTime);
+                                    $this->log->registraLog($_SESSION['pw_id'], "Usuário", $lastInsertId, 0, $dateTime);
                                 }else{
                                     $this->helper->setReturnMessage(
                                         $this->tipoError,
@@ -94,35 +94,31 @@
                         $this->rotinaCad
                     );
                 }
-                echo "<script>window.location.href='../novo';</script>";
+                $this->helper->redirectPage("/novo");
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
         // Exibe tela de consulta de usuários
-        public function consulta($pi = 0, $pf = 10){
+        public function consulta(){
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if((!isset($_SESSION["dbg_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
+                if((!isset($_SESSION["pw_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
-                        'dados' =>  $this->listaUsuarios($pi),
+                        'dados' =>  $this->listaUsuarios(),
                         'nome' => null,
-                        'pagina_inicio' => $pi,
-                        'pagina_fim'    => $pf,
                     ];
                 }else{
-                    if($_SESSION["dbg_usuario_consulta"] == null or isset($form["nome_usuario"])){
+                    if($_SESSION["pw_usuario_consulta"] == null or isset($form["nome_usuario"])){
                         $nome = $form["nome_usuario"]; 
                     }else{
-                        $nome = $_SESSION["dbg_usuario_consulta"];
+                        $nome = $_SESSION["pw_usuario_consulta"];
                     }
-                    $_SESSION["dbg_usuario_consulta"] = $nome;
+                    $_SESSION["pw_usuario_consulta"] = $nome;
                     $dados = [
-                        'dados' =>  $this->listaUsuarioPorNome($nome, $pi),
+                        'dados' =>  $this->listaUsuarioPorNome($nome),
                         'nome' => $nome,
-                        'pagina_inicio' => $pi,
-                        'pagina_fim'    => $pf,
                     ];
                 }
                 $this->view('usuario/consulta', $dados);
@@ -132,17 +128,17 @@
         }
 
         // Listar usuários cadastrados
-        public function listaUsuarios($pi, $attr = null){
+        public function listaUsuarios($attr = null){
             if($this->helper->sessionValidate()){
-                return $this->usuarioModel->listaUsuarios($pi, $attr);
+                return $this->usuarioModel->listaUsuarios($attr);
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaUsuarioPorNome($nome, $pi){
+        public function listaUsuarioPorNome($nome){
             if($this->helper->sessionValidate()){
-                return $this->usuarioModel->listaUsuarioPorNome($nome, $pi);
+                return $this->usuarioModel->listaUsuarioPorNome($nome);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -155,23 +151,23 @@
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
                     if($this->updateUsuario($form))
-                        $this->log->registraLog($_SESSION['dbg_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                 }else if(isset($form["inativar"])){
                     if($this->ativarInativarUsuario($form, "inativar"))
-                        $this->log->registraLog($_SESSION['dbg_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                 }else if(isset($form["ativar"])){
                     if($this->ativarInativarUsuario($form, "ativar"))
-                        $this->log->registraLog($_SESSION['dbg_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                 }
-                echo "<script>window.location.href='../usuario/consulta';</script>";
+                $this->helper->redirectPage("/usuario/consulta/");
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
         public function alterarsenha(){
-            $login = $_SESSION["dbg_user_altsen"];
-            $id = $_SESSION["dbg_id_altsen"];
+            $login = $_SESSION["pw_user_altsen"];
+            $id = $_SESSION["pw_id_altsen"];
             $dados = [
                 'id' => $id,
                 "login" => $login,
@@ -183,43 +179,39 @@
         public function atualizarSenha(){
             $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             if($form){
-                $alterarSenhaRedirect = "<script>window.location.href='".URL."/usuario/alterarsenha/';</script>";
-                if($form["senha"] != $form["repetesenha"]){
+                if(empty($form["senha"]) or empty($form["repetesenha"])){
                     $this->helper->setReturnMessage(
                         $this->tipoError,
                         'Não foi possível atualizar a senha, existem campos que não foram preenchidos, tente novamente!',
                         $this->rotinaAlt
                     );
-                    echo $alterarSenhaRedirect;
                 }else if($form["senha"] != $form["repetesenha"]){
                     $this->helper->setReturnMessage(
                         $this->tipoError,
                         'Não foi possível atualizar a senha, elas não conferem, tente novamente!',
                         $this->rotinaAlt
                     );
-                    echo $alterarSenhaRedirect;
                 }else if(strlen($form["senha"]) < 6){
                     $this->helper->setReturnMessage(
                         $this->tipoError,
                         'Não foi possível atualizar a senha, elas não possuem o mínimo de 6 caracteres!',
                         $this->rotinaAlt
                     );
-                    echo $alterarSenhaRedirect;
                 }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
                     $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
                     $dateTime = $this->helper->returnDateTime();
                     if($this->usuarioModel->alteraUsuario($form, "senha_update", $dateTime)){
                         $this->log->registraLog($form["id"], "Usuário", $form["id"], 1, $dateTime);
-                        echo "<script>window.location.href='".URL."/Login/validaLogin/admin/atualizaSenha';</script>";
+                        $this->helper->redirectPage('/login/validaEmail/admin/atualizaSenha');
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
                             'Erro ao atualizar a senha, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
                             $this->rotinaAlt
                         );
-                        echo $alterarSenhaRedirect;
                     }
                 }
+                $this->helper->redirectPage('/usuario/alterarsenha/');
             }else{
                 $this->view('pagenotfound');
             }

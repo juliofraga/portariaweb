@@ -1,6 +1,6 @@
 <?php
     $helper = new Helpers();
-    $_SESSION["dbg_usuario_consulta"] = $dados["nome"];
+    $_SESSION["pw_usuario_consulta"] = $dados["nome"];
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
@@ -22,18 +22,18 @@
         </form>
         <div class="resultados_admin mt-2">
             <?php 
-                if(isset($_SESSION["dbg_rotina"])){
-                    if($_SESSION["dbg_tipo"] == "error")
+                if(isset($_SESSION["pw_rotina"])){
+                    if($_SESSION["pw_tipo"] == "error")
                         $tipo = "danger";
-                    else if($_SESSION["dbg_tipo"] == "success")
+                    else if($_SESSION["pw_tipo"] == "success")
                         $tipo = "success";
-                    else if($_SESSION["dbg_tipo"] == "warning")
+                    else if($_SESSION["pw_tipo"] == "warning")
                         $tipo = "warning";
             ?>
                 <div class="row">
                     <div class="col-12">
                         <div class="alert alert-<?= $tipo ?>" role="alert">
-                            <?= $_SESSION["dbg_mensagem"] ?>
+                            <?= $_SESSION["pw_mensagem"] ?>
                         </div>
                     </div>
                 </div>
@@ -171,28 +171,8 @@
                 </div>
             <?php
                 }
-                $_SESSION["dbg_rotina"] = null;
+                $_SESSION["pw_rotina"] = null;
             ?>
         </div>
-        <nav class="mt-5">
-            <ul class="pagination">
-                <div class="col-sm-2">
-                    <li class="page-item">
-                        <?php if($dados["pagina_inicio"] > 1){ ?>
-                            <a class="page-link w-100" href="<?= URL ?>/usuario/consulta/<?= $dados['pagina_inicio'] - 10 ?>/<?= $dados['pagina_fim'] - 10 ?>"><< Anterior</a>
-                        <?php } ?>
-                    </li>
-                </div>
-                <div class="col-sm-8">
-                </div>
-                <div class="col-sm-2">
-                    <li class="page-item">
-                        <?php if(count($dados["dados"]) == 10){ ?>
-                            <a class="page-link w-100" href="<?= URL ?>/usuario/consulta/<?= $dados['pagina_inicio'] + 10 ?>/<?= $dados['pagina_fim'] + 10 ?>" style="float:right;text-align:right;">Próximo >></a>
-                        <?php } ?>   
-                    </li>
-                </div>
-            </ul>
-        </nav>
     </div>
 </div>

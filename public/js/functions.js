@@ -1,3 +1,75 @@
+function validaComplexidadeSenha(senha, complexidade){
+    if(complexidade == null || complexidade == false){
+        let tamanho = senha.length;
+        if(tamanho < 6){
+            document.getElementById('avisoComplexidadeSenha').style.display = 'block';
+        }else{
+            document.getElementById('avisoComplexidadeSenha').style.display = 'none';
+        }
+    }else if(complexidade == true){
+        validaAltaComplexidade(senha, 1);
+    }
+}
+
+function comparaSenhas(senhaRepetida, complexidade){
+    let senha = document.getElementById('senha').value;
+    if(senhaRepetida != senha){
+        document.getElementById('avisoSenhasNaoConferem').style.display = 'block';
+    }else{
+        document.getElementById('avisoSenhasNaoConferem').style.display = 'none';
+    }
+    if(((senhaRepetida.length >= 6 && !complexidade) || (complexidade && validaAltaComplexidade(senhaRepetida, 0))) && senhaRepetida == senha){
+        document.getElementById('cadastrar').disabled = false;
+    }else{
+        document.getElementById('cadastrar').disabled = true;
+    }
+}
+
+function validaAltaComplexidade(senha, num){
+    if(num == 0){
+        senha = document.getElementById('senha').value;
+    }
+    document.getElementById('avisoComplexidadeSenhaMaior').style.display = 'block';
+    var numeros = /([0-9])/;
+    var alfabetoMinusculo = /([a-z])/;
+    var alfabetoMaiusculo = /([A-Z])/;
+    var ret1, ret2, ret3, ret4;
+    if(senha.length >= 8){
+        document.getElementById('req1').style.color = 'green';
+        ret1 = true;
+    }else{
+        document.getElementById('req1').style.color = 'red';
+        ret1 = false;
+    }
+    if(senha.match(numeros)){
+        document.getElementById('req4').style.color = 'green';
+        ret4 = true;
+    }else{
+        document.getElementById('req4').style.color = 'red';
+        ret4 = false;
+    }
+    if(senha.match(alfabetoMaiusculo)){
+        document.getElementById('req2').style.color = 'green';
+        ret2 = true;
+    }else{
+        document.getElementById('req2').style.color = 'red';
+        ret2 = false;
+    }
+    if(senha.match(alfabetoMinusculo)){
+        document.getElementById('req3').style.color = 'green';
+        ret3 = true;
+    }else{
+        document.getElementById('req3').style.color = 'red';
+        ret3 = false;
+    }
+    if(ret1 && ret2 && ret3 && ret4){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+/*
 function ativaDesativaConfig(num){
     var valor = document.getElementById("checkOpcao__"+num).innerHTML;
     if(valor == 'Desativado'){
@@ -100,76 +172,7 @@ function exibeLabelImportProd(){
 }
 
 
-function validaComplexidadeSenha(senha, complexidade){
-    if(complexidade == null || complexidade == false){
-        let tamanho = senha.length;
-        if(tamanho < 6){
-            document.getElementById('avisoComplexidadeSenha').style.display = 'block';
-        }else{
-            document.getElementById('avisoComplexidadeSenha').style.display = 'none';
-        }
-    }else if(complexidade == true){
-        validaAltaComplexidade(senha, 1);
-    }
-}
 
-function comparaSenhas(senhaRepetida, complexidade){
-    let senha = document.getElementById('senha').value;
-    if(senhaRepetida != senha){
-        document.getElementById('avisoSenhasNaoConferem').style.display = 'block';
-    }else{
-        document.getElementById('avisoSenhasNaoConferem').style.display = 'none';
-    }
-    if(((senhaRepetida.length >= 6 && !complexidade) || (complexidade && validaAltaComplexidade(senhaRepetida, 0))) && senhaRepetida == senha){
-        document.getElementById('cadastrar').disabled = false;
-    }else{
-        document.getElementById('cadastrar').disabled = true;
-    }
-}
-
-function validaAltaComplexidade(senha, num){
-    if(num == 0){
-        senha = document.getElementById('senha').value;
-    }
-    document.getElementById('avisoComplexidadeSenhaMaior').style.display = 'block';
-    var numeros = /([0-9])/;
-    var alfabetoMinusculo = /([a-z])/;
-    var alfabetoMaiusculo = /([A-Z])/;
-    var ret1, ret2, ret3, ret4;
-    if(senha.length >= 8){
-        document.getElementById('req1').style.color = 'green';
-        ret1 = true;
-    }else{
-        document.getElementById('req1').style.color = 'red';
-        ret1 = false;
-    }
-    if(senha.match(numeros)){
-        document.getElementById('req4').style.color = 'green';
-        ret4 = true;
-    }else{
-        document.getElementById('req4').style.color = 'red';
-        ret4 = false;
-    }
-    if(senha.match(alfabetoMaiusculo)){
-        document.getElementById('req2').style.color = 'green';
-        ret2 = true;
-    }else{
-        document.getElementById('req2').style.color = 'red';
-        ret2 = false;
-    }
-    if(senha.match(alfabetoMinusculo)){
-        document.getElementById('req3').style.color = 'green';
-        ret3 = true;
-    }else{
-        document.getElementById('req3').style.color = 'red';
-        ret3 = false;
-    }
-    if(ret1 && ret2 && ret3 && ret4){
-        return true;
-    }else{
-        return false;
-    }
-}
 
 function mascaraMutuario(o,f){
     v_obj=o
@@ -510,7 +513,6 @@ function addNaoVisualizarNovamente(id){
     }
 }
 
-/*
 function realinhaIcones(){
     if(screen.width >= 768){
         alinhaComputador();
