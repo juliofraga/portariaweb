@@ -31,8 +31,7 @@
                             <input class="w-100 btn btn-lg btn-warning" type="submit" name="btLogin" id="btLogin" value="Entrar">
                         </div>
                         <p class="mt-4 text-sm text-center">
-                            Não tem acesso ainda ou esqueceu a sua senha?<br>
-                            <a href="https://wa.me/5551997830526" class="text-primary text-gradient font-weight-bold" target="_blank">Fale com nossa equipe pelo Whatsapp, clique aqui</a><br>
+                            
                         </p>
                     </div>
                 </div>
