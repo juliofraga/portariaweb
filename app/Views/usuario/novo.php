@@ -52,7 +52,7 @@
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
                                 <select class="form-control" name="perfil" id="perfil" required>
-                                    <option value="" selected>Selecione...</option>
+                                    <option value="">selecione...</option>
                                     <option value="Administrador">Administrador</option>
                                     <option value="Operador">Operador</option>
                                 </select>

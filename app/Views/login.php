@@ -21,9 +21,9 @@
                             <label class="form-check-label mb-0 ms-3" for="rememberMe">Lembrar-me</label>
                         </div>
                         <?php 
-                            if(isset($_SESSION["dbg_rotina"]) and $_SESSION["dbg_tipo"] == 'error'){
+                            if(isset($_SESSION["pw_rotina"]) and $_SESSION["pw_tipo"] == 'error'){
                                 echo "<div class='alert alert-danger' role='alert'>";
-                                echo "<center>".$_SESSION["dbg_mensagem"]."</center>";
+                                echo "<center>".$_SESSION["pw_mensagem"]."</center>";
                                 echo "</div>";
                             }
                         ?>
@@ -40,5 +40,5 @@
     </form>
 </div>
 <?php
-    $_SESSION["dbg_rotina"] = null;
+    $_SESSION["pw_rotina"] = null;
 ?>

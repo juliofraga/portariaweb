@@ -91,8 +91,22 @@
             $this->redirectPage("/home");
         }
 
-        /*
+        public function removeCookie($nome){
+            try{
+                setcookie($nome, NULL, -1, "/");
+            }catch (Throwable $th) {
+                return null;
+            } 
+            
+        }
 
+        public function setCookie($nome, $valor){
+            setcookie($nome, $valor, time()+2592000, "/");
+        }
+
+        public function geraHashMd5(){
+            return md5(rand(1,100000));   
+        }
 
         public function setMultiSelect($array = null, $valor){
             if($array != null){
@@ -166,22 +180,7 @@
             return $array[1];
         }
 
-        public function setCookie($nome, $valor){
-            setcookie($nome, $valor, time()+2592000, "/");
-        }
-
-        public function removeCookie($nome){
-            try{
-                setcookie($nome, NULL, -1, "/");
-            }catch (Throwable $th) {
-                return null;
-            } 
-            
-        }
-
-        public function geraHashMd5(){
-            return md5(rand(1,100000));   
-        }
+        
 
         public function setBusca($texto){
             if(empty($texto)){
@@ -426,6 +425,6 @@
             }else{
                 return $this->multiplicaFormata($precoFinal, $qtd_pacote_fardo);
             }
-        }*/
+        }
     } 
 ?>
