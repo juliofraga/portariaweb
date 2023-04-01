@@ -95,9 +95,11 @@ function atualizaConfiguracao(id, valor){
     });
 }
 
-
-
-/*
+$(document).ready(function(){
+    $('#endereco_ip').mask('999.999.999.999');
+});
+    
+    /*
 
 
 function ativaDesativaProd(num){

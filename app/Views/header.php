@@ -12,10 +12,10 @@
                     <a class="nav-link" aria-current="page" href="#">Painel de Operações</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Câmeras</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('camera/novo', 'camera/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Câmeras</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
-                        <li><a class="dropdown-item" href="#">Novo</a></li>
-                        <li><a class="dropdown-item" href="#">Consulta</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/camera/novo">Novo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/camera/consulta">Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -30,6 +30,13 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="#">Novo</a></li>
                         <li><a class="dropdown-item" href="#">Consulta</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('portaria/novo', 'portaria/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Portarias</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown03">
+                        <li><a class="dropdown-item" href="<?= URL ?>/portaria/novo">Novo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/portaria/consulta">Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

@@ -434,5 +434,21 @@
             ];
             return $situacoes[$situacao];
         }
+
+        public function handleEnderecoIp($ip){
+            $array = explode(".", $ip);
+            $enderecoFormatado = "";
+            for($i = 0; $i < count($array); $i++){
+                if($array[$i][0] == 0){
+                    $array[$i] = $array[$i][1].$array[$i][2];
+                }
+                if($array[$i][0] == 0){
+                    $array[$i] = $array[$i][1];
+                }
+                $enderecoFormatado .= $array[$i].".";
+            }
+            $enderecoFormatado = substr($enderecoFormatado, 0, -1);
+            return $enderecoFormatado;
+        }
     } 
 ?>

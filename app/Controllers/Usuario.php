@@ -23,7 +23,7 @@
         public function index()
         {
             if($this->helper->sessionValidate()){
-                $this->view('index');
+                $this->view('pagenotfound');
             }else{
                 $this->helper->redirectPage("/login/");
             }
@@ -94,7 +94,7 @@
                         $this->rotinaCad
                     );
                 }
-                $this->helper->redirectPage("/usuario/consulta");
+                $this->helper->redirectPage("/usuario/novo");
             }else{
                 $this->helper->loginRedirect();
             }
