@@ -42,5 +42,203 @@
                 return null;
             }   
         }
+
+        public function buscaUsuarioCookie($valor, $hostname)
+        {
+            try {
+                $this->db->query("SELECT u.login FROM usuarios u, cookie c WHERE u.id = c.usuario_id and c.valor = :valor and c.hostname = :hostname");
+                $this->db->bind("valor", $valor);
+                $this->db->bind("hostname", $hostname);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
+        public function validaLogin($login)
+        {
+            try {
+                $this->db->query("SELECT id, nome, senha, situacao, login, alterar_senha, primeiro_acesso, perfil FROM usuarios WHERE login = :login");
+                $this->db->bind("login", $login);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return $this->db->results();
+                else
+                    return null;
+            } catch (Throwable $th) {
+                return null;
+            }   
+        }
+
+        public function registraCookie($usuario_id, $nome, $valor, $hostname, $dataHora)
+        {
+            try {
+                $this->db->query("INSERT INTO cookie(usuario_id, nome, valor, hostname, created_at) VALUES (:usuario, :nome, :valor, :hostname, :dataHora)");
+                $this->db->bind("usuario", $usuario_id);
+                $this->db->bind("nome", $nome);
+                $this->db->bind("valor", $valor);
+                $this->db->bind("hostname", $hostname);
+                $this->db->bind("dataHora", $dataHora);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            }   
+        }
+
+        public function registraPrimeiroAcesso($id, $dataHora)
+        {
+            try {
+                $this->db->query("UPDATE usuarios SET primeiro_acesso = :acesso WHERE id = :id");
+                $this->db->bind("id", $id);
+                $this->db->bind("acesso", $dataHora);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function registraAcesso($id, $dataHora)
+        {
+            try {
+                $this->db->query("UPDATE usuarios SET ultimo_acesso = :acesso, login_error = :zero WHERE id = :id");
+                $this->db->bind("id", $id);
+                $this->db->bind("zero", 0);
+                $this->db->bind("acesso", $dataHora);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function registraErroLogin($id)
+        {
+            try {
+                $this->db->query("UPDATE usuarios SET login_error = login_error+1 WHERE id = :id");
+                $this->db->bind("id", $id);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function retornaLoginError($id)
+        {
+            try {
+                $this->db->query("SELECT login_error FROM usuarios WHERE id = :id");
+                $this->db->bind("id", $id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function bloqueiaUsuario($id)
+        {
+            try {
+                $this->db->query("UPDATE usuarios SET situacao = :situacao WHERE id = :id");
+                $this->db->bind("id", $id);
+                $this->db->bind("situacao", 2);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function removeCookie($usuario_id, $valor)
+        {
+            try {
+                $this->db->query("DELETE FROM cookie WHERE usuario_id = :usuario and valor = :valor");
+                $this->db->bind("usuario", $usuario_id);
+                $this->db->bind("valor", $valor);
+                $this->db->execQuery();
+            } catch (\Throwable $th) {
+                return null;
+            }
+        }
+
+        public function listaUsuarios($attr = null)
+        {
+            try {
+                $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function listaUsuarioPorNome($nome)
+        {
+            try {
+                $filter = "nome like '%". $nome . "%'";
+                $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' and $filter order by nome ASC");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function buscaUsuarioPorId($id)
+        {
+            try {
+                $this->db->query("SELECT * FROM usuarios WHERE id = :id");
+                $this->db->bind("id", $id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }   
+        }
+
+        public function alteraUsuario($dados, $rotina, $dateTime)
+        {
+            try {
+                if($rotina == "senha"){
+                    $this->db->query("UPDATE usuarios SET nome = :nome, perfil = :perfil, senha = :senha, updated_at = :dataHora, alterar_senha = :alterar_senha, situacao = :situacao, login_error = :login_error WHERE id = :id");
+                    $this->db->bind("nome", $dados["nome"]);
+                    $this->db->bind("senha", $dados["senha"]);
+                    $this->db->bind("perfil", $dados["perfil"]);
+                    $this->db->bind("dataHora", $dateTime);
+                    $this->db->bind("id", $dados["id"]);
+                    $this->db->bind("alterar_senha", 'S');
+                    $this->db->bind("situacao", 0);
+                    $this->db->bind("login_error", 0);
+                }else if($rotina == "nome-perfil"){
+                    $this->db->query("UPDATE usuarios SET nome = :nome, perfil = :perfil, updated_at = :dataHora WHERE id = :id");
+                    $this->db->bind("nome", $dados["nome"]);
+                    $this->db->bind("perfil", $dados["perfil"]);
+                    $this->db->bind("dataHora", $dateTime);
+                    $this->db->bind("id", $dados["id"]);
+                }else if ($rotina == "senha_update"){
+                    $this->db->query("UPDATE usuarios SET senha = :senha, updated_at = :dataHora, alterar_senha = :alterar_senha WHERE id = :id");
+                    $this->db->bind("senha", $dados["senha"]);
+                    $this->db->bind("dataHora", $dateTime);
+                    $this->db->bind("alterar_senha", "N");
+                    $this->db->bind("id", $dados["id"]);
+                }
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            }
+        }
+
+        public function ativaInativaUsuario($id, $acao, $dateTime){
+            try {
+                $situacao = $acao == "inativar" ? 1 : 0;
+                $this->db->query("UPDATE usuarios SET situacao = :situacao, updated_at = :dataHora WHERE id = :id");
+                $this->db->bind("situacao", $situacao);
+                $this->db->bind("dataHora", $dateTime);
+                $this->db->bind("id", $id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            }  
+        }
     }
 ?>

@@ -69,7 +69,6 @@ function validaAltaComplexidade(senha, num){
     }
 }
 
-/*
 function ativaDesativaConfig(num){
     var valor = document.getElementById("checkOpcao__"+num).innerHTML;
     if(valor == 'Desativado'){
@@ -81,6 +80,25 @@ function ativaDesativaConfig(num){
     }
     atualizaConfiguracao(num, valor);
 }
+
+function atualizaConfiguracao(id, valor){
+    var url = document.getElementById('txtUrl').value;
+    console.log(valor);
+    $.ajax({
+        url: url+'/configuracoes/atualizaConfiguracao/'+id+'/'+valor,
+        success: function(result){
+            console.log('Valor atualizado com sucesso');
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Erro ao atualizar valor');
+        }
+    });
+}
+
+
+
+/*
+
 
 function ativaDesativaProd(num){
     var valor = document.getElementById("checkOpcao__"+num).innerHTML;
@@ -106,19 +124,7 @@ function ativaDesativaCliente(num){
     atualizaCliente(num, valor);
 }
 
-function atualizaConfiguracao(id, valor){
-    var url = document.getElementById('txtUrl').value;
-    console.log(valor);
-    $.ajax({
-        url: url+'/configuracoes/atualizaConfiguracao/'+id+'/'+valor,
-        success: function(result){
-            console.log('Valor atualizado com sucesso');
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log('Erro ao atualizar valor');
-        }
-    });
-}
+
 
 function atualizaProduto(id, valor){
     var url = document.getElementById('txtUrl').value;

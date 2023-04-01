@@ -10,8 +10,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <meta name="description" content="Du Burguer - Sistema de Pedidos">
-        <meta name="Júlio Fraga" content="Du Burguer - Sistema de Pedidos" />
+        <meta name="description" content="Portaria Web">
+        <meta name="Júlio Fraga" content="Portaria Web" />
         <link href="<?= URL ?>/public/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?= URL ?>/public/css/navbar.css" rel="stylesheet">
         <link href="<?= URL ?>/public/css/bootstrap.min.css.map" rel="stylesheet">
@@ -49,6 +49,7 @@
     <body>
         <?php 
             include '../app/Views/header.php';
+            echo "<br><br><br>";
             $rotas = new Routes();
             include '../app/Views/footer.php';
         ?>

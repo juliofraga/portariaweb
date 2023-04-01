@@ -1,6 +1,6 @@
 <link id="pagestyle" href="<?= URL ?>/public/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
 <div class="login_page" >
-    <form name="form_login_admin" id="form_login_admin" method="POST" action="<?= URL ?>/login/validaLogin/admin">
+    <form name="form_login_admin" id="form_login_admin" method="POST" action="<?= URL ?>/login/validaLogin/">
         <div class="row">
             <div class="col-lg-8 col-md-8 col-12 mx-auto">
                 <div class="card z-index-0 fadeIn3 fadeInBottom">
@@ -17,7 +17,7 @@
                             <input type="password" class="form-control" id="pass" name="pass" placeholder="Senha" required>
                         </div>
                         <div class="form-check form-switch d-flex align-items-center mb-3">
-                            <input class="form-check-input" type="checkbox" name="keepConnected" id="keepConnected" checked>
+                            <input class="form-check-input" type="checkbox" name="keepConnected" id="keepConnected">
                             <label class="form-check-label mb-0 ms-3" for="rememberMe">Lembrar-me</label>
                         </div>
                         <?php 

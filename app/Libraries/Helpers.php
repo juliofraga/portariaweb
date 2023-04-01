@@ -14,7 +14,7 @@
             if(isset($_SESSION['pw_session_id'])){
                 $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
                 $ip = $_SERVER['REMOTE_ADDR'];
-                $array = explode("-_-", $_SESSION['pw_ession_id']);
+                $array = explode("-_-", $_SESSION['pw_session_id']);
                 if(count($array) > 1){
                     if($array[2] == md5(1) or $array[2] == md5(3) or $array[2] == md5(5)){
                         if($array[1] == md5($hostname)){
@@ -322,7 +322,7 @@
         }
 
         public function verificaLinkAtivo($url1, $url2 = null){
-            $urlRequested = explode('pedido/', $_SERVER["REQUEST_URI"]);
+            $urlRequested = explode('portariaweb/', $_SERVER["REQUEST_URI"]);
             if($urlRequested[1] == $url1 or $urlRequested[1] == $url2){
                 return "active";
             }else{
@@ -425,6 +425,14 @@
             }else{
                 return $this->multiplicaFormata($precoFinal, $qtd_pacote_fardo);
             }
+        }
+
+        public function retornaSituacao($situacao){
+            $situacoes = [
+                0 => 'Ativo',
+                1 => 'Inativo'
+            ];
+            return $situacoes[$situacao];
         }
     } 
 ?>
