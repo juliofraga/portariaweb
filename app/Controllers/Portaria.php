@@ -9,12 +9,18 @@
         public $helper;
         public $portariaModel;
         public $log;
+        public $placa;
+        public $camera;
 
         public function __construct()
         {
+            require "Placa.php";
+            require "Camera.php";
             $this->helper = new Helpers();
             $this->portariaModel = $this->model('PortariaModel');
             $this->log = new Logs();
+            $this->placa = new Placa();
+            $this->camera = new Camera();
         }
 
         public function index()
@@ -30,8 +36,8 @@
         {
             if($this->helper->sessionValidate()){
                 $dados = [
-                    "placas" => null,
-                    "cameras" => null,
+                    "placas" => $this->placa->listaPlacasDisponiveis(),
+                    "cameras" => $this->camera->listaCamerasDisponiveis(),
                 ];
                 $this->view('portaria/novo', $dados);
             }else{

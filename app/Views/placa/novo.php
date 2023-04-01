@@ -1,8 +1,8 @@
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
-            <h1>Nova Portaria</h1>
-            <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/camera/cadastrar/">
+            <h1>Nova Placa</h1>
+            <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/placa/cadastrar/">
                 <hr class="divisor_horizontal">
                 <div id="formUserAdmin">
                     <?php 
@@ -40,26 +40,34 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
-                                <select name="placa" id="placa" class="form-control" required>
-                                    <option value="">Selecione...</option>
-                                    <?php foreach($dados["placas"] as $placa){ ?>
-                                        <option value="<?= $placa->id ?>"><?= $placa->descricao ?> - <?= $placa->endereco_ip ?></option>
-                                    <?php }?>
-                                </select>
-                                <label for="placa">Placa*</label>
+                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required>
+                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-3">
                             <div class="form-floating mt-3">
-                                <select name="camera" id="camera" class="form-control" required>
-                                    <option value="">Selecione...</option>
-                                    <?php foreach($dados["cameras"] as $camera){ ?>
-                                        <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
-                                    <?php }?>
-                                </select>
-                                <label for="placa">Câmeras*</label>
+                                <input type="text" class="form-control" id="rele1" name="rele1" placeholder="Relé 1*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="rele1">Relé 1*</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-floating mt-3">
+                            <input type="text" class="form-control" id="rele2" name="rele2" placeholder="Relé 2*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="rele1">Relé 2*</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-floating mt-3">
+                                <input type="text" class="form-control" id="rele3" name="rele3" placeholder="Relé 3*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="rele1">Relé 3*</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-floating mt-3">
+                            <input type="text" class="form-control" id="rele4" name="rele4" placeholder="Relé 4*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="rele1">Relé 4*</label>
                             </div>
                         </div>
                     </div>

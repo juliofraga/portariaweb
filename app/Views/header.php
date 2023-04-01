@@ -26,10 +26,10 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Placas</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('placa/novo', 'placa/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Placas</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
-                        <li><a class="dropdown-item" href="#">Novo</a></li>
-                        <li><a class="dropdown-item" href="#">Consulta</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/placa/novo">Novo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/placa/consulta">Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">

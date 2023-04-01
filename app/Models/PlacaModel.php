@@ -1,5 +1,5 @@
 <?php
-    class CameraModel
+    class PlacaModel
     {
         private $db;
 
@@ -10,7 +10,7 @@
 
         public function verificaIp($ip) {
             try {
-                $this->db->query("SELECT id FROM cameras WHERE endereco_ip = :ip");
+                $this->db->query("SELECT id FROM placas WHERE endereco_ip = :ip");
                 $this->db->bind("ip", $ip);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
@@ -22,20 +22,17 @@
             } 
         }
 
-        public function cadastrarCamera($dados, $dataHora)
+        public function cadastrarPlaca($dados, $dataHora)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
-                }
-                $this->db->query("INSERT INTO cameras(descricao, endereco_ip, url_foto, url_video, created_at, portoes_id) VALUES (:descricao, :endereco_ip, :url_foto, :url_video, :created_at, :portoes_id)");
+                $this->db->query("INSERT INTO placas(descricao, endereco_ip, rele1, rele2, rele3, rele4, created_at) VALUES (:descricao, :endereco_ip, :rele1, :rele2, :rele3, :rele4, :created_at)");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
-                $this->db->bind("url_foto", $dados['url_foto']);
-                $this->db->bind("url_video", $dados['url_video']);
+                $this->db->bind("rele1", $dados['rele1']);
+                $this->db->bind("rele2", $dados['rele2']);
+                $this->db->bind("rele3", $dados['rele3']);
+                $this->db->bind("rele4", $dados['rele4']);
                 $this->db->bind("created_at", $dataHora);
-                $this->db->bind("portoes_id", $portao);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
                 }else{
@@ -46,14 +43,15 @@
             }   
         }
 
-        public function listaCamerasDisponiveis()
+        public function listaPlacasDisponiveis()
         {
             try {
-                $this->db->query("SELECT * FROM cameras WHERE portoes_id IS NULL");
+                $this->db->query("SELECT p.* FROM placas p LEFT JOIN portoes po ON p.id = po.placas_id WHERE po.placas_id IS NULL");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
             }  
         }
+
     }
 ?>

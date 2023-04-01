@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    $('#endereco_ip').mask('999.999.999.999');
+});
+
 function validaComplexidadeSenha(senha, complexidade){
     if(complexidade == null || complexidade == false){
         let tamanho = senha.length;
@@ -95,9 +99,11 @@ function atualizaConfiguracao(id, valor){
     });
 }
 
-$(document).ready(function(){
-    $('#endereco_ip').mask('999.999.999.999');
-});
+function limpaSeNaoNumerico(valor){
+    if($.isNumeric(valor.value) == false){
+        document.getElementById(valor.id).value = "";
+    }
+}
     
     /*
 
