@@ -30,6 +30,16 @@
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+
+        <!-- MULTI SELECT -->
+        <script src="<?= URL ?>/public/js/select2.min.js"></script>
+        <link href="<?= URL ?>/public/css/select2.min.css" rel="stylesheet">
+        <script>
+            $(document).ready(function() {
+                $('.js-example-basic-multiple').select2();
+            });
+        </script>
+
         <style>
             .bd-placeholder-img {
                 font-size: 1.125rem;

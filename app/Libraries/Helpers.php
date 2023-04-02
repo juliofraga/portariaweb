@@ -440,10 +440,14 @@
             $enderecoFormatado = "";
             for($i = 0; $i < count($array); $i++){
                 if($array[$i][0] == 0){
-                    $array[$i] = $array[$i][1].$array[$i][2];
+                    if(strlen($array[$i]) > 2){
+                        $array[$i] = $array[$i][1].$array[$i][2];
+                    }
                 }
                 if($array[$i][0] == 0){
-                    $array[$i] = $array[$i][1];
+                    if(strlen($array[$i]) > 1){
+                        $array[$i] = $array[$i][1];
+                    }
                 }
                 $enderecoFormatado .= $array[$i].".";
             }

@@ -86,5 +86,169 @@
                 $this->helper->loginRedirect();
             }
         }
+
+        public function consulta()
+        {
+            if($this->helper->sessionValidate()){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if((!isset($_SESSION["pw_placa_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
+                    $dados = [
+                        'dados' =>  $this->listaPlacas(),
+                        'filtro' => null,
+                    ];
+                }else{
+                    if($_SESSION["pw_placa_consulta"] == null or isset($form["descricao_ip"])){
+                        $filtro = $form["descricao_ip"]; 
+                    }else{
+                        $filtro = $_SESSION["pw_placa_consulta"];
+                    }
+                    $_SESSION["pw_placa_consulta"] = $filtro;
+                    $dados = [
+                        'dados' =>  $this->listaPlacasPorFiltro($filtro),
+                        'filtro' => $filtro,
+                    ];
+                }
+                $this->view('placa/consulta', $dados);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function listaPlacas($attr = null)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->placaModel->listaPlacas($attr);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function listaPlacasPorFiltro($filtro)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->placaModel->listaPlacasPorFiltro($filtro);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function alterar(){
+            if($this->helper->sessionValidate()){
+                $dateTime = $this->helper->returnDateTime();
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if(isset($form["update"])){
+                    if($this->updatePlaca($form, $dateTime))
+                        $this->log->registraLog($_SESSION['pw_id'], "Placa", $form["id"], 1, $dateTime);
+                }else if(isset($form["inativar"])){
+                    if($this->ativarInativarPlaca($form["id"], "inativar", $dateTime))
+                        $this->log->registraLog($_SESSION['pw_id'], "Placa", $form["id"], 1, $dateTime);
+                }else if(isset($form["ativar"])){
+                    if($this->ativarInativarPlaca($form["id"], "ativar", $dateTime))
+                        $this->log->registraLog($_SESSION['pw_id'], "Placa", $form["id"], 1, $dateTime);
+                }else if(isset($form["deletar"])){
+                    if($this->deletarPlaca($form["id"]))
+                        $this->log->registraLog($_SESSION['pw_id'], "Placa", $form["id"], 2, $dateTime);
+                }
+                $this->helper->redirectPage("/placa/consulta");
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function updatePlaca($form, $dateTime)
+        {
+            if($this->helper->sessionValidate()){
+                $retorno = false;
+                if($this->helper->validateFields($form)){
+                    $form["endereco_ip"] = $this->helper->handleEnderecoIp($form["endereco_ip"]);
+                    if(!$this->placaModel->verificaIp($form["endereco_ip"], $form["id"])){
+                        $dateTime = $this->helper->returnDateTime();
+                        if($this->placaModel->alterarPlaca($form, $dateTime)){
+                            $this->helper->setReturnMessage(
+                                $this->tipoSuccess,
+                                'Placa alterada com sucesso!',
+                                $this->rotinaCad
+                            );
+                            $this->log->registraLog($_SESSION['pw_id'], "Placa", $form["id"], 1, $dateTime);
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Não foi possível alterar a placa, tente novamente!',
+                                $this->rotinaCad
+                            );
+                        }
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            "Não foi possível alterar a placa, já existe outra placa cadastrada com esse endereço IP (".$form["endereco_ip"]."), tente novamente informando outro endereço IP!",
+                            $this->rotinaCad
+                        );
+                    }
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Existem campos que não foram preenchidos, verifique novamente!',
+                        $this->rotinaCad
+                    );
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function ativarInativarPlaca($id, $acao, $dateTime){
+            if($this->helper->sessionValidate()){
+                $retorno = false;
+                if($this->placaModel->ativarInativarPlaca($id, $acao, $dateTime)){
+                    if($acao == "inativar")
+                        $mensagem = 'Placa inativada com sucesso!';
+                    else if($acao == "ativar")
+                        $mensagem = 'Placa inativada com sucesso!';
+                    $this->helper->setReturnMessage(
+                        $this->tipoSuccess,
+                        $mensagem,
+                        $this->rotinaCad
+                    );
+                    $retorno = true;
+                }else{
+                    if($acao == "inativar")
+                        $mensagem = 'Não foi possível inativar esta placa, tente novamente mais tarde!';
+                    else if($acao == "ativar")
+                        $mensagem = 'Não foi possível ativar esta placa, tente novamente mais tarde!';
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        $mensagem,
+                        $this->rotinaCad
+                    );
+                }
+                return $retorno;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function deletarPlaca($id)
+        {
+            if($this->helper->sessionValidate()){
+                $retorno = false;
+                if($this->placaModel->deletarPlaca($id)){
+                    $this->helper->setReturnMessage(
+                        $this->tipoSuccess,
+                        "Placa deletada com sucesso!",
+                        $this->rotinaCad
+                    );
+                    $retorno = true;
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        "A placa não pode ser deletada porque ela está em uso, remova-a da portaria a qual ela está ligada e tente deletá-la novamente",
+                        $this->rotinaCad
+                    );
+                }
+                return $retorno;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
     }
 ?>

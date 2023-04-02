@@ -2,7 +2,7 @@
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
             <h1>Nova Portaria</h1>
-            <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/camera/cadastrar/">
+            <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/portaria/cadastrar/">
                 <hr class="divisor_horizontal">
                 <div id="formUserAdmin">
                     <?php 
@@ -40,27 +40,24 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
-                                <select name="placa" id="placa" class="form-control" required>
+                                <select name="placa" id="placa" class="form-control">
                                     <option value="">Selecione...</option>
                                     <?php foreach($dados["placas"] as $placa){ ?>
                                         <option value="<?= $placa->id ?>"><?= $placa->descricao ?> - <?= $placa->endereco_ip ?></option>
                                     <?php }?>
                                 </select>
-                                <label for="placa">Placa*</label>
+                                <label for="placa">Placa</label>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col-sm-12">
-                            <div class="form-floating mt-3">
-                                <select name="camera" id="camera" class="form-control" required>
-                                    <option value="">Selecione...</option>
-                                    <?php foreach($dados["cameras"] as $camera){ ?>
-                                        <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
-                                    <?php }?>
-                                </select>
-                                <label for="placa">Câmeras*</label>
-                            </div>
+                            <select class="js-example-basic-multiple w-100" name="camera[]" id="camera"  multiple="multiple">
+                                <?php foreach($dados["cameras"] as $camera){ ?>
+                                    <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
+                                <?php }?>
+                            </select>
+                            <label for="placa">Câmeras</label>
                         </div>
                     </div>
                     <div class="row mt-4">
