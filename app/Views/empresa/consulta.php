@@ -11,8 +11,8 @@
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="form-floating mb-3 mt-2 mb-5">
-                            <input class="form-control" type="text" id="descricao_ip" name="descricao_ip" placeholder="Descrição ou Endereço IP" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
-                            <label for="descricao_ip">Descrição ou Endereço IP</label>
+                            <input class="form-control" type="text" id="cnpj_nome" name="cnpj_nome" placeholder="CNPJ, Razão Social ou Nome Fantasia" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
+                            <label for="cnpj_nome">CNPJ, Razão Social ou Nome Fantasia</label>
                         </div>
                     </div>
                     <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
@@ -44,14 +44,14 @@
             ?>
             <h6>Empresas Cadastradas</h6>
             <div class="row mt-4">
-                <div class="col-sm-3">
-                    Descrição
-                </div>
                 <div class="col-sm-2">
-                    Endereço IP
+                    CNPJ/CPF
                 </div>
                 <div class="col-sm-3">
-                    Portaria
+                    Razão Social
+                </div>
+                <div class="col-sm-3">
+                    Nome Fantasia
                 </div>
                 <div class="col-sm-2">
                     Situação
@@ -64,17 +64,17 @@
                 <div class="row mt-4">
                     <div class="col-sm-3">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $empresa->descricao ?>
+                            <?= $empresa->cnpj ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $empresa->endereco_ip ?>
+                            <?= $empresa->razao_social ?>
                         </p>
                     </div>
                     <div class="col-sm-3">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $empresa->portaria ?>
+                            <?= $empresa->nome_fantasia ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
@@ -92,56 +92,104 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title"><?= $empresa->descricao ?></h4>
+                                <h4 class="modal-title"><?= $empresa->nome_fantasia ?></h4>
                                 <button type="button" class="btn-close" data-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <form method="POST" action="<?= URL ?>/empresa/alterar" id="form_altera_empresa" name="form_altera_empresa">
                                     <div class="row mt-3">
                                         <input type="hidden" id="id" name="id" value="<?= $empresa->id ?>" required>
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-4">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição*" required value="<?= $empresa->descricao ?>">
-                                                <label for="descricao">Descrição*</label>
+                                                <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ/CPF*" required maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' value="<?= $empresa->cnpj ?>" disabled>
+                                                <label for="cnpj">CNPJ/CPF*</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="razao_social" name="razao_social" placeholder="Razão Social" maxlength="18" value="<?= $empresa->razao_social ?>">
+                                                <label for="razao_social">Razão Social</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="nome_fantasia" name="nome_fantasia" placeholder="Nome Fantasia*" required maxlength="18" value="<?= $empresa->nome_fantasia ?>">
+                                                <label for="nome_fantasia">Nome Fantasia*</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-3">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $empresa->endereco_ip ?>">
-                                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
+                                                <input type="text" class="form-control" id="cep" name="cep" placeholder="CEP" onBlur="buscaCep(this.value);" onkeypress='mascaraMutuario(this,cepMasc)' maxlength="9" value="<?= $empresa->cep ?>">
+                                                <label for="cep">CEP</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="logradouro" name="logradouro" placeholder="Logradouro" value="<?= $empresa->logradouro ?>">
+                                                <label for="logradouro">Logradouro</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="numero" name="numero" placeholder="Número" value="<?= $empresa->numero ?>">
+                                                <label for="numero">Número</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Compl." value="<?= $empresa->complemento ?>">
+                                                <label id="label_complemento">Compl.</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
+                                    <div class="row mt-3">
+                                        <div class="col-sm-3">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $empresa->url_foto ?>">
-                                                <label for="url_foto">URL Foto*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $empresa->url_video ?>">
-                                                <label for="url_video">URL Vídeo*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <select name="portaria" id="portaria" class="form-control">
+                                                <select class="form-control" id="estado" name="estado">
                                                     <option value="">Selecione...</option>
-                                                    <?php foreach($dados["portoes"] as $portaria){ ?>
-                                                        <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $empresa->portoes_id) ?>>
-                                                            <?= $portaria->descricao ?>
-                                                        </option>
-                                                    <?php }?>
+                                                    <option value="AC" <?= $helper->setSelected('AC', isset($empresa->estado) ? $empresa->estado : '') ?>>AC</option>
+                                                    <option value="AL" <?= $helper->setSelected('AL', isset($empresa->estado) ? $empresa->estado : '') ?>>AL</option>
+                                                    <option value="AP" <?= $helper->setSelected('AP', isset($empresa->estado) ? $empresa->estado : '') ?>>AP</option>
+                                                    <option value="AM" <?= $helper->setSelected('AM', isset($empresa->estado) ? $empresa->estado : '') ?>>AM</option>
+                                                    <option value="BA" <?= $helper->setSelected('BA', isset($empresa->estado) ? $empresa->estado : '') ?>>BA</option>
+                                                    <option value="CE" <?= $helper->setSelected('CE', isset($empresa->estado) ? $empresa->estado : '') ?>>CE</option>
+                                                    <option value="DF" <?= $helper->setSelected('DF', isset($empresa->estado) ? $empresa->estado : '') ?>>DF</option>
+                                                    <option value="ES" <?= $helper->setSelected('ES', isset($empresa->estado) ? $empresa->estado : '') ?>>ES</option>
+                                                    <option value="GO" <?= $helper->setSelected('GO', isset($empresa->estado) ? $empresa->estado : '') ?>>GO</option>
+                                                    <option value="MA" <?= $helper->setSelected('MA', isset($empresa->estado) ? $empresa->estado : '') ?>>MA</option>
+                                                    <option value="MT" <?= $helper->setSelected('MT', isset($empresa->estado) ? $empresa->estado : '') ?>>MT</option>
+                                                    <option value="MS" <?= $helper->setSelected('MS', isset($empresa->estado) ? $empresa->estado : '') ?>>MS</option>
+                                                    <option value="MG" <?= $helper->setSelected('MG', isset($empresa->estado) ? $empresa->estado : '') ?>>MG</option>
+                                                    <option value="PA" <?= $helper->setSelected('PA', isset($empresa->estado) ? $empresa->estado : '') ?>>PA</option>
+                                                    <option value="PB" <?= $helper->setSelected('PB', isset($empresa->estado) ? $empresa->estado : '') ?>>PB</option>
+                                                    <option value="PR" <?= $helper->setSelected('PR', isset($empresa->estado) ? $empresa->estado : '') ?>>PR</option>
+                                                    <option value="PE" <?= $helper->setSelected('PE', isset($empresa->estado) ? $empresa->estado : '') ?>>PE</option>
+                                                    <option value="PI" <?= $helper->setSelected('PI', isset($empresa->estado) ? $empresa->estado : '') ?>>PI</option>
+                                                    <option value="RJ" <?= $helper->setSelected('RJ', isset($empresa->estado) ? $empresa->estado : '') ?>>RJ</option>
+                                                    <option value="RN" <?= $helper->setSelected('RN', isset($empresa->estado) ? $empresa->estado : '') ?>>RN</option>
+                                                    <option value="RS" <?= $helper->setSelected('RS', isset($empresa->estado) ? $empresa->estado : '') ?>>RS</option>
+                                                    <option value="RO" <?= $helper->setSelected('RO', isset($empresa->estado) ? $empresa->estado : '') ?>>RO</option>
+                                                    <option value="RR" <?= $helper->setSelected('RR', isset($empresa->estado) ? $empresa->estado : '') ?>>RR</option>
+                                                    <option value="SC" <?= $helper->setSelected('SC', isset($empresa->estado) ? $empresa->estado : '') ?>>SC</option>
+                                                    <option value="SP" <?= $helper->setSelected('SP', isset($empresa->estado) ? $empresa->estado : '') ?>>SP</option>
+                                                    <option value="SE" <?= $helper->setSelected('SE', isset($empresa->estado) ? $empresa->estado : '') ?>>SE</option>
+                                                    <option value="TO" <?= $helper->setSelected('TO', isset($empresa->estado) ? $empresa->estado : '') ?>>TO</option>
                                                 </select>
-                                                <label for="portaria">Portaria</label>
+                                                <label for="estado">Estado</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade" value="<?= $empresa->cidade ?>">
+                                                <label for="cidade">Cidade</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Bairro" value="<?= $empresa->bairro ?>">
+                                                <label for="bairro">Bairro</label>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +221,6 @@
                                             <?php 
                                                 }
                                             ?>
-                                            <input type="submit" class="btn btn-danger" style="margin-top:40px;" name="deletar" id="deletar" value="Deletar">
                                         </div>
                                     </div>
                                 </form>
