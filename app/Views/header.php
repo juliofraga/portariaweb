@@ -19,7 +19,7 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['empresa/nova', 'empresa/consulta', 'veiculo/novo', 'veiculo/consulta', 'pessoa/nova', 'pessoa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Empresas / Veículos / Pessoas</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['empresa/nova', 'empresa/consulta', 'veiculo/novo', 'veiculo/consulta', 'pessoa/nova', 'pessoa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Empresas</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="<?= URL ?>/empresa/nova">Nova Empresa</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>/empresa/consulta">Consulta Empresa</a></li>

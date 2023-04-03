@@ -26,7 +26,7 @@
             }  
         }
 
-        public function novo()
+        public function nova()
         {
             if($this->helper->sessionValidate()){
                 $this->view('pessoa/nova');

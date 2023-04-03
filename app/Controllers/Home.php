@@ -1,10 +1,11 @@
 <?php
 
     class Home extends Controller{
+        public $helper;
 
         public function __construct()
         {
-
+            $this->helper = new Helpers();
         }
 
         public function index()
