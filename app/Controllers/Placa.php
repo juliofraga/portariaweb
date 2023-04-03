@@ -203,7 +203,7 @@
                     if($acao == "inativar")
                         $mensagem = 'Placa inativada com sucesso!';
                     else if($acao == "ativar")
-                        $mensagem = 'Placa inativada com sucesso!';
+                        $mensagem = 'Placa ativada com sucesso!';
                     $this->helper->setReturnMessage(
                         $this->tipoSuccess,
                         $mensagem,

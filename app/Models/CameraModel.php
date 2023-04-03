@@ -155,5 +155,21 @@
                 return false;
             } 
         }
+
+        public function removeCamerasPortaria($portaria_id)
+        {
+            try {
+                $this->db->query("UPDATE cameras SET portoes_id = :nulo WHERE portoes_id = :id");
+                $this->db->bind("id", $portaria_id);
+                $this->db->bind("nulo", NULL);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            }  
+        }
     }
 ?>

@@ -150,6 +150,19 @@
             }
         }
 
+        public function removeCamerasPortaria($portaria_id)
+        {
+            if($this->helper->sessionValidate()){
+                if($portaria_id == null){
+                    $this->view('pagenotfound');
+                }else{
+                    $this->cameraModel->removeCamerasPortaria($portaria_id);
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function alterar(){
             if($this->helper->sessionValidate()){
                 $dateTime = $this->helper->returnDateTime();
@@ -221,7 +234,7 @@
                     if($acao == "inativar")
                         $mensagem = 'Câmera inativada com sucesso!';
                     else if($acao == "ativar")
-                        $mensagem = 'Câmera inativada com sucesso!';
+                        $mensagem = 'Câmera ativada com sucesso!';
                     $this->helper->setReturnMessage(
                         $this->tipoSuccess,
                         $mensagem,

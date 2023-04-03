@@ -60,8 +60,8 @@
                     if($portariaTemp != $portaria->id){
                         $portariaTemp = $portaria->id;
             ?>  
-            <hr class="divisor_horizontal">
-                    <div class="row mt-4">
+                    <hr class="divisor_horizontal">
+                    <div class="row">
                         <div class="col-sm-4">
                             <p class="pb-1 mb-0 large">
                                 <?= $portaria->descricao ?>
@@ -85,15 +85,19 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <i><b>Câmeras</b></i>
+                            <?php
+                                $cameras = "";
+                                foreach($dados["dados"] as $camera){
+                                    if($portaria->id == $camera->id){
+                                        $cameras .= "$camera->camera ($camera->ip_camera) - ";
+                                    }
+                                }
+                                $cameras = substr($cameras, 0, -2);
+                            ?>
+                            <i><b>Câmeras: </b><?= $cameras == " () " ? "" : $cameras ?></i>
                         </div>
                     </div>
                     <?php } ?>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <i><?= $portaria->camera ?> - <?= $portaria->ip_camera ?></i>
-                        </div>
-                    </div>
                     <div class="modal fade" id="modal-<?= $portaria->id ?>">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -102,7 +106,7 @@
                                     <button type="button" class="btn-close" data-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form method="POST" action="<?= URL ?>/camera/alterar" id="form_altera_camera" name="form_altera_camera">
+                                    <form method="POST" action="<?= URL ?>/portaria/alterar" id="form_altera_portaria" name="form_altera_portaria">
                                         <div class="row mt-3">
                                             <input type="hidden" id="id" name="id" value="<?= $portaria->id ?>" required>
                                             <div class="col-sm-12">
@@ -115,40 +119,37 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <div class="form-floating mt-3">
-                                                    <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $portaria->endereco_ip ?>">
-                                                    <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-floating mt-3">
-                                                    <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $portaria->url_foto ?>">
-                                                    <label for="url_foto">URL Foto*</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-floating mt-3">
-                                                    <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $portaria->url_video ?>">
-                                                    <label for="url_video">URL Vídeo*</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-floating mt-3">
-                                                    <select name="portaria" id="portaria" class="form-control">
+                                                    <select name="placa" id="placa" class="form-control">
                                                         <option value="">Selecione...</option>
-                                                        <?php foreach($dados["portoes"] as $portaria){ ?>
-                                                            <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $portaria->portoes_id) ?>>
-                                                                <?= $portaria->descricao ?>
-                                                            </option>
+                                                        <?php if(isset($portaria->placas_id)){ ?>
+                                                            <option value="<?= $portaria->placas_id ?>" selected><?= $portaria->placa ?> - <?= $portaria->ip_placa ?></option>
+                                                        <?php }?>
+                                                        <?php foreach($dados["placas"] as $placa){ ?>
+                                                            <option value="<?= $placa->id ?>"><?= $placa->descricao ?> - <?= $placa->endereco_ip ?></option>
                                                         <?php }?>
                                                     </select>
-                                                    <label for="portaria">Portaria</label>
+                                                    <label for="placa">Placa</label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-sm-12">
+                                                <label for="placa">Câmeras</label>
+                                                <select class="form-control" name="camera[]" id="camera"  multiple="multiple">
+                                                    <option value = "">Selecione...</option>
+                                                    <?php 
+                                                        foreach($dados["dados"] as $cameraSelect){
+                                                            if($portaria->id == $cameraSelect->id and isset($cameraSelect->camera_id)){
+                                                        ?>
+                                                        <option value="<?= $cameraSelect->camera_id ?>" selected><?= $cameraSelect->camera ?> - <?= $cameraSelect->ip_camera ?></option>
+                                                    <?php
+                                                            }
+                                                        }
+                                                    ?>
+                                                    <?php foreach($dados["cameras"] as $camera){ ?>
+                                                        <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
+                                                    <?php }?>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="row">
