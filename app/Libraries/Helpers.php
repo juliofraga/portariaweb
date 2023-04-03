@@ -321,13 +321,14 @@
             return $valor;
         }
 
-        public function verificaLinkAtivo($url1, $url2 = null){
+        public function verificaLinkAtivo($url){
             $urlRequested = explode('portariaweb/', $_SERVER["REQUEST_URI"]);
-            if($urlRequested[1] == $url1 or $urlRequested[1] == $url2){
-                return "active";
-            }else{
-                return "";
+            foreach($url as $url){
+                if($urlRequested[1] == $url){
+                    return "active";
+                }
             }
+            return "";
         }
 
         public function verificaCheck($array, $valor){

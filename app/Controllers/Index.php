@@ -14,8 +14,7 @@
                 $this->view('index');
             }else{
                 $this->helper->redirectPage("/login/");
-            }
-            
+            }  
         }
 
     }

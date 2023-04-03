@@ -9,7 +9,11 @@
 
         public function index()
         {
-            $this->view('home');
+            if($this->helper->sessionValidate()){
+                $this->view('home');
+            }else{
+                $this->helper->redirectPage("/login/");
+            }  
         }
 
     }

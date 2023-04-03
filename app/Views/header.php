@@ -12,49 +12,47 @@
                     <a class="nav-link" aria-current="page" href="#">Painel de Operações</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('camera/novo', 'camera/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Câmeras</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['camera/novo', 'camera/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Câmeras</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="<?= URL ?>/camera/novo">Novo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>/camera/consulta">Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Empresas</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['empresa/nova', 'empresa/consulta', 'veiculo/novo', 'veiculo/consulta', 'pessoa/nova', 'pessoa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Empresas / Veículos / Pessoas</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
-                        <li><a class="dropdown-item" href="#">Novo</a></li>
-                        <li><a class="dropdown-item" href="#">Consulta</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/empresa/nova">Nova Empresa</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/empresa/consulta">Consulta Empresa</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/veiculo/novo">Novo Veículo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/veiculo/consulta">Consulta Veículo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/pessoa/nova">Nova Pessoa</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/pessoa/consulta">Consulta Pessoa</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('placa/novo', 'placa/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Placas</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['placa/novo', 'placa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Placas</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="<?= URL ?>/placa/novo">Novo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>/placa/consulta">Consulta</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('portaria/novo', 'portaria/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Portarias</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['portaria/novo', 'portaria/consulta', 'portaria/portaria_usuario']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Portarias</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="<?= URL ?>/portaria/novo">Novo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>/portaria/consulta">Consulta</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>/portaria/portaria_usuario">Ligação Portaria x Usuários</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo('usuario/novo', 'usuario/consulta') ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Usuários</a>
+                    <a class="nav-link dropdown-toggle <?= $helper->verificaLinkAtivo(['usuario/novo', 'usuario/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Usuários</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <li><a class="dropdown-item" href="<?= URL ?>/usuario/novo">Novo</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>/usuario/consulta">Consulta</a></li>
                     </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Veículos</a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdown03">
-                        <li><a class="dropdown-item" href="#">Novo</a></li>
-                        <li><a class="dropdown-item" href="#">Consulta</a></li>
-                    </ul>
-                </li>                
+                </li>              
                 <li class="nav-item">
-                    <a class="nav-link <?= $helper->verificaLinkAtivo('configuracoes') ?>" href="<?= URL ?>/configuracoes">Configurações do Sistema</a>
+                    <a class="nav-link <?= $helper->verificaLinkAtivo(['configuracoes']) ?>" href="<?= URL ?>/configuracoes">Configurações do Sistema</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Logs</a>
