@@ -4,7 +4,7 @@
         <?php if($helper->sessionValidate()){?>
             <a class="navbar-brand" href="#">Portaria Web</a>
         <?php }else{ ?>
-            <a class="navbar-brand" href="#"></a>
+            <a class="navbar-brand" href="#"><br></a>
         <?php } ?>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -29,7 +29,6 @@
                             <li><a class="dropdown-item" href="<?= URL ?>/empresa/consulta">Consulta Empresa</a></li>
                             <li><a class="dropdown-item" href="<?= URL ?>/veiculo/novo">Novo Veículo</a></li>
                             <li><a class="dropdown-item" href="<?= URL ?>/veiculo/consulta">Consulta Veículo</a></li>
-                            <li><a class="dropdown-item" href="<?= URL ?>/pessoa/nova">Nova Pessoa</a></li>
                             <li><a class="dropdown-item" href="<?= URL ?>/pessoa/consulta">Consulta Pessoa</a></li>
                         </ul>
                     </li>

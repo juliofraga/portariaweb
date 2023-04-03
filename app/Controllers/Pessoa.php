@@ -26,15 +26,6 @@
             }  
         }
 
-        public function nova()
-        {
-            if($this->helper->sessionValidate()){
-                $this->view('pessoa/nova');
-            }else{
-                $this->helper->redirectPage("/login/");
-            } 
-        }
-
         public function consulta()
         {
             if($this->helper->sessionValidate()){

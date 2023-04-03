@@ -9,12 +9,15 @@
         public $helper;
         public $veiculoModel;
         public $log;
+        public $empresa;
 
         public function __construct()
         {
+            require "Empresa.php";
             $this->helper = new Helpers();
             $this->veiculoModel = $this->model('VeiculoModel');
             $this->log = new Logs();
+            $this->empresa = new Empresa();
         }
 
         public function index()
@@ -28,8 +31,11 @@
 
         public function novo()
         {
+            $dados = [
+                "empresas" => $this->empresa->listaEmpresas("ativas"),
+            ];
             if($this->helper->sessionValidate()){
-                $this->view('veiculo/novo');
+                $this->view('veiculo/novo', $dados);
             }else{
                 $this->helper->redirectPage("/login/");
             } 

@@ -156,6 +156,7 @@
                                 'Empresa alterada com sucesso!',
                                 $this->rotinaCad
                             );
+                            $retorno = true;
                             $this->log->registraLog($_SESSION['pw_id'], "Empresa", $form["id"], 1, $dateTime);
                         }else{
                             $this->helper->setReturnMessage(
@@ -178,6 +179,7 @@
                         $this->rotinaCad
                     );
                 }
+                return $retorno;
             }else{
                 $this->helper->loginRedirect();
             }

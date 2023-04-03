@@ -101,7 +101,7 @@
                                         <input type="hidden" id="id" name="id" value="<?= $empresa->id ?>" required>
                                         <div class="col-sm-4">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ/CPF*" required maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' value="<?= $empresa->cnpj ?>" disabled>
+                                                <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ/CPF*" required maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' value="<?= $empresa->cnpj ?>" readonly>
                                                 <label for="cnpj">CNPJ/CPF*</label>
                                             </div>
                                         </div>
@@ -131,13 +131,13 @@
                                                 <label for="logradouro">Logradouro</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-2">
                                             <div class="form-floating mt-3">
                                                 <input type="text" class="form-control" id="numero" name="numero" placeholder="Número" value="<?= $empresa->numero ?>">
                                                 <label for="numero">Número</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-3">
                                             <div class="form-floating mt-3">
                                                 <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Compl." value="<?= $empresa->complemento ?>">
                                                 <label id="label_complemento">Compl.</label>
@@ -145,7 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="form-floating mt-3">
                                                 <select class="form-control" id="estado" name="estado">
                                                     <option value="">Selecione...</option>
@@ -180,13 +180,13 @@
                                                 <label for="estado">Estado</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="form-floating mt-3">
                                                 <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade" value="<?= $empresa->cidade ?>">
                                                 <label for="cidade">Cidade</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-4">
                                             <div class="form-floating mt-3">
                                                 <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Bairro" value="<?= $empresa->bairro ?>">
                                                 <label for="bairro">Bairro</label>
