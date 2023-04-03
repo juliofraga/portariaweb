@@ -47,7 +47,40 @@
         public function cadastrar()
         {
             if($this->helper->sessionValidate()){
-
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if(!empty($form["cnpj"]) and !empty($form["nome_fantasia"])){
+                    if(!$this->empresaModel->verificaEmpresa($form["cnpj"])){
+                        $dateTime = $this->helper->returnDateTime();
+                        $lastInsertId = $this->empresaModel->cadastrarEmpresa($form, $dateTime);
+                        if($lastInsertId != null){
+                            $this->helper->setReturnMessage(
+                                $this->tipoSuccess,
+                                'Empresa cadastrada com sucesso!',
+                                $this->rotinaCad
+                            );
+                            $this->log->registraLog($_SESSION['pw_id'], "Empresa", $lastInsertId, 0, $dateTime);
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Não foi possível cadastrar a empresa, tente novamente!',
+                                $this->rotinaCad
+                            );
+                        }
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            "Não foi possível cadastrar a empresa, já existe outra empresa cadastrada com esse CNPJ / CPF(".$form["cnpj"].")",
+                            $this->rotinaCad
+                        );
+                    }
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'CNPJ/CPF e Nome Fantasia são de preenchimento obrigatórios, tente novamente!',
+                        $this->rotinaCad
+                    );
+                }
+                $this->helper->redirectPage("/empresa/nova");
             }else{
                 $this->helper->loginRedirect();
             }

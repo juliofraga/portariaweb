@@ -8,14 +8,34 @@
             $this->db = new Database();
         }
 
+        public function verificaEmpresa($cnpj)
+        {
+            try {
+                $this->db->query("SELECT id FROM empresas WHERE cnpj = :cnpj");
+                $this->db->bind("cnpj", $cnpj);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            } 
+        }
+
         public function cadastrarEmpresa($dados, $dataHora)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
-                }
-                $this->db->query("INSERT INTO empresas() VALUES ()");
+                $this->db->query("INSERT INTO empresas(cnpj, razao_social, nome_fantasia, logradouro, numero, bairro, cidade, cep, complemento, created_at) VALUES (:cnpj, :razao_social, :nome_fantasia, :logradouro, :numero, :bairro, :cidade, :cep, :complemento, :created_at)");
+                $this->db->bind("cnpj", $dados["cnpj"]);
+                $this->db->bind("razao_social", $dados["razao_social"]);
+                $this->db->bind("nome_fantasia", $dados["nome_fantasia"]);
+                $this->db->bind("logradouro", $dados["logradouro"]);
+                $this->db->bind("numero", $dados["numero"]);
+                $this->db->bind("bairro", $dados["bairro"]);
+                $this->db->bind("cidade", $dados["cidade"]);
+                $this->db->bind("cep", $dados["cep"]);
+                $this->db->bind("complemento", $dados["complemento"]);
                 $this->db->bind("created_at", $dataHora);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
