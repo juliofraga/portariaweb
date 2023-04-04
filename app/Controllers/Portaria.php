@@ -163,8 +163,47 @@
                 $dados = [
                     "portarias" => $this->listaPortarias("ativo"),
                     "usuarios" => $this->usuario->listaUsuarios("operador"),
+                    "portaria_usuarios"=> $this->listaPortariasUsuarios()
                 ];
                 $this->view("portaria/portaria_usuario", $dados);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function ligar_portaria_usuario()
+        {
+            if($this->helper->sessionValidate()){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if((isset($form["usuario"]) and $form["usuario"] != null) and !empty($form["portaria_id"])){
+                    $error = false;
+                    $this->portariaModel->removePortariaUsuarioPorId($form["portaria_id"]);
+                    foreach($form["usuario"] as $usuario){
+                        if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
+                            $error = true;
+                        }
+                    }
+                    if($error == false){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            "Ligação Portaria x Usuario concluída com sucesso!",
+                            $this->rotinaCad
+                        );
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            "Ocorreu um problema na ligação Portaria x Usuario, tente novamente!",
+                            $this->rotinaCad
+                        );
+                    }
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        "É obrigatório informar pelo menos um usuário ligado a portaria, tente novamente!",
+                        $this->rotinaCad
+                    );
+                }
+                $this->helper->redirectPage("/portaria/portaria_usuario");
             }else{
                 $this->helper->loginRedirect();
             }
@@ -201,6 +240,15 @@
                     );
                 }
                 return $retorno;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function listaPortariasUsuarios()
+        {
+            if($this->helper->sessionValidate()){
+                return $this->portariaModel->listaPortariasUsuarios();
             }else{
                 $this->helper->loginRedirect();
             }

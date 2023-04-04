@@ -108,11 +108,11 @@
             return md5(rand(1,100000));   
         }
 
-        public function setMultiSelect($array = null, $valor){
+        public function setMultiSelectUsuariosPortaria($array = null, $usuario, $portaria){
             if($array != null){
-                for($i = 0; $i < count($array); $i++){
-                    if($array[$i] == $valor){
-                        return "selected";
+                foreach($array as $array){
+                    if($array->usuarios_id == $usuario and $array->portoes_id == $portaria){
+                        echo "selected";
                     }
                 }
             }

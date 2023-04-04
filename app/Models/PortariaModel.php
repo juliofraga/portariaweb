@@ -68,6 +68,16 @@
             }
         }
 
+        public function listaPortariasUsuarios()
+        {
+            try {
+                $this->db->query("SELECT * FROM portoes_pessoas");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
         public function listaPortariasPorFiltro($filtro)
         {
             try {
@@ -101,6 +111,33 @@
             try {
                 $this->db->query("DELETE FROM portoes WHERE id = :id");
                 $this->db->bind("id", $id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            } 
+        }
+
+        public function removePortariaUsuarioPorId($portaria_id)
+        {
+            try {
+                $this->db->query("DELETE FROM portoes_pessoas WHERE portoes_id = :id");
+                $this->db->bind("id", $portaria_id);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return false;
+            } 
+        }
+
+        public function ligaUsuarioPortaria($portaria_id, $usuario_id)
+        {
+            try {
+                $this->db->query("INSERT INTO portoes_pessoas(portoes_id, usuarios_id)VALUES(:portoes_id, :usuarios_id)");
+                $this->db->bind("portoes_id", $portaria_id);
+                $this->db->bind("usuarios_id", $usuario_id);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
                     return true;

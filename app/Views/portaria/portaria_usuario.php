@@ -1,4 +1,8 @@
-<?php ?>
+<?php 
+
+$helper = new Helpers();
+
+?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
@@ -32,21 +36,20 @@
                     <?php foreach($dados["portarias"] as $portaria){?>
                         <form name="form_cad_portaria_usuario" id="form_cad_portaria_usuario" method="POST" action="<?= URL ?>/portaria/ligar_portaria_usuario/">
                             <div class="row mt-5">
-                                <div class="col-sm-2">
-                                    <div class="form-floating">
-                                        <select name="portaria" id="portaria" class="form-control" required>
-                                            <option value="<?= $portaria->id ?>"><?= $portaria->descricao ?></option>
-                                        </select>
-                                        <label for="portaria">Portaria*</label>
-                                    </div>
+                                <div class="col-sm-3">
+                                    <input type="hidden" name="portaria_id" value="<?= $portaria->id ?>" required>
+                                    <select name="portaria" class="js-example-basic-multiple w-100" multiple="multiple" disabled>
+                                        <option value="<?= $portaria->id ?>" selected><?= $portaria->descricao ?></option>
+                                    </select>
+                                    <label for="portaria">Portaria*</label>
                                 </div>
-                                <div class="col-sm-8">
-                                    <select class="js-example-basic-multiple w-100" name="usuario[]"  multiple="multiple" placeholder="Usuários">
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-multiple w-100" name="usuario[]"  multiple="multiple" placeholder="Usuários" required>
                                         <?php foreach($dados["usuarios"] as $usuario){ ?>
-                                            <option value="<?= $usuario->id ?>"><?= $usuario->login ?> - <?= $usuario->nome ?></option>
+                                            <option value="<?= $usuario->id ?>" <?= $helper->setMultiSelectUsuariosPortaria($dados["portaria_usuarios"], $usuario->id, $portaria->id) ?>><?= $usuario->login ?> - <?= $usuario->nome ?></option>
                                         <?php }?>
                                     </select>
-                                <label for="usuarios">Usuários*</label>
+                                    <label for="usuarios">Usuários*</label>
                                 </div>
                                 <div class="col-sm-2 mt-2">
                                     <button class="w-100 btn btn-warning btn-lg" name="cadastrar" id="cadastrar" value="cadastrar">Cadastrar</button>
