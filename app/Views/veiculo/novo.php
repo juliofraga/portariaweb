@@ -32,7 +32,7 @@
                     <div class="row mt-5">
                         <div class="col-sm-3">
                             <div class="form-floating mt-2">
-                                <input type="text" class="form-control" id="placa" name="placa" placeholder="Placa*" required>
+                                <input type="text" class="form-control letraMaiuscula" id="placaVeiculo" name="placaVeiculo" placeholder="Placa*" required>
                                 <label for="placa">Placa*</label>
                             </div>
                         </div>
@@ -58,13 +58,13 @@
                     <div class="row mt-3">
                         <div class="col-sm-12">
                             <div class="form-floating mt-2">
-                                <select class="form-control w-100" name="empresa" id="empresa" required placeholder="Empresa">
+                                <select class="form-control w-100" name="empresa" id="empresa" required placeholder="Empresa*">
                                     <option value="">Selecione...</option>
                                     <?php foreach($dados["empresas"] as $empresa){ ?>
                                         <option value="<?= $empresa->id ?>"><?= $empresa->nome_fantasia ?></option>
                                     <?php }?>
                                 </select>
-                                <label for="empresa">Empresa</label>
+                                <label for="empresa">Empresa*</label>
                             </div>
                         </div>
                     </div>

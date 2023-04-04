@@ -154,6 +154,15 @@
             }
         }
 
+        public function portaria_usuario()
+        {
+            if($this->helper->sessionValidate()){
+                $this->view("portaria/portaria_usuario");
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function updatePortaria($form, $dateTime)
         {
             if($this->helper->sessionValidate()){

@@ -11,11 +11,11 @@
         public function cadastrarVeiculo($dados, $dataHora)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
-                }
-                $this->db->query("INSERT INTO veiculos() VALUES ()");
+                $this->db->query("INSERT INTO veiculos(placa, descricao, tipo, created_at, empresas_id) VALUES (:placa, :descricao, :tipo, :created_at, :empresa)");
+                $this->db->bind("placa", $dados["placaVeiculo"]);
+                $this->db->bind("descricao", $dados["descricao"]);
+                $this->db->bind("tipo", $dados["tipo"]);
+                $this->db->bind("empresa", $dados["empresa"]);
                 $this->db->bind("created_at", $dataHora);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
@@ -27,10 +27,34 @@
             }   
         }
 
+        public function verificaPlaca($placa, $veiculo_id = null)
+        {
+            try {
+                if($veiculo_id == null){
+                    $this->db->query("SELECT id FROM veiculos WHERE placa = :placa");
+                }else{
+                    $this->db->query("SELECT id FROM veiculos WHERE placa = :placa and id <> :id");
+                    $this->db->bind("id", $veiculo_id);
+                }
+                $this->db->bind("placa", $placa);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            } 
+        }
+
         public function alterarVeiculo($dados, $dataHora)
         {
             try {
-                $this->db->query("UPDATE veiculos SET updated_at = :updated_at WHERE id = :id");
+                $this->db->query("UPDATE veiculos SET placa = :placa, descricao = :descricao, tipo = :tipo, empresas_id = :empresa, updated_at = :updated_at WHERE id = :id");
+                $this->db->bind("placa", $dados["placaVeiculo"]);
+                $this->db->bind("descricao", $dados["descricao"]);
+                $this->db->bind("tipo", $dados["tipo"]);
+                $this->db->bind("empresa", $dados["empresa"]);
                 $this->db->bind("updated_at", $dataHora);
                 $this->db->bind("id", $dados["id"]);
                 $this->db->execQuery();
@@ -46,7 +70,7 @@
         public function listaVeiculos($attr = null)
         {
             try {
-                $this->db->query("SELECT * FROM veiculos");
+                $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
@@ -56,8 +80,8 @@
         public function listaVeiculosPorFiltro($filtro)
         {
             try {
-                $filter = "";
-                $this->db->query("SELECT * FROM veiculos WHERE $filter");
+                $filter = "and (v.descricao like '%".$filtro."%' or v.placa like '%".$filtro."%')";
+                $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

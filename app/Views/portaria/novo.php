@@ -2,7 +2,7 @@
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
             <h1>Nova Portaria</h1>
-            <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/portaria/cadastrar/">
+            <form name="form_cad_portaria" id="form_cad_portaria" method="POST" action="<?= URL ?>/portaria/cadastrar/">
                 <hr class="divisor_horizontal">
                 <div id="formUserAdmin">
                     <?php 

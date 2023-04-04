@@ -2,6 +2,10 @@ $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
 });
 
+$(document).ready(function(){
+    $("#placaVeiculo").mask('AAA-9A99');
+ });
+
 function validaComplexidadeSenha(senha, complexidade){
     if(complexidade == null || complexidade == false){
         let tamanho = senha.length;

@@ -1,6 +1,13 @@
 <?php
     $helper = new Helpers();
     $_SESSION["pw_veiculo_consulta"] = $dados["filtro"];
+    $tipos = [
+        "0" => "Não informado",
+        "1" => "Carro",
+        "2" => "Caminhão",
+        "3" => "Moto",
+        "4" => "Outro",
+    ];
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
@@ -11,8 +18,8 @@
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="form-floating mb-3 mt-2 mb-5">
-                            <input class="form-control" type="text" id="descricao_ip" name="descricao_ip" placeholder="Descrição ou Endereço IP" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
-                            <label for="descricao_ip">Descrição ou Endereço IP</label>
+                            <input class="form-control" type="text" id="descricao_placa" name="descricao_placa" placeholder="Descrição ou Placa" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
+                            <label for="descricao_placa">Descrição ou Placa</label>
                         </div>
                     </div>
                     <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
@@ -44,14 +51,17 @@
             ?>
             <h6>Veículos Cadastradas</h6>
             <div class="row mt-4">
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     Descrição
                 </div>
                 <div class="col-sm-2">
-                    Endereço IP
+                    Placa
                 </div>
-                <div class="col-sm-3">
-                    Portaria
+                <div class="col-sm-2">
+                    Tipo
+                </div>
+                <div class="col-sm-2">
+                    Empresa
                 </div>
                 <div class="col-sm-2">
                     Situação
@@ -62,19 +72,24 @@
                 foreach($dados["dados"] as $veiculo){
             ?>
                 <div class="row mt-4">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
                             <?= $veiculo->descricao ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $veiculo->endereco_ip ?>
+                            <?= $veiculo->placa ?>
                         </p>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $veiculo->portaria ?>
+                            <?= $tipos[$veiculo->tipo] ?>
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                            <?= $veiculo->nome_fantasia ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
@@ -101,47 +116,42 @@
                                         <input type="hidden" id="id" name="id" value="<?= $veiculo->id ?>" required>
                                         <div class="col-sm-12">
                                             <div class="form-floating">
+                                                <input type="text" class="form-control letraMaiuscula" id="placaVeiculo" name="placaVeiculo" placeholder="Placa*" required value="<?= $veiculo->placa ?>">
+                                                <label for="placa">Placa*</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-sm-12">
+                                            <div class="form-floating">
                                                 <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição*" required value="<?= $veiculo->descricao ?>">
                                                 <label for="descricao">Descrição*</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $veiculo->endereco_ip ?>">
-                                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
+                                            <div class="form-floating">
+                                                <select class="form-control" id="tipo" name="tipo" placeholder="Tipo" required>
+                                                    <option value="1" <?= $this->helper->setSelected("1", $veiculo->tipo) ?>>Carro</option>
+                                                    <option value="2" <?= $this->helper->setSelected("2", $veiculo->tipo) ?>>Caminhão</option>
+                                                    <option value="3" <?= $this->helper->setSelected("3", $veiculo->tipo) ?>>Moto</option>
+                                                    <option value="4" <?= $this->helper->setSelected("4", $veiculo->tipo) ?>>Outro</option>
+                                                </select>
+                                                <label for="tipo">Tipo*</label>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $veiculo->url_foto ?>">
-                                                <label for="url_foto">URL Foto*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $veiculo->url_video ?>">
-                                                <label for="url_video">URL Vídeo*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <select name="portaria" id="portaria" class="form-control">
+                                            <div class="form-floating">
+                                                <select class="form-control w-100" name="empresa" id="empresa" required placeholder="Empresa*">
                                                     <option value="">Selecione...</option>
-                                                    <?php foreach($dados["portoes"] as $portaria){ ?>
-                                                        <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $veiculo->portoes_id) ?>>
-                                                            <?= $portaria->descricao ?>
-                                                        </option>
+                                                    <?php foreach($dados["empresas"] as $empresa){ ?>
+                                                        <option value="<?= $empresa->id ?>" <?= $this->helper->setSelected($empresa->id, $veiculo->empresas_id) ?>><?= $empresa->nome_fantasia ?></option>
                                                     <?php }?>
                                                 </select>
-                                                <label for="portaria">Portaria</label>
+                                                <label for="empresa">Empresa*</label>
                                             </div>
                                         </div>
                                     </div>
@@ -173,7 +183,6 @@
                                             <?php 
                                                 }
                                             ?>
-                                            <input type="submit" class="btn btn-danger" style="margin-top:40px;" name="deletar" id="deletar" value="Deletar">
                                         </div>
                                     </div>
                                 </form>
