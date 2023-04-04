@@ -159,7 +159,13 @@
         public function listaUsuarios($attr = null)
         {
             try {
-                $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC");
+                if($attr == null){
+                    $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC");
+                }else if($attr == "operador"){
+                    $this->db->query("SELECT * FROM usuarios WHERE perfil = :operador and situacao = :situacao order by nome ASC");
+                    $this->db->bind("operador", "Operador");
+                    $this->db->bind("situacao", 0);
+                }
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

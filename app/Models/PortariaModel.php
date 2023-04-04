@@ -56,6 +56,9 @@
             try {
                 if($attr == null){
                     $this->db->query("SELECT * FROM portoes order by descricao ASC");
+                }else if($attr == "ativo"){
+                    $this->db->query("SELECT * FROM portoes WHERE situacao = :situacao order by descricao ASC");
+                    $this->db->bind("situacao", 0);
                 }else{
                     $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN cameras c ON p.id = c.portoes_id order by p.descricao ASC");
                 }

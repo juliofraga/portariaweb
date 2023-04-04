@@ -11,16 +11,19 @@
         public $log;
         public $placa;
         public $camera;
+        public $usuario;
 
         public function __construct()
         {
             require "Placa.php";
             require "Camera.php";
+            require "Usuario.php";
             $this->helper = new Helpers();
             $this->portariaModel = $this->model('PortariaModel');
             $this->log = new Logs();
             $this->placa = new Placa();
             $this->camera = new Camera();
+            $this->usuario = new Usuario();
         }
 
         public function index()
@@ -157,7 +160,11 @@
         public function portaria_usuario()
         {
             if($this->helper->sessionValidate()){
-                $this->view("portaria/portaria_usuario");
+                $dados = [
+                    "portarias" => $this->listaPortarias("ativo"),
+                    "usuarios" => $this->usuario->listaUsuarios("operador"),
+                ];
+                $this->view("portaria/portaria_usuario", $dados);
             }else{
                 $this->helper->loginRedirect();
             }
