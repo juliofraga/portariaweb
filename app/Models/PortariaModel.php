@@ -164,5 +164,20 @@
                 return null;
             }
         }
+
+        public function retornaPortariaPadrao($usuario_id, $attr = false){
+            try {
+                if($attr == true){
+                    $this->db->query("SELECT id, descricao FROM portoes WHERE situacao = :situacao order by id ASC limit 1");
+                    $this->db->bind("situacao", 0);
+                }else{
+                    $this->db->query("SELECT p.id, p.descricao FROM portoes p, portoes_pessoas pp WHERE p.id = pp.portoes_id and pp.usuarios_id = :usuario_id order by p.id LIMIT 1");
+                    $this->db->bind("usuario_id", $usuario_id);
+                }
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
     }
 ?>

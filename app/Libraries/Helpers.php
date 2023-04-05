@@ -88,7 +88,7 @@
         }
 
         public function homeRedirect(){
-            $this->redirectPage("/home");
+            $this->redirectPage("/painel");
         }
 
         public function removeCookie($nome){

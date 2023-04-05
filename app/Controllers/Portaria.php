@@ -217,7 +217,20 @@
                 }else{
                     return $this->portariaModel->listaPortariasPorUsuario($usuario_id, false);
                 }
-                
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function retornaPortariaPadrao($usuario_id, $perfil)
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isAdministrador($perfil) or $this->helper->isSuperadmin($perfil)){
+                    $portaria = $this->portariaModel->retornaPortariaPadrao($usuario_id, true);
+                }else{
+                    $portaria = $this->portariaModel->retornaPortariaPadrao($usuario_id, false);
+                }
+                return $portaria[0]->id;
             }else{
                 $this->helper->loginRedirect();
             }

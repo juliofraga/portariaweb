@@ -183,7 +183,18 @@ function submitSelecao(){
     document.form_seleciona_portaria.submit();
 }
 
+function exibeOperadaEntrada(){
+    $("#operacaoSaida").fadeOut();
+    $("#operacaoEntrada").fadeIn(1000);
+    $("#operacaoEntrada").fadeIn();
+    $('.js-example-basic-multiple').select2();
+}
 
+function exibeOperadaSaida(){
+    $("#operacaoEntrada").fadeOut();
+    $("#operacaoSaida").fadeIn(1000);
+    $("#operacaoSaida").fadeIn();
+}
 
 /*
 
