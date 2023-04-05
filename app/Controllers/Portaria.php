@@ -91,7 +91,7 @@
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if((!isset($_SESSION["pw_portaria_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
-                        'dados' =>  $this->listaPortarias(true),
+                        'dados' =>  $this->listaPortarias("todos"),
                         'filtro' => null,
                         "placas" => $this->placa->listaPlacasDisponiveis(),
                         "cameras" => $this->camera->listaCamerasDisponiveis(),
@@ -204,6 +204,20 @@
                     );
                 }
                 $this->helper->redirectPage("/portaria/portaria_usuario");
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function listaPortariasPorUsuario($usuario_id, $perfil)
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isAdministrador($perfil) or $this->helper->isSuperadmin($perfil)){
+                    return $this->portariaModel->listaPortariasPorUsuario($usuario_id, true);
+                }else{
+                    return $this->portariaModel->listaPortariasPorUsuario($usuario_id, false);
+                }
+                
             }else{
                 $this->helper->loginRedirect();
             }

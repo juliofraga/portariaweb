@@ -118,14 +118,6 @@
             }
         }
 
-        public function setSelectProdutos($produtos_ligados, $produto_id){
-            foreach($produtos_ligados as $produto){
-                if($produto->produtos_id == $produto_id){
-                    echo "selected";
-                }
-            }
-        }
-
         public function formataDateTime($dateTime){
             if($dateTime != null and !empty($dateTime)){
                 $divisor = explode(" ", $dateTime);
@@ -454,6 +446,33 @@
             }
             $enderecoFormatado = substr($enderecoFormatado, 0, -1);
             return $enderecoFormatado;
+        }
+
+        public function isSuperadmin($perfil)
+        {
+            if($perfil == md5("Superadmin")){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public function isAdministrador($perfil)
+        {
+            if($perfil == md5("Administrador")){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        public function isOperador($perfil)
+        {
+            if($perfil == md5("Operador")){
+                return true;
+            }else{
+                return false;
+            }
         }
     } 
 ?>

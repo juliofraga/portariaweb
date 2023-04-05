@@ -54,12 +54,13 @@
         public function listaPortarias($attr = null)
         {
             try {
+                
                 if($attr == null){
                     $this->db->query("SELECT * FROM portoes order by descricao ASC");
                 }else if($attr == "ativo"){
                     $this->db->query("SELECT * FROM portoes WHERE situacao = :situacao order by descricao ASC");
                     $this->db->bind("situacao", 0);
-                }else{
+                }else if($attr == "todos"){   
                     $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN cameras c ON p.id = c.portoes_id order by p.descricao ASC");
                 }
                 return $this->db->results();
@@ -146,6 +147,22 @@
             } catch (Throwable $th) {
                 return false;
             } 
+        }
+
+        public function listaPortariasPorUsuario($usuario_id, $attr = false)
+        {
+            try {
+                if($attr == true){
+                    $this->db->query("SELECT id, descricao FROM portoes WHERE situacao = :situacao order by descricao ASC");
+                    $this->db->bind("situacao", 0);
+                }else{
+                    $this->db->query("SELECT p.id, p.descricao FROM portoes p, portoes_pessoas pp WHERE p.id = pp.portoes_id and pp.usuarios_id = :usuario_id");
+                    $this->db->bind("usuario_id", $usuario_id);
+                }
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
         }
     }
 ?>

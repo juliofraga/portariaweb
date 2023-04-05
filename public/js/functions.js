@@ -179,6 +179,10 @@ function buscaCep(cep){
     
 }
 
+function submitSelecao(){
+    document.form_seleciona_portaria.submit();
+}
+
 
 
 /*

@@ -11,7 +11,7 @@
         public function index()
         {
             if($this->helper->sessionValidate()){
-                $this->view('index');
+                $this->helper->redirectPage("/painel/");
             }else{
                 $this->helper->redirectPage("/login/");
             }  
