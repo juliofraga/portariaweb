@@ -78,9 +78,10 @@ $helper = new Helpers();
                             <label for="cpf">Nome</label>
                         </div>
                         <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="cpf" id="cpf1">
+                            <select class="js-example-basic-multiple w-100" name="cpf1" id="cpf1" onchange="validaAbrirCancela();">
                                 <?php foreach($dados["cameras"] as $camera){ ?>
-                                    <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
+                                    <option>a</option>
+                                    <option>b</option>
                                 <?php }?>
                             </select>
                             <label for="cpf">CPF</label>
@@ -110,6 +111,14 @@ $helper = new Helpers();
                         </div>
                     </div>
                 </div>
+                <div class="row mt-4">
+                    <div class="col-sm-6 mt-2">
+                        <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancela" id="btnAbrirCancela" style="display: none;" onclick="validaFecharCancela();">Abrir Cancela</button>
+                    </div>
+                    <div class="col-sm-6  mt-2">
+                        <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancela" id="btnFecharCancela" style="display: none;" onclick="executaFechamentoCancela()">Fechar Cancela</button>
+                    </div>
+                </div>
                 <div id="operacaoSaida" style="margin-top:30px; display:none;">
                     <h4><u>Nova Saída</u></h4>
                 </div>
@@ -128,8 +137,9 @@ $helper = new Helpers();
                     </div>
                     <div class="row">
                         <?php foreach($dados["cameras"] as $camera){ ?>
-                            <div class="col-sm-6 mt-3">
-                                <iframe src="http://localhost/portariaweb/usuario/novo" height="100%" width="100%" allowfullscreen id="camera_iframe_id_<?= $camera->id ?>"></iframe> 
+                            <div class="col-sm-12 mt-5" id="camera_iframe_id_<?= $camera->id ?>">
+                                <label><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></label>
+                                <iframe src="http://localhost/" height="100%" width="100%" allowfullscreen></iframe> 
                             </div>
                         <?php }?>
                     </div>
