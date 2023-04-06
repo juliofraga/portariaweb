@@ -92,6 +92,15 @@
             }
         }
 
+        public function listaCamerasPortaria($portaria_id)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->cameraModel->listaCamerasPortaria($portaria_id);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function inserePortariaCamera($camera_id, $portaria_id, $dateTime)
         {
             if($this->helper->sessionValidate()){

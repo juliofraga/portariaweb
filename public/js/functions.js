@@ -184,16 +184,25 @@ function submitSelecao(){
 }
 
 function exibeOperadaEntrada(){
-    $("#operacaoSaida").fadeOut();
+    document.getElementById('operacaoSaida').style.display = 'none';
     $("#operacaoEntrada").fadeIn(1000);
     $("#operacaoEntrada").fadeIn();
     $('.js-example-basic-multiple').select2();
 }
 
 function exibeOperadaSaida(){
-    $("#operacaoEntrada").fadeOut();
+    document.getElementById('operacaoEntrada').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
+}
+
+function exibeEscondeCamera(valor, id){
+    newId = id.split("camera__");
+    if(valor == false){
+        document.getElementById('camera_iframe_id_'+newId).style.display = 'none';
+    }else if(valor == true){
+        document.getElementById('camera_iframe_id_'+newId).style.display = 'block';
+    }
 }
 
 /*

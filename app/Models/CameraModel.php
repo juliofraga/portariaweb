@@ -171,5 +171,16 @@
                 return false;
             }  
         }
+
+        public function listaCamerasPortaria($portaria_id)
+        {
+            try {
+                $this->db->query("SELECT * FROM cameras WHERE portoes_id = :portaria ORDER BY id ASC");
+                $this->db->bind("portaria", $portaria_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }  
+        }
     }
 ?>

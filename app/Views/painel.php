@@ -1,7 +1,6 @@
 <?php 
 
 $helper = new Helpers();
-
 ?>
 <div id="conteudo" class="mb-5 mt-3">
     <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
@@ -22,10 +21,10 @@ $helper = new Helpers();
             <hr class="divisor_horizontal">
             <div id="formUserAdmin">
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 mt-2">
                         <button class="w-100 btn btn-success btn-lg" name="novaEntrada" id="novaEntrada" onclick="exibeOperadaEntrada();">Nova Entrada</button>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-2 mt-2">
                         <button class="w-100 btn btn-danger btn-lg" name="novaSaida" id="novaSaida" onclick="exibeOperadaSaida();">Nova Saída</button>
                     </div>
                 </div>
@@ -113,6 +112,27 @@ $helper = new Helpers();
                 </div>
                 <div id="operacaoSaida" style="margin-top:30px; display:none;">
                     <h4><u>Nova Saída</u></h4>
+                </div>
+                <hr>
+                <div id="camerasPortaria">
+                    <h4><u>Câmeras</u></h4>
+                    <div class="row mt-3">
+                        <?php foreach($dados["cameras"] as $camera){ ?>
+                            <div class="col-sm-2">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="camera__<?= $camera->id ?>" onchange="exibeEscondeCamera(this.checked, this.id);" checked>
+                                    <label class="form-check-label" for="flexSwitchCheckDefault" id="checkOpcao__<?= $camera->id ?>"><?= $camera->descricao ?></label>
+                                </div>
+                            </div>
+                        <?php }?>
+                    </div>
+                    <div class="row">
+                        <?php foreach($dados["cameras"] as $camera){ ?>
+                            <div class="col-sm-6 mt-3">
+                                <iframe src="http://localhost/portariaweb/usuario/novo" height="100%" width="100%" allowfullscreen id="camera_iframe_id_<?= $camera->id ?>"></iframe> 
+                            </div>
+                        <?php }?>
+                    </div>
                 </div>
             </div>
         </div>
