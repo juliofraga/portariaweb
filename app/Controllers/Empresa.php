@@ -107,7 +107,23 @@
         public function listaEmpresas($attr = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->empresaModel->listaEmpresas($attr);
+                if($attr == "listaPainel"){
+                    $empresas = $this->empresaModel->listaEmpresas("ativas");
+                    if($empresas){
+                        foreach($empresas as $empresa){
+                            echo "<empresa>";
+                            echo "<id>".$empresa->id;
+                            echo "</id>";
+                            echo "<cnpj>".$empresa->cnpj;
+                            echo "</cnpj>";
+                            echo "<nome_fantasia>".$empresa->nome_fantasia;
+                            echo "</nome_fantasia>";
+                            echo "</empresa>";
+                        }
+                    }
+                }else{
+                    return $this->empresaModel->listaEmpresas($attr);
+                }
             }else{
                 $this->helper->loginRedirect();
             }

@@ -8,6 +8,9 @@ $helper = new Helpers();
             tags: true
         });
     });
+    $(document).ready(function() {
+        carregaEmpresas();
+    });
 </script>
 <div id="conteudo" class="mb-5 mt-3">
     <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
@@ -41,10 +44,7 @@ $helper = new Helpers();
                     <div class="row mt-4">
                         <div class="col-sm-3">
                             <select class="js-example-basic-multiple w-100" name="empresa" id="empresa" onchange="buscaCnpjCpf(this.value)">
-                                <option value="" selected></option>
-                                <?php foreach($dados["empresas"] as $empresa){ ?>
-                                    <option value="<?= $empresa->id ?>"><?= $empresa->nome_fantasia ?> (<?= $empresa->cnpj ?>)</option>
-                                <?php }?>
+                                <option value="" selected>Selecione...</option>
                             </select>
                             <label for="empresa">Empresa</label>
                         </div>
@@ -62,7 +62,7 @@ $helper = new Helpers();
                             <label for="descricao">Descrição do Veículo</label>
                         </div>
                         <div class="col-sm-2">
-                            <select class="js-example-basic-multiple w-100" name="tipo" id="tipo">
+                            <select class="form-control w-100" name="tipo" id="tipo">
                                 <option value="">Selecione...</option>    
                                 <option value="1">Carro</option>
                                 <option value="2">Caminhão</option>
@@ -73,13 +73,11 @@ $helper = new Helpers();
                         </div>
                     </div>
                     <hr>
-                    <h6>Pessoas no Veículo</h6>
-                    <div class="row mt-2">
+                    <div class="row mt-4">
                         <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="pessoa" id="pessoa1">
-                                
+                            <select class="js-example-basic-multiple w-100" name="motorista" id="motorista">
                             </select>
-                            <label for="cpf">Nome</label>
+                            <label for="motorista">Nome Motorista</label>
                         </div>
                         <div class="col-sm-6">
                             <select class="js-example-basic-multiple w-100" name="cpf1" id="cpf1" onchange="validaAbrirCancela();">
@@ -89,25 +87,6 @@ $helper = new Helpers();
                                 <?php }?>
                             </select>
                             <label for="cpf">CPF</label>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="pessoa" id="pessoa2">
-                                
-                            </select>
-                            <label for="cpf">Nome</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="cpf" id="cpf2">
-                                
-                            </select>
-                            <label for="cpf">CPF</label>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-sm-3">
-                            <button class="w-100 btn btn-secondary btn-md" name="cadastrar" id="cadastrar" value="cadastrar">Adicionar Mais Pessoas (+)</button>
                         </div>
                     </div>
                 </div>

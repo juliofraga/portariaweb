@@ -172,13 +172,15 @@
             }
         }
 
-        public function retornaDescricaoVeiculo($veiculo_id)
+        public function retornaDescricaoTipoVeiculo($veiculo_id)
         {
             if($this->helper->sessionValidate()){
-                $veiculo = $this->veiculoModel->retornaDescricaoVeiculo($veiculo_id);
+                $veiculo = $this->veiculoModel->retornaDescricaoTipoVeiculo($veiculo_id);
                 if($veiculo){
                     echo "<veiculo>".$veiculo[0]->descricao;
                     echo "</veiculo>";
+                    echo "<tipoVeiculo>".$veiculo[0]->tipo;
+                    echo "</tipoVeiculo>";
                 }
             }else{
                 $this->helper->loginRedirect();

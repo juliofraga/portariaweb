@@ -29,7 +29,7 @@
                             <li><a class="dropdown-item" href="<?= URL ?>/empresa/consulta">Consulta Empresa</a></li>
                             <li><a class="dropdown-item" href="<?= URL ?>/veiculo/novo">Novo Veículo</a></li>
                             <li><a class="dropdown-item" href="<?= URL ?>/veiculo/consulta">Consulta Veículo</a></li>
-                            <li><a class="dropdown-item" href="<?= URL ?>/pessoa/consulta">Consulta Pessoa</a></li>
+                            <li><a class="dropdown-item" href="<?= URL ?>/motorista/consulta">Consulta Motorista</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

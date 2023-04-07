@@ -1,5 +1,5 @@
 <?php
-    class PessoaModel
+    class MotoristaModel
     {
         private $db;
 
@@ -94,6 +94,11 @@
             } catch (Throwable $th) {
                 return false;
             } 
+        }
+
+        public function retornaMotoristaPorEmpresa($empresa_id)
+        {
+            
         }
     }
 ?>

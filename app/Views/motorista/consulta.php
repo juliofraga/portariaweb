@@ -5,7 +5,7 @@
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
-            <h1>Pessoas - Consulta</h1>
+            <h1>Motorista - Consulta</h1>
             <hr class="divisor_horizontal">
             <form method="POST" action="<?= URL ?>/pessoa/consulta" id="form_busca_pessoa" name="form_busca_pessoa">
                 <div class="row">

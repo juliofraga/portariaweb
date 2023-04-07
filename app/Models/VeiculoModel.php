@@ -132,10 +132,10 @@
             }
         }
 
-        public function retornaDescricaoVeiculo($veiculo_id)
+        public function retornaDescricaoTipoVeiculo($veiculo_id)
         {
             try {
-                $this->db->query("SELECT descricao FROM veiculos WHERE id = :veiculo_id");
+                $this->db->query("SELECT descricao, tipo FROM veiculos WHERE id = :veiculo_id");
                 $this->db->bind("veiculo_id", $veiculo_id);
                 return $this->db->results();
             } catch (Throwable $th) {

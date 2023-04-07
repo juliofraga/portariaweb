@@ -261,6 +261,7 @@ function buscaCnpjCpf(empresa){
         success: function(result){
             retornaCnpjCpf(result);
             buscaVeiculos(empresa);
+            buscaMotorista(empresa);
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Empresa não encontrada');
@@ -276,6 +277,49 @@ function retornaCnpjCpf(result){
     }else{
         document.getElementById('cnpj').value = "";
     }
+}
+
+function buscaMotorista(empresa){
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        url: url+'/motorista/retornaMotoristaPorEmpresa/'+empresa,
+        success: function(result){
+            exibeMotorista(result);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Motorista não encontrado');
+        }
+    });
+}
+
+function exibeMotorista(result){
+    limpaListaMotorista();
+    var motoristaSelect = document.getElementById("motorista");
+    var opcao;
+    var motorista = result.split("<motorista>");
+    var id;
+    var nome_completo;
+    opcao = document.createElement("option");
+    opcao.text = "Selecione...";
+    opcao.value = "";
+    motoristaSelect.options.add(opcao);
+    for($i = 1; $i < motorista.length; $i++){
+        id = motorista[$i].split("<id>");
+        id = id[1].split("</id>");
+        nome_completo = motorista[$i].split("<nome_completo>");
+        nome_completo = nome_completo[1].split("</nome_completo>");
+        
+        // Cria elemento option no select
+        opcao = document.createElement("option");
+        opcao.text = nome_completo[0];
+        opcao.value = id[0];
+        motoristaSelect.options.add(opcao);
+    }
+}
+
+function limpaListaMotorista(){
+    var motorista = document.querySelectorAll("#motorista option");
+    motorista.forEach(o => o.remove());
 }
 
 function buscaVeiculos(empresa){
@@ -296,14 +340,26 @@ function buscaDescricaoVeiculo(veiculo){
     if(veiculo != ""){
         var url = document.getElementById('txtUrl').value;
         $.ajax({
-            url: url+'/veiculo/retornaDescricaoVeiculo/'+veiculo,
+            url: url+'/veiculo/retornaDescricaoTipoVeiculo/'+veiculo,
             success: function(result){
                 exibeDescricaoVeiculo(result);
+                selecionaTipoVeiculo(result);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log('Veículo não encontrada');
             }
         });
+    }
+}
+
+function selecionaTipoVeiculo(result){
+    var tipo = document.querySelector('#tipo');
+    var tipoVeiculo = result.split("<tipoVeiculo>");
+    var tipoVeiculo2 = tipoVeiculo[1].split("</tipoVeiculo>");
+    if(tipoVeiculo2[0] != "Array"){
+        tipo.selectedIndex = tipoVeiculo2[0];
+    }else{
+        tipo.selectedIndex = "";
     }
 }
 
@@ -319,8 +375,10 @@ function exibeDescricaoVeiculo(result){
 
 function limpaListaVeiculos(){
     var placa = document.querySelectorAll("#placa option");
+    var tipo = document.querySelector('#tipo');
     placa.forEach(o => o.remove());
     document.getElementById('descricao').value = "";
+    tipo.selectedIndex = "";
 }
 
 function exibeVeiculo(result){
@@ -344,6 +402,43 @@ function exibeVeiculo(result){
         opcao.text = placaRetorno[0];
         opcao.value = id[0];
         placa.options.add(opcao);
+    }
+}
+
+function carregaEmpresas(){
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        url: url+'/empresa/listaEmpresas/listaPainel',
+        success: function(result){
+            exibeEmpresa(result);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Erro ao carregar empresas');
+        }
+    });
+}
+
+function exibeEmpresa(result){
+    var empresa = document.getElementById("empresa");
+    var opcao;
+    var empresaRet = result.split("<empresa>");
+    var id;
+    var cnpj;
+    var nome_fantasia;
+    opcao = document.createElement("option");
+    for($i = 1; $i < empresaRet.length; $i++){
+        id = empresaRet[$i].split("<id>");
+        id = id[1].split("</id>");
+        cnpj = empresaRet[$i].split("<cnpj>");
+        cnpj = cnpj[1].split("</cnpj>");
+        nome_fantasia = empresaRet[$i].split("<nome_fantasia>");
+        nome_fantasia = nome_fantasia[1].split("</nome_fantasia>");
+        
+        // Cria elemento option no select
+        opcao = document.createElement("option");
+        opcao.text = nome_fantasia[0]+' - '+cnpj[0];
+        opcao.value = id[0];
+        empresa.options.add(opcao);
     }
 }
 

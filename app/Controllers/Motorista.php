@@ -1,19 +1,19 @@
 <?php
 
-    class Pessoa extends Controller{
+    class Motorista extends Controller{
         private $tipoSuccess = 'success';
         private $tipoError = 'error';
         private $tipoWarning = 'warning';
-        private $rotinaCad = 'pessoa';
-        private $rotinaAlt = 'pessoa';
+        private $rotinaCad = 'motorista';
+        private $rotinaAlt = 'motorista';
         public $helper;
-        public $pessoaModel;
+        public $motoristaModel;
         public $log;
 
         public function __construct()
         {
             $this->helper = new Helpers();
-            $this->pessoaModel = $this->model('PessoaModel');
+            $this->motoristaModel = $this->model('MotoristaModel');
             $this->log = new Logs();
         }
 
@@ -29,13 +29,13 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
-                $this->view('pessoa/consulta');
+                $this->view('motorista/consulta');
             }else{
                 $this->helper->redirectPage("/login/");
             } 
         }
 
-        public function listaPessoas($attr = null)
+        public function listaMotoristas($attr = null)
         {
             if($this->helper->sessionValidate()){
                 
@@ -44,10 +44,29 @@
             }
         }
 
-        public function listaPessoasPorFiltro($filtro)
+        public function listaMotoristasPorFiltro($filtro)
         {
             if($this->helper->sessionValidate()){
 
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function retornaMotoristaPorEmpresa($empresa_id)
+        {
+            if($this->helper->sessionValidate()){
+                $motoristas = $this->motoristaModel->retornaMotoristaPorEmpresa($empresa_id);
+                if($motoristas){
+                    foreach($motoristas as $motorista){
+                        echo "<motorista>";
+                        echo "<id>".$motorista->id;
+                        echo "</id>";
+                        echo "<nome_completo>".$motorista->nome_completo;
+                        echo "</nome_completo>";
+                        echo "</motorista>";
+                    }
+                }
             }else{
                 $this->helper->loginRedirect();
             }
@@ -62,7 +81,7 @@
             }
         }
 
-        private function updatePessoa($form, $dateTime)
+        private function updateMotorista($form, $dateTime)
         {
             if($this->helper->sessionValidate()){
 
@@ -71,7 +90,7 @@
             }
         }
 
-        private function ativarInativarPessoa($id, $acao, $dateTime){
+        private function ativarInativarMotorista($id, $acao, $dateTime){
             if($this->helper->sessionValidate()){
 
             }else{
@@ -79,7 +98,7 @@
             }
         }
 
-        private function deletarPessoa($id)
+        private function deletarMotorista($id)
         {
             if($this->helper->sessionValidate()){
 
