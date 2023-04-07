@@ -1,5 +1,3 @@
-var cnpjEmpresa;
-
 $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
 });
@@ -212,11 +210,11 @@ function exibeEscondeCamera(valor, id){
 }
 
 function validaAbrirCancela(){
-   /* if(document.getElementById('empresa').value != '' && (cnpjEmpresa != '' && cnpjEmpresa != undefined) && document.getElementById('placa').value != '' && document.getElementById('descricao').value != ''){
+    if(document.getElementById('empresa').value != '' && document.getElementById('cnpj').value.length > 17 && document.getElementById('placa').value != '' && document.getElementById('descricao').value != '' && document.getElementById('tipo').value != '' && document.getElementById('motorista').value != '' && document.getElementById('cpfMotorista').value.length > 13){
         exibeBtnAbrirCancela();
     }else{
         escondeBtnAbrirCancela();
-    }*/
+    }
 }
 
 
@@ -263,6 +261,11 @@ function buscaCnpjCpf(empresa){
         limpaListaMotorista();
         document.getElementById('cnpj').value = "";
         document.getElementById('cpfMotorista').value = "";
+        document.getElementById('tipo').selectedIndex = "";
+        document.getElementById('cnpj').removeAttribute("readonly");
+        document.getElementById('descricao').removeAttribute("readonly");
+        document.getElementById('tipo').removeAttribute("readonly");
+        document.getElementById('cpfMotorista').removeAttribute("readonly");
     }else{
         document.getElementById('cpfMotorista').value = "";
         var url = document.getElementById('txtUrl').value;
@@ -278,7 +281,9 @@ function buscaCnpjCpf(empresa){
             }
         });
     }
-    validaAbrirCancela();
+    setTimeout(() => {
+        validaAbrirCancela();
+    }, 500);
 }
 
 function retornaCnpjCpf(result){
@@ -287,8 +292,12 @@ function retornaCnpjCpf(result){
     if(cnpjcpf2[0] != "Array"){
         document.getElementById('cnpj').value = cnpjcpf2[0];
         cnpjEmpresa = cnpjcpf2[0];
+        document.getElementById('cnpj').setAttribute("readonly", true);
     }else{
         document.getElementById('cnpj').value = "";
+        document.getElementById('cnpj').removeAttribute("readonly");
+        document.getElementById('descricao').removeAttribute("readonly");
+        document.getElementById('tipo').removeAttribute("readonly");
     }
 }
 
@@ -333,6 +342,7 @@ function exibeMotorista(result){
 function buscaCpfMotorista(motorista){
     if(motorista == ""){
         document.getElementById('cpfMotorista').value = "";
+        document.getElementById('cpfMotorista').removeAttribute("readonly");
     }else{
         var url = document.getElementById('txtUrl').value;
         $.ajax({
@@ -345,7 +355,9 @@ function buscaCpfMotorista(motorista){
             }
         });
     }
-    validaAbrirCancela();
+    setTimeout(() => {
+        validaAbrirCancela();
+    }, 500);
 }
 
 function exibeCpfMotorista(result){
@@ -354,11 +366,14 @@ function exibeCpfMotorista(result){
         var cpf2 = cpf[1].split("</cpfMotorista>");
         if(cpf2[0] != "Array"){
             document.getElementById('cpfMotorista').value = cpf2[0];
+            document.getElementById('cpfMotorista').setAttribute("readonly", true);
         }else{
             document.getElementById('cpfMotorista').value = "";
+            document.getElementById('cpfMotorista').removeAttribute("readonly");
         }
     } catch (error){
         document.getElementById('cpfMotorista').value = "";
+        document.getElementById('cpfMotorista').removeAttribute("readonly");
     }
 }
 
@@ -397,8 +412,12 @@ function buscaDescricaoVeiculo(veiculo){
     }else{
         document.getElementById('descricao').value = "";
         document.getElementById('tipo').selectedIndex = "";
+        document.getElementById('descricao').removeAttribute("readonly");
+        document.getElementById('tipo').removeAttribute("readonly");
     }
-    validaAbrirCancela();
+    setTimeout(() => {
+        validaAbrirCancela();
+    }, 500);
 }
 
 function selecionaTipoVeiculo(result){
@@ -407,18 +426,33 @@ function selecionaTipoVeiculo(result){
     var tipoVeiculo2 = tipoVeiculo[1].split("</tipoVeiculo>");
     if(tipoVeiculo2[0] != "Array"){
         tipo.selectedIndex = tipoVeiculo2[0];
+        document.getElementById('descricao').setAttribute("readonly", true);
+        document.getElementById('tipo').setAttribute("readonly", true);
     }else{
         tipo.selectedIndex = "";
+        document.getElementById('descricao').removeAttribute("readonly");
+        document.getElementById('tipo').removeAttribute("readonly");
     }
 }
 
 function exibeDescricaoVeiculo(result){
-    var veiculo = result.split("<veiculo>");
-    var veiculo2 = veiculo[1].split("</veiculo>");
-    if(veiculo2[0] != "Array"){
-        document.getElementById('descricao').value = veiculo2[0];
-    }else{
+    try{
+        var veiculo = result.split("<veiculo>");
+        var veiculo2 = veiculo[1].split("</veiculo>");
+        if(veiculo2[0] != "Array"){
+            document.getElementById('descricao').value = veiculo2[0];
+            document.getElementById('descricao').setAttribute("readonly", true);
+            document.getElementById('tipo').setAttribute("readonly", true);
+        }else{
+            document.getElementById('descricao').value = "";
+            document.getElementById('descricao').removeAttribute("readonly");
+            document.getElementById('tipo').removeAttribute("readonly");
+        }
+    }catch(error){
         document.getElementById('descricao').value = "";
+        document.getElementById('tipo').selectedIndex = "";
+        document.getElementById('descricao').removeAttribute("readonly");
+        document.getElementById('tipo').removeAttribute("readonly");
     }
 }
 
