@@ -152,6 +152,39 @@
             }
         }
 
+        public function retornaVeiculosPorEmpresa($empresa_id)
+        {
+            if($this->helper->sessionValidate()){
+                $veiculos = "";
+                $veiculos = $this->veiculoModel->retornaVeiculosPorEmpresa($empresa_id);
+                if($veiculos){
+                    foreach($veiculos as $veiculo){
+                        echo "<veiculo>";
+                        echo "<id>".$veiculo->id;
+                        echo "</id>";
+                        echo "<placa>".$veiculo->placa;
+                        echo "</placa>";
+                        echo "</veiculo>";
+                    }
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function retornaDescricaoVeiculo($veiculo_id)
+        {
+            if($this->helper->sessionValidate()){
+                $veiculo = $this->veiculoModel->retornaDescricaoVeiculo($veiculo_id);
+                if($veiculo){
+                    echo "<veiculo>".$veiculo[0]->descricao;
+                    echo "</veiculo>";
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function updateVeiculo($form, $dateTime)
         {
             if($this->helper->sessionValidate()){

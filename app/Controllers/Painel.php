@@ -4,13 +4,16 @@
         public $helper;
         public $portaria;
         public $camera;
+        public $empresa;
 
         public function __construct()
         {
             require "Portaria.php";
+            require "Empresa.php";
             $this->helper = new Helpers();
             $this->portaria = new Portaria();
             $this->camera = new Camera();
+            $this->empresa = new Empresa();
         }
 
         public function index()
@@ -26,6 +29,7 @@
                     "portarias" => $this->portaria->listaPortariasPorUsuario($_SESSION["pw_id"], $_SESSION['pw_tipo_perfil']),
                     "portaria_selecionada" => $portaria,
                     "cameras" => $this->camera->listaCamerasPortaria($portaria),
+                    "empresas" => $this->empresa->listaEmpresas("ativas"),
                 ];
                 $this->view('painel', $dados);
             }else{

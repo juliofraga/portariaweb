@@ -119,5 +119,28 @@
                 return false;
             } 
         }
+
+        public function retornaVeiculosPorEmpresa($empresa_id)
+        {
+            try {
+                $this->db->query("SELECT id, placa FROM veiculos WHERE empresas_id = :empresa_id and situacao = :situacao");
+                $this->db->bind("situacao", 0);
+                $this->db->bind("empresa_id", $empresa_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function retornaDescricaoVeiculo($veiculo_id)
+        {
+            try {
+                $this->db->query("SELECT descricao FROM veiculos WHERE id = :veiculo_id");
+                $this->db->bind("veiculo_id", $veiculo_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
     }
 ?>

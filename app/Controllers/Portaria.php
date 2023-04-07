@@ -52,6 +52,8 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                var_dump($form);
+                /*
                 if(!empty($form["descricao"])){
                     $dateTime = $this->helper->returnDateTime();
                     $lastInsertId = $this->portariaModel->cadastrarPortaria($form, $dateTime);
@@ -79,7 +81,7 @@
                         $this->rotinaCad
                     );
                 }
-                $this->helper->redirectPage("/portaria/novo");
+                $this->helper->redirectPage("/portaria/novo");*/
             }else{
                 $this->helper->loginRedirect();
             }

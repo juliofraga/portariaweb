@@ -183,14 +183,18 @@ function submitSelecao(){
     document.form_seleciona_portaria.submit();
 }
 
-function exibeOperadaEntrada(){
+function exibeOperacaoEntrada(){
+    escondeBtnAbrirCancela();
+    escondeBtnFecharCancela();
     document.getElementById('operacaoSaida').style.display = 'none';
     $("#operacaoEntrada").fadeIn(1000);
     $("#operacaoEntrada").fadeIn();
     $('.js-example-basic-multiple').select2();
 }
 
-function exibeOperadaSaida(){
+function exibeOperacaoSaida(){
+    escondeBtnAbrirCancela();
+    escondeBtnFecharCancela();
     document.getElementById('operacaoEntrada').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
@@ -210,8 +214,7 @@ function validaAbrirCancela(){
 }
 
 function abreCancela(){
-    $("#btnAbrirCancela").fadeIn(1000);
-    $("#btnAbrirCancela").fadeIn();
+    exibeBtnAbrirCancela();
 }
 
 function validaFecharCancela(){
@@ -222,15 +225,126 @@ function validaFecharCancela(){
 }
 
 function fechaCancela(){
+    exibeBtnFecharCancela();
+}
+
+function executaFechamentoCancela(){
+    escondeBtnAbrirCancela();
+    escondeBtnFecharCancela();
+}
+
+function exibeBtnAbrirCancela(){
+    $("#btnAbrirCancela").fadeIn(1000);
+    $("#btnAbrirCancela").fadeIn();
+}
+
+function escondeBtnAbrirCancela(){
+    $("#btnAbrirCancela").fadeOut(1000);
+    $("#btnAbrirCancela").fadeOut();
+}
+
+function exibeBtnFecharCancela(){
     $("#btnFecharCancela").fadeIn(1000);
     $("#btnFecharCancela").fadeIn(); 
 }
 
-function executaFechamentoCancela(){
-    $("#btnAbrirCancela").fadeOut(1000);
-    $("#btnAbrirCancela").fadeOut();
+function escondeBtnFecharCancela(){
     $("#btnFecharCancela").fadeOut(1000);
     $("#btnFecharCancela").fadeOut();
+}
+
+
+function buscaCnpjCpf(empresa){
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        url: url+'/empresa/retornaCnpjCpf/'+empresa,
+        success: function(result){
+            retornaCnpjCpf(result);
+            buscaVeiculos(empresa);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Empresa não encontrada');
+        }
+    });
+}
+
+function retornaCnpjCpf(result){
+    var cnpjcpf = result.split("<cnpjcpf>");
+    var cnpjcpf2 = cnpjcpf[1].split("</cnpjcpf>");
+    if(cnpjcpf2[0] != "Array"){
+        document.getElementById('cnpj').value = cnpjcpf2[0];
+    }else{
+        document.getElementById('cnpj').value = "";
+    }
+}
+
+function buscaVeiculos(empresa){
+    limpaListaVeiculos();
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        url: url+'/veiculo/retornaVeiculosPorEmpresa/'+empresa,
+        success: function(result){
+            exibeVeiculo(result);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Empresa não encontrada');
+        }
+    });
+}
+
+function buscaDescricaoVeiculo(veiculo){
+    if(veiculo != ""){
+        var url = document.getElementById('txtUrl').value;
+        $.ajax({
+            url: url+'/veiculo/retornaDescricaoVeiculo/'+veiculo,
+            success: function(result){
+                exibeDescricaoVeiculo(result);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Veículo não encontrada');
+            }
+        });
+    }
+}
+
+function exibeDescricaoVeiculo(result){
+    var veiculo = result.split("<veiculo>");
+    var veiculo2 = veiculo[1].split("</veiculo>");
+    if(veiculo2[0] != "Array"){
+        document.getElementById('descricao').value = veiculo2[0];
+    }else{
+        document.getElementById('descricao').value = "";
+    }
+}
+
+function limpaListaVeiculos(){
+    var placa = document.querySelectorAll("#placa option");
+    placa.forEach(o => o.remove());
+    document.getElementById('descricao').value = "";
+}
+
+function exibeVeiculo(result){
+    var placa = document.getElementById("placa");
+    var opcao;
+    var veiculo = result.split("<veiculo>");
+    var id;
+    var placaRetorno;
+    opcao = document.createElement("option");
+    opcao.text = "Selecione...";
+    opcao.value = "";
+    placa.options.add(opcao);
+    for($i = 1; $i < veiculo.length; $i++){
+        id = veiculo[$i].split("<id>");
+        id = id[1].split("</id>");
+        placaRetorno = veiculo[$i].split("<placa>");
+        placaRetorno = placaRetorno[1].split("</placa>");
+        
+        // Cria elemento option no select
+        opcao = document.createElement("option");
+        opcao.text = placaRetorno[0];
+        opcao.value = id[0];
+        placa.options.add(opcao);
+    }
 }
 
 /*

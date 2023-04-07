@@ -143,6 +143,20 @@
             }
         }
 
+        public function retornaCnpjCpf($empresa_id)
+        {
+            if($this->helper->sessionValidate()){
+                $cnpjCpf = "";
+                $cnpjCpf = $this->empresaModel->retornaCnpjCpf($empresa_id);
+                if($cnpjCpf){
+                    $cnpjCpf = $cnpjCpf[0]->cnpj;
+                }
+                echo "<cnpjcpf>" . $cnpjCpf . "</cnpjcpf>";
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function updateEmpresa($form, $dateTime)
         {
             if($this->helper->sessionValidate()){

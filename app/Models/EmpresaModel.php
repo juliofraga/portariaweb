@@ -136,5 +136,18 @@
                 return false;
             } 
         }
+
+        public function retornaCnpjCpf($empresa_id)
+        {
+            try {
+                $this->db->query("SELECT cnpj FROM empresas WHERE id = :id and situacao = :situacao");
+                $this->db->bind("situacao", 0);
+                $this->db->bind("id", $empresa_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
     }
 ?>
