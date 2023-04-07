@@ -1,3 +1,5 @@
+var cnpjEmpresa;
+
 $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
 });
@@ -210,12 +212,13 @@ function exibeEscondeCamera(valor, id){
 }
 
 function validaAbrirCancela(){
-    abreCancela();
+   /* if(document.getElementById('empresa').value != '' && (cnpjEmpresa != '' && cnpjEmpresa != undefined) && document.getElementById('placa').value != '' && document.getElementById('descricao').value != ''){
+        exibeBtnAbrirCancela();
+    }else{
+        escondeBtnAbrirCancela();
+    }*/
 }
 
-function abreCancela(){
-    exibeBtnAbrirCancela();
-}
 
 function validaFecharCancela(){
     document.getElementById('btnAbrirCancela').disabled = 'true';
@@ -255,18 +258,27 @@ function escondeBtnFecharCancela(){
 
 
 function buscaCnpjCpf(empresa){
-    var url = document.getElementById('txtUrl').value;
-    $.ajax({
-        url: url+'/empresa/retornaCnpjCpf/'+empresa,
-        success: function(result){
-            retornaCnpjCpf(result);
-            buscaVeiculos(empresa);
-            buscaMotorista(empresa);
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.log('Empresa não encontrada');
-        }
-    });
+    if(empresa == ""){
+        limpaListaVeiculos();
+        limpaListaMotorista();
+        document.getElementById('cnpj').value = "";
+        document.getElementById('cpfMotorista').value = "";
+    }else{
+        document.getElementById('cpfMotorista').value = "";
+        var url = document.getElementById('txtUrl').value;
+        $.ajax({
+            url: url+'/empresa/retornaCnpjCpf/'+empresa,
+            success: function(result){
+                retornaCnpjCpf(result);
+                buscaVeiculos(empresa);
+                buscaMotorista(empresa);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Empresa não encontrada');
+            }
+        });
+    }
+    validaAbrirCancela();
 }
 
 function retornaCnpjCpf(result){
@@ -274,6 +286,7 @@ function retornaCnpjCpf(result){
     var cnpjcpf2 = cnpjcpf[1].split("</cnpjcpf>");
     if(cnpjcpf2[0] != "Array"){
         document.getElementById('cnpj').value = cnpjcpf2[0];
+        cnpjEmpresa = cnpjcpf2[0];
     }else{
         document.getElementById('cnpj').value = "";
     }
@@ -317,6 +330,38 @@ function exibeMotorista(result){
     }
 }
 
+function buscaCpfMotorista(motorista){
+    if(motorista == ""){
+        document.getElementById('cpfMotorista').value = "";
+    }else{
+        var url = document.getElementById('txtUrl').value;
+        $.ajax({
+            url: url+'/motorista/retornaCpfMotorista/'+motorista,
+            success: function(result){
+                exibeCpfMotorista(result);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('CPF Motorista não encontrado');
+            }
+        });
+    }
+    validaAbrirCancela();
+}
+
+function exibeCpfMotorista(result){
+    try{
+        var cpf = result.split("<cpfMotorista>");
+        var cpf2 = cpf[1].split("</cpfMotorista>");
+        if(cpf2[0] != "Array"){
+            document.getElementById('cpfMotorista').value = cpf2[0];
+        }else{
+            document.getElementById('cpfMotorista').value = "";
+        }
+    } catch (error){
+        document.getElementById('cpfMotorista').value = "";
+    }
+}
+
 function limpaListaMotorista(){
     var motorista = document.querySelectorAll("#motorista option");
     motorista.forEach(o => o.remove());
@@ -349,7 +394,11 @@ function buscaDescricaoVeiculo(veiculo){
                 console.log('Veículo não encontrada');
             }
         });
+    }else{
+        document.getElementById('descricao').value = "";
+        document.getElementById('tipo').selectedIndex = "";
     }
+    validaAbrirCancela();
 }
 
 function selecionaTipoVeiculo(result){

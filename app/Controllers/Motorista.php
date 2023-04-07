@@ -72,6 +72,21 @@
             }
         }
 
+        public function retornaCpfMotorista($motorista_id)
+        {
+            if($this->helper->sessionValidate()){
+                
+                $cpf = "";
+                $cpf = $this->motoristaModel->retornaCpfMotorista($motorista_id);
+                if($cpf){
+                    $cpf = $cpf[0]->cpf;
+                }
+                echo "<cpfMotorista>" . $cpf . "</cpfMotorista>";
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function alterar()
         {
             if($this->helper->sessionValidate()){

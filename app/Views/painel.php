@@ -40,7 +40,7 @@ $helper = new Helpers();
                     </div>
                 </div>
                 <div id="operacaoEntrada" style="margin-top:30px; display:block;">
-                    <h4><u>Nova Entrada</u></h4>
+                    <h4>NOVA ENTRADA</h4>
                     <div class="row mt-4">
                         <div class="col-sm-3">
                             <select class="js-example-basic-multiple w-100" name="empresa" id="empresa" onchange="buscaCnpjCpf(this.value)">
@@ -49,7 +49,7 @@ $helper = new Helpers();
                             <label for="empresa">Empresa</label>
                         </div>
                         <div class="col-sm-3">
-                            <input type="text" class="form-control w-100" name="cnpj" id="cnpj">
+                            <input type="text" onblur="validaAbrirCancela();" class="form-control w-100" name="cnpj" id="cnpj" maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' >
                             <label for="cnpj">CNPJ / CPF</label>
                         </div>
                         <div class="col-sm-2">
@@ -58,11 +58,11 @@ $helper = new Helpers();
                             <label for="placa">Placa do Veículo</label>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control w-100" name="descricao" id="descricao">
+                            <input type="text" class="form-control w-100" name="descricao" id="descricao" onblur="validaAbrirCancela();">
                             <label for="descricao">Descrição do Veículo</label>
                         </div>
                         <div class="col-sm-2">
-                            <select class="form-control w-100" name="tipo" id="tipo">
+                            <select class="form-control w-100" name="tipo" id="tipo" onchange="validaAbrirCancela();">
                                 <option value="">Selecione...</option>    
                                 <option value="1">Carro</option>
                                 <option value="2">Caminhão</option>
@@ -72,21 +72,15 @@ $helper = new Helpers();
                             <label for="tipo">Tipo do Veículo</label>
                         </div>
                     </div>
-                    <hr>
                     <div class="row mt-4">
                         <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="motorista" id="motorista">
+                            <select class="js-example-basic-multiple w-100" name="motorista" id="motorista" onchange="buscaCpfMotorista(this.value)">
                             </select>
                             <label for="motorista">Nome Motorista</label>
                         </div>
                         <div class="col-sm-6">
-                            <select class="js-example-basic-multiple w-100" name="cpf1" id="cpf1" onchange="validaAbrirCancela();">
-                                <?php foreach($dados["cameras"] as $camera){ ?>
-                                    <option>a</option>
-                                    <option>b</option>
-                                <?php }?>
-                            </select>
-                            <label for="cpf">CPF</label>
+                            <input type="text" class="form-control w-100" name="cpfMotorista" id="cpfMotorista" onchange="validaAbrirCancela();" maxlength="14" onkeypress='mascaraMutuario(this,cpfCnpj)' onkeyup="validaAbrirCancela();" onblur="validaAbrirCancela();">
+                            <label for="cpfMotorista">CPF</label>
                         </div>
                     </div>
                 </div>
@@ -99,7 +93,7 @@ $helper = new Helpers();
                     </div>
                 </div>
                 <div id="operacaoSaida" style="margin-top:30px; display:none;">
-                    <h4><u>Nova Saída</u></h4>
+                    <h4>NOVA SAÍDA</h4>
                 </div>
                 <hr>
                 <div id="camerasPortaria">

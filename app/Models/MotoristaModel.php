@@ -95,10 +95,27 @@
                 return false;
             } 
         }
-
+        
         public function retornaMotoristaPorEmpresa($empresa_id)
         {
-            
+            try {
+                $this->db->query("SELECT p.id, p.nome_completo FROM pessoas p, pessoas_has_veiculos pv, veiculos v, empresas e WHERE p.id = pv.pessoas_id AND pv.veiculos_id = v.id AND v.empresas_id = e.id AND e.id = :empresa_id");
+                $this->db->bind("empresa_id", $empresa_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function retornaCpfMotorista($motorista_id)
+        {
+            try {
+                $this->db->query("SELECT cpf FROM pessoas WHERE id = :id");
+                $this->db->bind("id", $motorista_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
         }
     }
 ?>
