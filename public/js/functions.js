@@ -244,7 +244,27 @@ function capturaImagens(){
 }
 
 function registraOperacao(){
-    return true;
+    var url = document.getElementById('txtUrl').value;
+    var empresa = document.getElementById('empresa').value;
+    var cnpj = document.getElementById('cnpj').value;
+    var placa = document.getElementById('placa').value;
+    var descricao = document.getElementById('descricao').value;
+    var tipo = document.getElementById('tipo').value;
+    var motorista = document.getElementById('motorista').value;
+    var cpfMotorista = document.getElementById('cpfMotorista').value;
+    var operador = document.getElementById('loginOperador').value;
+    $.ajax({
+        type: "POST",
+        data: "empresa="+empresa+"&cnpj="+cnpj+"&placa="+placa+"&descricao="+descricao+"&tipo="+tipo+"&motorista="+motorista+"&cpfMotorista="+cpfMotorista+"&usuario="+operador,
+        url: url+'/operacao/registrar',
+        success: function(result){
+            console.log(result)
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+            return false;
+        }
+    });
 }
 
 function fechaCancela(){

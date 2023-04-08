@@ -1,6 +1,7 @@
 <?php 
 
 $helper = new Helpers();
+
 ?>
 <script>
     $(document).ready(function() {
@@ -18,6 +19,7 @@ $helper = new Helpers();
             <div class="col-sm-1"></div>
             <div class="col-sm-2">
                 <input type="hidden" id="txtUrl" value="<?= URL ?>">
+                <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_login"] ?>">
                 <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
                     <?php foreach($dados["portarias"] as $portaria){ ?>
                         <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
@@ -52,7 +54,7 @@ $helper = new Helpers();
                             <label for="cnpj">CNPJ / CPF</label>
                         </div>
                         <div class="col-sm-2">
-                            <select class="js-example-basic-multiple w-100" name="placa" id="placa" onchange="buscaDescricaoVeiculo(this.value)">
+                            <select class="js-example-basic-multiple w-100" name="placa" id="placa" onchange="buscaDescricaoVeiculo(this.value)" >
                             </select>
                             <label for="placa">Placa do Veículo</label>
                         </div>
