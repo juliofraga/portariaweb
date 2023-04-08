@@ -44,7 +44,6 @@ $helper = new Helpers();
                     <div class="row mt-4">
                         <div class="col-sm-3">
                             <select class="js-example-basic-multiple w-100" name="empresa" id="empresa" onchange="buscaCnpjCpf(this.value)">
-                                <option value="" selected>Selecione...</option>
                             </select>
                             <label for="empresa">Empresa</label>
                         </div>
@@ -86,10 +85,38 @@ $helper = new Helpers();
                 </div>
                 <div class="row mt-4">
                     <div class="col-sm-6 mt-2">
-                        <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancela" id="btnAbrirCancela" style="display: none;" onclick="validaFecharCancela();">Abrir Cancela</button>
+                        <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancela" id="btnAbrirCancela" style="display: none;" onclick="executaOperacaoAbrirCancela();">Abrir Cancela</button>
                     </div>
                     <div class="col-sm-6  mt-2">
-                        <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancela" id="btnFecharCancela" style="display: none;" onclick="executaFechamentoCancela()">Fechar Cancela</button>
+                        <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancela" id="btnFecharCancela" style="display: none;" onclick="executaOperacaoFechamentoCancela()">Fechar Cancela</button>
+                    </div>
+                </div>
+                <div class="row mt-4" id="alertaErrorAbrirCancela" style="display: none">
+                    <div class="col-sm-12 mt-2">
+                        <div class="alert alert-danger" role="alert">
+                            Houve um problema na comunicação com a cancela e ela não pode ser aberta. Operação não realizada com sucesso!
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4" id="alertaErrorCapturaImagens" style="display: none">
+                    <div class="col-sm-12 mt-2">
+                        <div class="alert alert-warning" role="alert">
+                            Houve um problema na captura das imagens desta operação.
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4" id="alertaErrorFecharCancela" style="display: none">
+                    <div class="col-sm-12 mt-2">
+                        <div class="alert alert-danger" role="alert">
+                            Houve um problema na comunicação com a cancela e ela não pode ser fechada. Operação não realizada com sucesso!
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4" id="alertaErrorRegistrarOperacao" style="display: none">
+                    <div class="col-sm-12 mt-2">
+                        <div class="alert alert-danger" role="alert">
+                            Houve um problema no registro desta operação, comunique o administrador do sistema!
+                        </div>
                     </div>
                 </div>
                 <div id="operacaoSaida" style="margin-top:30px; display:none;">

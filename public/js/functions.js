@@ -217,21 +217,54 @@ function validaAbrirCancela(){
     }
 }
 
+function executaOperacaoAbrirCancela(){
+    if(abreCancela()){
+        if(!capturaImagens()){
+            document.getElementById('alertaErrorCapturaImagens').style.display = 'block';
+        }
+        if(registraOperacao()){
+            document.getElementById('btnAbrirCancela').disabled = 'true';
+            setTimeout(() => {
+                fechaCancela();
+            }, 2000);
+        }else{
+            document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+        }
+    }else{
+        document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
+    }
+}
 
-function validaFecharCancela(){
-    document.getElementById('btnAbrirCancela').disabled = 'true';
-    setTimeout(() => {
-        fechaCancela();
-    }, 2000);
+function abreCancela(){
+    return true;
+}
+
+function capturaImagens(){
+    return true;
+}
+
+function registraOperacao(){
+    return true;
 }
 
 function fechaCancela(){
     exibeBtnFecharCancela();
 }
 
-function executaFechamentoCancela(){
+function executaOperacaoFechamentoCancela(){
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
+    document.getElementById('alertaErrorCapturaImagens').style.display = 'none';
+    document.getElementById('alertaErrorRegistrarOperacao').style.display = 'none';
+    document.getElementById('alertaErrorAbrirCancela').style.display = 'none';
+    limpaCamposEntrada();
+    redefiniListaEmpresas();
+}
+
+function redefiniListaEmpresas(){
+    var empresa = document.querySelectorAll("#empresa option");
+    empresa.forEach(o => o.remove());
+    carregaEmpresas();
 }
 
 function exibeBtnAbrirCancela(){
@@ -254,18 +287,21 @@ function escondeBtnFecharCancela(){
     $("#btnFecharCancela").fadeOut();
 }
 
+function limpaCamposEntrada(){
+    limpaListaVeiculos();
+    limpaListaMotorista();
+    document.getElementById('cnpj').value = "";
+    document.getElementById('cpfMotorista').value = "";
+    document.getElementById('tipo').selectedIndex = "";
+    document.getElementById('cnpj').removeAttribute("readonly");
+    document.getElementById('descricao').removeAttribute("readonly");
+    document.getElementById('tipo').removeAttribute("readonly");
+    document.getElementById('cpfMotorista').removeAttribute("readonly");
+}
 
 function buscaCnpjCpf(empresa){
     if(empresa == ""){
-        limpaListaVeiculos();
-        limpaListaMotorista();
-        document.getElementById('cnpj').value = "";
-        document.getElementById('cpfMotorista').value = "";
-        document.getElementById('tipo').selectedIndex = "";
-        document.getElementById('cnpj').removeAttribute("readonly");
-        document.getElementById('descricao').removeAttribute("readonly");
-        document.getElementById('tipo').removeAttribute("readonly");
-        document.getElementById('cpfMotorista').removeAttribute("readonly");
+        limpaCamposEntrada();
     }else{
         document.getElementById('cpfMotorista').value = "";
         var url = document.getElementById('txtUrl').value;
@@ -490,6 +526,7 @@ function exibeVeiculo(result){
 
 function carregaEmpresas(){
     var url = document.getElementById('txtUrl').value;
+    
     $.ajax({
         url: url+'/empresa/listaEmpresas/listaPainel',
         success: function(result){
@@ -509,6 +546,9 @@ function exibeEmpresa(result){
     var cnpj;
     var nome_fantasia;
     opcao = document.createElement("option");
+    opcao.text = "Selecione...";
+    opcao.value = "";
+    empresa.options.add(opcao);
     for($i = 1; $i < empresaRet.length; $i++){
         id = empresaRet[$i].split("<id>");
         id = id[1].split("</id>");
