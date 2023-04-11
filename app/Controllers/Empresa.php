@@ -62,43 +62,68 @@
             } 
         }
 
-        public function cadastrar()
+        public function cadastrar($cnpj = null, $nome_fantasia = null, $tipo = null)
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if(!empty($form["cnpj"]) and !empty($form["nome_fantasia"])){
-                    if(!$this->empresaModel->verificaEmpresa($form["cnpj"])){
+                if((!empty($form["cnpj"]) and !empty($form["nome_fantasia"])) or ($tipo == "registro")){
+                    if(!$this->verificaEmpresa($form["cnpj"]) and !$this->verificaEmpresa($cnpj)){
                         $dateTime = $this->helper->returnDateTime();
-                        $lastInsertId = $this->empresaModel->cadastrarEmpresa($form, $dateTime);
+                        if($tipo == "registro"){
+                            $form = [
+                                "cnpj" => $cnpj,
+                                "nome_fantasia" => $nome_fantasia
+                            ];
+                        }
+                        $lastInsertId = $this->empresaModel->cadastrarEmpresa($form, $dateTime, $tipo);
                         if($lastInsertId != null){
-                            $this->helper->setReturnMessage(
-                                $this->tipoSuccess,
-                                'Empresa cadastrada com sucesso!',
-                                $this->rotinaCad
-                            );
+                            if($tipo == null){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoSuccess,
+                                    'Empresa cadastrada com sucesso!',
+                                    $this->rotinaCad
+                                );
+                            }
                             $this->log->registraLog($_SESSION['pw_id'], "Empresa", $lastInsertId, 0, $dateTime);
+                            return $lastInsertId;
                         }else{
+                            if($tipo == null){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoError,
+                                    'Não foi possível cadastrar a empresa, tente novamente!',
+                                    $this->rotinaCad
+                                );
+                            }
+                        }
+                    }else{
+                        if($tipo == null){
                             $this->helper->setReturnMessage(
                                 $this->tipoError,
-                                'Não foi possível cadastrar a empresa, tente novamente!',
+                                "Não foi possível cadastrar a empresa, já existe outra empresa cadastrada com esse CNPJ / CPF(".$form["cnpj"].")",
                                 $this->rotinaCad
                             );
                         }
-                    }else{
+                    }
+                }else{
+                    if($tipo == null){
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            "Não foi possível cadastrar a empresa, já existe outra empresa cadastrada com esse CNPJ / CPF(".$form["cnpj"].")",
+                            'CNPJ/CPF e Nome Fantasia são de preenchimento obrigatórios, tente novamente!',
                             $this->rotinaCad
                         );
                     }
-                }else{
-                    $this->helper->setReturnMessage(
-                        $this->tipoError,
-                        'CNPJ/CPF e Nome Fantasia são de preenchimento obrigatórios, tente novamente!',
-                        $this->rotinaCad
-                    );
                 }
-                $this->helper->redirectPage("/empresa/nova");
+                if($tipo == null){
+                    $this->helper->redirectPage("/empresa/nova");
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function verificaEmpresa($cnpj, $empresa_id = null){
+            if($this->helper->sessionValidate()){
+                return $this->empresaModel->verificaEmpresa($cnpj, $empresa_id);
             }else{
                 $this->helper->loginRedirect();
             }

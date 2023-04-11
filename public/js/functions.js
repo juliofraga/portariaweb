@@ -1,3 +1,5 @@
+var idOperacao;
+
 $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
 });
@@ -91,7 +93,6 @@ function ativaDesativaConfig(num){
 
 function atualizaConfiguracao(id, valor){
     var url = document.getElementById('txtUrl').value;
-    console.log(valor);
     $.ajax({
         url: url+'/configuracoes/atualizaConfiguracao/'+id+'/'+valor,
         success: function(result){
@@ -198,7 +199,27 @@ function exibeOperacaoSaida(){
     document.getElementById('operacaoEntrada').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
+    buscaVeiculosParaSaida();
 }
+
+function buscaVeiculosParaSaida(){
+    var url = document.getElementById('txtUrl').value;
+    var portaria = document.getElementById('portaria_id').value;
+    $.ajax({
+        type: "POST",
+        data: "portaria="+portaria,
+        url: url+'/operacao/buscaVeiculosParaSaida',
+        success: function(result){
+            var retorno = result.split("<registroOperacao>");
+            var retorno2 = retorno[1].split("</registroOperacao>");
+            console.log(retorno2[0]);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao buscar veículos');
+        }
+    });
+}
+
 
 function exibeEscondeCamera(valor, id){
     newId = id.split("camera__");
@@ -222,14 +243,7 @@ function executaOperacaoAbrirCancela(){
         if(!capturaImagens()){
             document.getElementById('alertaErrorCapturaImagens').style.display = 'block';
         }
-        if(registraOperacao()){
-            document.getElementById('btnAbrirCancela').disabled = 'true';
-            setTimeout(() => {
-                fechaCancela();
-            }, 2000);
-        }else{
-            document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
-        }
+        registraOperacao();
     }else{
         document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
     }
@@ -253,16 +267,29 @@ function registraOperacao(){
     var motorista = document.getElementById('motorista').value;
     var cpfMotorista = document.getElementById('cpfMotorista').value;
     var operador = document.getElementById('loginOperador').value;
+    var portaria = document.getElementById('portaria_id').value;
     $.ajax({
         type: "POST",
-        data: "empresa="+empresa+"&cnpj="+cnpj+"&placa="+placa+"&descricao="+descricao+"&tipo="+tipo+"&motorista="+motorista+"&cpfMotorista="+cpfMotorista+"&usuario="+operador,
-        url: url+'/operacao/registrar',
+        data: "empresa="+empresa+"&cnpj="+cnpj+"&placa="+placa+"&descricao="+descricao+"&tipo="+tipo+"&motorista="+motorista+"&cpfMotorista="+cpfMotorista+"&usuario="+operador+"&portaria="+portaria,
+        url: url+'/operacao/registrarEntrada',
         success: function(result){
-            console.log(result)
+            var retorno = result.split("<registroOperacao>");
+            var retorno2 = retorno[1].split("</registroOperacao>");
+            if(retorno2[0] == "SUCESSO"){
+                var retId = result.split("<idOperacao>");
+                var retId2 = retId[1].split("</idOperacao>");
+                idOperacao = retId2[0];
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'none';
+                document.getElementById('btnAbrirCancela').disabled = 'true';
+                setTimeout(() => {
+                    fechaCancela();
+                }, 2000);
+            }else{
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Falha ao registrar Operação');
-            return false;
         }
     });
 }
@@ -272,13 +299,30 @@ function fechaCancela(){
 }
 
 function executaOperacaoFechamentoCancela(){
-    escondeBtnAbrirCancela();
-    escondeBtnFecharCancela();
-    document.getElementById('alertaErrorCapturaImagens').style.display = 'none';
-    document.getElementById('alertaErrorRegistrarOperacao').style.display = 'none';
-    document.getElementById('alertaErrorAbrirCancela').style.display = 'none';
-    limpaCamposEntrada();
-    redefiniListaEmpresas();
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        type: "POST",
+        data: "operacao="+idOperacao,
+        url: url+'/operacao/registrarFechamentoCancela/entrada',
+        success: function(result){
+            var retorno = result.split("<registroOperacao>");
+            var retorno2 = retorno[1].split("</registroOperacao>");
+            if(retorno2[0] == "SUCESSO"){
+                escondeBtnAbrirCancela();
+                escondeBtnFecharCancela();
+                document.getElementById('alertaErrorCapturaImagens').style.display = 'none';
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'none';
+                document.getElementById('alertaErrorAbrirCancela').style.display = 'none';
+                limpaCamposEntrada();
+                redefiniListaEmpresas();
+            }else{
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+        }
+    });
 }
 
 function redefiniListaEmpresas(){
@@ -290,6 +334,7 @@ function redefiniListaEmpresas(){
 function exibeBtnAbrirCancela(){
     $("#btnAbrirCancela").fadeIn(1000);
     $("#btnAbrirCancela").fadeIn();
+    document.getElementById('btnAbrirCancela').removeAttribute("disabled");
 }
 
 function escondeBtnAbrirCancela(){

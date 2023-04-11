@@ -19,7 +19,8 @@ $helper = new Helpers();
             <div class="col-sm-1"></div>
             <div class="col-sm-2">
                 <input type="hidden" id="txtUrl" value="<?= URL ?>">
-                <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_login"] ?>">
+                <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
+                <input type="hidden" id="portaria_id" value="<?= $dados["portaria_selecionada"] ?>">
                 <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
                     <?php foreach($dados["portarias"] as $portaria){ ?>
                         <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
@@ -121,8 +122,15 @@ $helper = new Helpers();
                         </div>
                     </div>
                 </div>
-                <div id="operacaoSaida" style="margin-top:30px; display:none;">
+                <div id="operacaoSaida" style="display:none;">
                     <h4>NOVA SAÍDA</h4>
+                    <div class="row mt-4">
+                        <div class="col-sm-12">
+                            <select class="form-control w-100" name="veiculoSaida" id="veiculoSaida">
+                            </select>
+                            <label for="veiculo">Veículo</label>
+                        </div>
+                    </div>
                 </div>
                 <hr>
                 <div id="camerasPortaria">

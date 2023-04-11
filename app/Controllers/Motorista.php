@@ -26,6 +26,21 @@
             }  
         }
 
+        public function cadastrar($nomeMotorista, $cpfMotorista, $veiculo_id)
+        {
+            if($this->helper->sessionValidate()){
+                $dateTime = $this->helper->returnDateTime();
+                $lastInsertId = $this->motoristaModel->cadastrarMotorista($nomeMotorista, $cpfMotorista, $dateTime);
+                if($lastInsertId != null){
+                    $this->motoristaModel->ligaMotoristaVeiculo($lastInsertId, $veiculo_id);
+                    $this->log->registraLog($_SESSION['pw_id'], "Motorista", $lastInsertId, 0, $dateTime);
+                    return $lastInsertId;
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
+            }  
+        }
+
         public function consulta()
         {
             if($this->helper->sessionValidate()){
@@ -48,6 +63,15 @@
         {
             if($this->helper->sessionValidate()){
 
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function verificaMotorista($motorista_id)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->motoristaModel->verificaMotorista($motorista_id);
             }else{
                 $this->helper->loginRedirect();
             }

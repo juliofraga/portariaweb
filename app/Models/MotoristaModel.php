@@ -8,15 +8,29 @@
             $this->db = new Database();
         }
 
-        public function cadastrarPessoa($dados, $dataHora)
+        public function cadastrarMotorista($nomeMotorista, $cpfMotorista, $dateTime)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
+                $this->db->query("INSERT INTO pessoas(nome_completo, cpf, created_at) VALUES (:nome_completo, :cpf, :created_at)");
+                $this->db->bind("nome_completo", $nomeMotorista);
+                $this->db->bind("cpf", $cpfMotorista);
+                $this->db->bind("created_at", $dateTime);
+                if($this->db->execQuery()){
+                    return $this->db->lastInsertId();
+                }else{
+                    return null;
                 }
-                $this->db->query("INSERT INTO pessoas() VALUES ()");
-                $this->db->bind("created_at", $dataHora);
+            } catch (Throwable $th) {
+                return null;
+            }   
+        }
+
+        public function ligaMotoristaVeiculo($motorista_id, $veiculo_id)
+        {
+            try {
+                $this->db->query("INSERT INTO pessoas_has_veiculos(pessoas_id, veiculos_id) VALUES (:motorista, :veiculo)");
+                $this->db->bind("motorista", $motorista_id);
+                $this->db->bind("veiculo", $veiculo_id);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
                 }else{
@@ -113,6 +127,21 @@
                 $this->db->query("SELECT cpf FROM pessoas WHERE id = :id");
                 $this->db->bind("id", $motorista_id);
                 return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function verificaMotorista($motorista_id)
+        {
+            try {
+                $this->db->query("SELECT id FROM pessoas WHERE id = :id");
+                $this->db->bind("id", $motorista_id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
             } catch (Throwable $th) {
                 return null;
             }

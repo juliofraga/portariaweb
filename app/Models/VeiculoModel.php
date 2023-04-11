@@ -47,6 +47,21 @@
             } 
         }
 
+        public function verificaVeiculoPorId($veiculo_id)
+        {
+            try {
+                $this->db->query("SELECT id FROM veiculos WHERE id = :id");
+                $this->db->bind("id", $veiculo_id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return false;
+            } 
+        }
+
         public function alterarVeiculo($dados, $dataHora)
         {
             try {

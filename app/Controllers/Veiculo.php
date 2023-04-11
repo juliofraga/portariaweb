@@ -29,44 +29,82 @@
             }  
         }
 
-        public function cadastrar()
+        public function cadastrar($placa = null, $descricao = null, $tipoCarro = null, $empresa = null, $tipo = null)
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if($this->helper->validateFields($form)){
+                if($this->helper->validateFields($form) or $tipo == "registro"){
+                    if($tipo == "registro"){
+                        $form = [
+                            "placaVeiculo" => $placa,
+                            "descricao" => $descricao,
+                            "tipo" => $tipoCarro,
+                            "empresa" => $empresa,
+                        ];
+                    }
                     $form["placaVeiculo"] = strtoupper($form["placaVeiculo"]);
-                    if(!$this->veiculoModel->verificaPlaca($form["placaVeiculo"])){
+                    if(!$this->verificaPlaca($form["placaVeiculo"])){
                         $dateTime = $this->helper->returnDateTime();
-                        $lastInsertId = $this->veiculoModel->cadastrarVeiculo($form, $dateTime);
+                        $lastInsertId = $this->veiculoModel->cadastrarVeiculo($form, $dateTime, $tipo);
                         if($lastInsertId != null){
-                            $this->helper->setReturnMessage(
-                                $this->tipoSuccess,
-                                'Veículo cadastrado com sucesso!',
-                                $this->rotinaCad
-                            );
+                            if($tipo == null){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoSuccess,
+                                    'Veículo cadastrado com sucesso!',
+                                    $this->rotinaCad
+                                );
+                            }
                             $this->log->registraLog($_SESSION['pw_id'], "Veículo", $lastInsertId, 0, $dateTime);
+                            if($tipo == "registro"){
+                                return $lastInsertId;
+                            }
                         }else{
+                            if($tipo == null){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoError,
+                                    'Não foi possível cadastrar o veículo, tente novamente!',
+                                    $this->rotinaCad
+                                );
+                            }
+                        }
+                    }else{
+                        if($tipo == null){
                             $this->helper->setReturnMessage(
                                 $this->tipoError,
-                                'Não foi possível cadastrar o veículo, tente novamente!',
+                                "Não foi possível cadastrar o veículo, já existe outro veículo cadastrado com essa placa(".$form["placaVeiculo"].")",
                                 $this->rotinaCad
                             );
                         }
-                    }else{
+                    }
+                }else{
+                    if($tipo == null){
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            "Não foi possível cadastrar o veículo, já existe outro veículo cadastrado com essa placa(".$form["placaVeiculo"].")",
+                            'Existem campos que não foram preenchidos, tente novamente!',
                             $this->rotinaCad
                         );
                     }
-                }else{
-                    $this->helper->setReturnMessage(
-                        $this->tipoError,
-                        'Existem campos que não foram preenchidos, tente novamente!',
-                        $this->rotinaCad
-                    );
                 }
-                $this->helper->redirectPage("/veiculo/novo");
+                if($tipo == null){
+                    $this->helper->redirectPage("/veiculo/novo");
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function verificaPlaca($placa, $veiculo_id = null)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->veiculoModel->verificaPlaca($placa, $veiculo_id);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function verificaVeiculoPorId($veiculo_id){
+            if($this->helper->sessionValidate()){
+                return $this->veiculoModel->verificaVeiculoPorId($veiculo_id);
             }else{
                 $this->helper->loginRedirect();
             }

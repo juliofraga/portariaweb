@@ -28,21 +28,29 @@
             } 
         }
 
-        public function cadastrarEmpresa($dados, $dataHora)
+        public function cadastrarEmpresa($dados, $dataHora, $tipo = null)
         {
             try {
-                $this->db->query("INSERT INTO empresas(cnpj, razao_social, nome_fantasia, logradouro, numero, bairro, cidade, estado, cep, complemento, created_at) VALUES (:cnpj, :razao_social, :nome_fantasia, :logradouro, :numero, :bairro, :cidade, :estado, :cep, :complemento, :created_at)");
-                $this->db->bind("cnpj", $dados["cnpj"]);
-                $this->db->bind("razao_social", $dados["razao_social"]);
-                $this->db->bind("nome_fantasia", $dados["nome_fantasia"]);
-                $this->db->bind("logradouro", $dados["logradouro"]);
-                $this->db->bind("numero", $dados["numero"]);
-                $this->db->bind("bairro", $dados["bairro"]);
-                $this->db->bind("cidade", $dados["cidade"]);
-                $this->db->bind("estado", $dados["estado"]);
-                $this->db->bind("cep", $dados["cep"]);
-                $this->db->bind("complemento", $dados["complemento"]);
-                $this->db->bind("created_at", $dataHora);
+                if($tipo == null){
+                    $this->db->query("INSERT INTO empresas(cnpj, razao_social, nome_fantasia, logradouro, numero, bairro, cidade, estado, cep, complemento, created_at) VALUES (:cnpj, :razao_social, :nome_fantasia, :logradouro, :numero, :bairro, :cidade, :estado, :cep, :complemento, :created_at)");
+                    $this->db->bind("cnpj", $dados["cnpj"]);
+                    $this->db->bind("razao_social", $dados["razao_social"]);
+                    $this->db->bind("nome_fantasia", $dados["nome_fantasia"]);
+                    $this->db->bind("logradouro", $dados["logradouro"]);
+                    $this->db->bind("numero", $dados["numero"]);
+                    $this->db->bind("bairro", $dados["bairro"]);
+                    $this->db->bind("cidade", $dados["cidade"]);
+                    $this->db->bind("estado", $dados["estado"]);
+                    $this->db->bind("cep", $dados["cep"]);
+                    $this->db->bind("complemento", $dados["complemento"]);
+                    $this->db->bind("created_at", $dataHora);
+                }else if($tipo == "registro"){
+                    $this->db->query("INSERT INTO empresas(cnpj, razao_social, nome_fantasia, created_at) VALUES (:cnpj, :razao_social, :nome_fantasia, :created_at)");
+                    $this->db->bind("cnpj", $dados["cnpj"]);
+                    $this->db->bind("razao_social", $dados["nome_fantasia"]);
+                    $this->db->bind("nome_fantasia", $dados["nome_fantasia"]);
+                    $this->db->bind("created_at", $dataHora);
+                }
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
                 }else{
