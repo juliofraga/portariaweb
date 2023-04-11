@@ -16,8 +16,8 @@ $helper = new Helpers();
 <div id="conteudo" class="mb-5 mt-3">
     <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
         <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2">
+            <div class="col-sm-1 mt-4"></div>
+            <div class="col-sm-2 mt-4">
                 <input type="hidden" id="txtUrl" value="<?= URL ?>">
                 <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
                 <input type="hidden" id="portaria_id" value="<?= $dados["portaria_selecionada"] ?>">

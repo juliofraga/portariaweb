@@ -11238,3 +11238,7 @@ label{
 .letraMaiuscula{
   text-transform: uppercase;
 }
+
+.fonteMenu{
+  font-size: 10px;
+}
