@@ -42,7 +42,7 @@ $helper = new Helpers();
                         <button class="w-100 btn btn-danger btn-lg" name="novaSaida" id="novaSaida" onclick="exibeOperacaoSaida();">Nova Saída</button>
                     </div>
                 </div>
-                <div id="operacaoEntrada" style="margin-top:30px; display:block;">
+                <div id="operacaoEntrada" style="margin-top:30px; display:none;">
                     <h4>NOVA ENTRADA</h4>
                     <div class="row mt-4">
                         <div class="col-sm-3">
@@ -86,12 +86,31 @@ $helper = new Helpers();
                         </div>
                     </div>
                 </div>
+                <div id="operacaoSaida" style="margin-top:30px; display:block;">
+                    <h4>NOVA SAÍDA</h4>
+                    <div class="row mt-4">
+                        <div class="col-sm-12">
+                            <select class="form-control w-100" name="veiculoSaida" id="veiculoSaida" onchange="exibeBtnAbrirCancelaSaida();">
+                            </select>
+                            <label for="veiculo">Veículo</label>
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div class="row mt-4">
                     <div class="col-sm-6 mt-2">
                         <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancela" id="btnAbrirCancela" style="display: none;" onclick="executaOperacaoAbrirCancela();">Abrir Cancela</button>
                     </div>
                     <div class="col-sm-6  mt-2">
                         <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancela" id="btnFecharCancela" style="display: none;" onclick="executaOperacaoFechamentoCancela()">Fechar Cancela</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 mb-4">
+                        <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancelaSaida" id="btnAbrirCancelaSaida" style="display: none;" onclick="executaOperacaoAbrirCancelaSaida();">Abrir Cancela</button>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancelaSaida" id="btnFecharCancelaSaida" style="display: none;" onclick="executaOperacaoFechamentoCancelaSaida()">Fechar Cancela</button>
                     </div>
                 </div>
                 <div class="row mt-4" id="alertaErrorAbrirCancela" style="display: none">
@@ -122,17 +141,6 @@ $helper = new Helpers();
                         </div>
                     </div>
                 </div>
-                <div id="operacaoSaida" style="display:none;">
-                    <h4>NOVA SAÍDA</h4>
-                    <div class="row mt-4">
-                        <div class="col-sm-12">
-                            <select class="form-control w-100" name="veiculoSaida" id="veiculoSaida">
-                            </select>
-                            <label for="veiculo">Veículo</label>
-                        </div>
-                    </div>
-                </div>
-                <hr>
                 <div id="camerasPortaria">
                     <h4><u>Câmeras</u></h4>
                     <div class="row mt-3">

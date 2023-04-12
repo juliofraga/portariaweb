@@ -44,7 +44,6 @@
                 else
                     return false;
             } catch (Throwable $th) {
-                echo $th;
                 return null;
             } 
         }
@@ -52,11 +51,11 @@
         public function buscaVeiculosParaSaida($portaria_id)
         {
             try {
-                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id WHERE portaria_id = :portaria_id");
+                echo $portaria_id;
+                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id AND portaria_id = :portaria_id AND hora_abre_cancela_saida IS NULL");
                 $this->db->bind("portaria_id", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {
-                echo $th;
                 return null;
             } 
         }

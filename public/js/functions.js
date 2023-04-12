@@ -199,20 +199,53 @@ function exibeOperacaoSaida(){
     document.getElementById('operacaoEntrada').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
+    limpaListaVeiculosSaida();
     buscaVeiculosParaSaida();
 }
 
 function buscaVeiculosParaSaida(){
     var url = document.getElementById('txtUrl').value;
     var portaria = document.getElementById('portaria_id').value;
+    var listaSaida = document.getElementById("veiculoSaida");
+    var opcao;
     $.ajax({
         type: "POST",
         data: "portaria="+portaria,
         url: url+'/operacao/buscaVeiculosParaSaida',
         success: function(result){
-            var retorno = result.split("<registroOperacao>");
-            var retorno2 = retorno[1].split("</registroOperacao>");
-            console.log(retorno2[0]);
+            try{
+                var veiculoSaida = result.split("<registroOperacao>");
+                if(veiculoSaida.length == 1){
+                    opcao = document.createElement("option");
+                    opcao.text = "Não existe veículo para sair nesta portaria";
+                    opcao.value = "";
+                    listaSaida.options.add(opcao);
+                }else if(veiculoSaida.length > 1){
+                    opcao = document.createElement("option");
+                    opcao.text = "Selecione...";
+                    opcao.value = "";
+                    listaSaida.options.add(opcao);
+                }
+                for($i = 1; $i < veiculoSaida.length; $i++){
+                    id = veiculoSaida[$i].split("<id>");
+                    id = id[1].split("</id>");
+                    nome_completo = veiculoSaida[$i].split("<nome_completo>");
+                    nome_completo = nome_completo[1].split("</nome_completo>");
+                    placaVeiculo = veiculoSaida[$i].split("<placa>");
+                    placaVeiculo = placaVeiculo[1].split("</placa>");
+
+                    // Cria elemento option no select
+                    opcao = document.createElement("option");
+                    opcao.text = placaVeiculo[0]+" - "+nome_completo[0];
+                    opcao.value = id[0];
+                    listaSaida.options.add(opcao);
+                }
+            }catch(error){
+                opcao = document.createElement("option");
+                opcao.text = "Não existe veículo para sair nesta portaria";
+                opcao.value = "";
+                listaSaida.options.add(opcao);
+            }
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Falha ao buscar veículos');
@@ -247,6 +280,38 @@ function executaOperacaoAbrirCancela(){
     }else{
         document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
     }
+}
+
+function exibeBtnAbrirCancelaSaida(){
+    $("#btnAbrirCancelaSaida").fadeIn(1000);
+    $("#btnAbrirCancelaSaida").fadeIn();
+    document.getElementById('btnAbrirCancelaSaida').removeAttribute("disabled");
+}
+
+function executaOperacaoAbrirCancelaSaida(){
+    if(abreCancela()){
+        if(!capturaImagens()){
+            document.getElementById('alertaErrorCapturaImagens').style.display = 'block';
+        }
+        registraOperacaoSaida();
+    }else{
+        document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
+    }
+}
+
+function registraOperacaoSaida(){
+    $("#btnFecharCancelaSaida").fadeIn(1000);
+    $("#btnFecharCancelaSaida").fadeIn();
+    document.getElementById('btnAbrirCancelaSaida').disabled = 'true';
+}
+
+function executaOperacaoFechamentoCancelaSaida(){
+    $("#btnFecharCancelaSaida").fadeOut(1000);
+    $("#btnFecharCancelaSaida").fadeOut();
+    $("#btnAbrirCancelaSaida").fadeOut(1000);
+    $("#btnAbrirCancelaSaida").fadeOut();
+    limpaListaVeiculosSaida();
+    buscaVeiculosParaSaida();
 }
 
 function abreCancela(){
@@ -563,6 +628,11 @@ function limpaListaVeiculos(){
     placa.forEach(o => o.remove());
     document.getElementById('descricao').value = "";
     tipo.selectedIndex = "";
+}
+
+function limpaListaVeiculosSaida(){
+    var listaVeiculosSaida = document.querySelectorAll("#veiculoSaida option");
+    listaVeiculosSaida.forEach(o => o.remove());
 }
 
 function exibeVeiculo(result){
