@@ -41,7 +41,7 @@
             }   
         }
 
-        public function alterarPessoa($dados, $dataHora)
+        public function alterarMotorista($dados, $dataHora)
         {
             try {
                 $this->db->query("UPDATE pessoas SET updated_at = :updated_at WHERE id = :id");
@@ -57,7 +57,7 @@
             }  
         }
 
-        public function listaPessoas($attr = null)
+        public function listaMotoristas($attr = null)
         {
             try {
                 $this->db->query("SELECT * FROM pessoas");
@@ -67,10 +67,10 @@
             }
         }
 
-        public function listaPessoasPorFiltro($filtro)
+        public function listaMotoristasPorFiltro($filtro)
         {
             try {
-                $filter = "";
+                $filter = "nome_completo like '%".$filtro."%' or cpf like '%".$filtro."%'";
                 $this->db->query("SELECT * FROM pessoas WHERE $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
@@ -78,37 +78,6 @@
             }
         }
 
-        public function ativarInativarPessoa($id, $acao, $dateTime){
-            try {
-                $situacao = $acao == "inativar" ? 1 : 0;
-                $this->db->query("UPDATE pessoas SET situacao = :situacao, updated_at = :dataHora WHERE id = :id");
-                $this->db->bind("situacao", $situacao);
-                $this->db->bind("dataHora", $dateTime);
-                $this->db->bind("id", $id);
-                $this->db->execQuery();
-                if($this->db->numRows() > 0)
-                    return true;
-                else
-                    return false;
-            } catch (Throwable $th) {
-                return false;
-            }  
-        }
-
-        public function deletarPessoa($id)
-        {
-            try {
-                $this->db->query("DELETE FROM pessoas WHERE id = :id");
-                $this->db->bind("id", $id);
-                $this->db->execQuery();
-                if($this->db->numRows() > 0)
-                    return true;
-                else
-                    return false;
-            } catch (Throwable $th) {
-                return false;
-            } 
-        }
         
         public function retornaMotoristaPorEmpresa($empresa_id)
         {

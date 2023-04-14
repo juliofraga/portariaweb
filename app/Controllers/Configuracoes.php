@@ -20,6 +20,9 @@
             return $this->configuracaoModel->opcaoAtiva(2);
         }
         
+        public function operadorEmergencia(){
+            return $this->configuracaoModel->opcaoAtiva(3);
+        }
         
         public function index(){
             if($this->helper->sessionValidate()){

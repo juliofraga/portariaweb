@@ -44,7 +44,25 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
-                $this->view('motorista/consulta');
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if((!isset($_SESSION["pw_motorista_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
+                    $dados = [
+                        'dados' =>  $this->listaMotoristas(),
+                        'filtro' => null,
+                    ];
+                }else{
+                    if($_SESSION["pw_motorista_consulta"] == null or isset($form["filtro"])){
+                        $filtro = $form["filtro"]; 
+                    }else{
+                        $filtro = $_SESSION["pw_motorista_consulta"];
+                    }
+                    $_SESSION["pw_motorista_consulta"] = $filtro;
+                    $dados = [
+                        'dados' =>  $this->listaMotoristasPorFiltro($filtro),
+                        'filtro' => $filtro,
+                    ];
+                }
+                $this->view('motorista/consulta', $dados);
             }else{
                 $this->helper->redirectPage("/login/");
             } 
@@ -53,7 +71,7 @@
         public function listaMotoristas($attr = null)
         {
             if($this->helper->sessionValidate()){
-                
+                return $this->motoristaModel->listaMotoristas();
             }else{
                 $this->helper->loginRedirect();
             }
@@ -62,7 +80,7 @@
         public function listaMotoristasPorFiltro($filtro)
         {
             if($this->helper->sessionValidate()){
-
+                return $this->motoristaModel->listaMotoristasPorFiltro($filtro);
             }else{
                 $this->helper->loginRedirect();
             }

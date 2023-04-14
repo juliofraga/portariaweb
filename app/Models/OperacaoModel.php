@@ -48,6 +48,22 @@
             } 
         }
 
+        public function registrarSaida($operacao_id, $dateTime)
+        {
+            try {
+                $this->db->query("UPDATE operacoes SET hora_abre_cancela_saida = :dateTime WHERE id = :id");
+                $this->db->bind("id", $operacao_id);
+                $this->db->bind("dateTime", $dateTime);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
         public function buscaVeiculosParaSaida($portaria_id)
         {
             try {

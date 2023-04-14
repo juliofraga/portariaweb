@@ -190,7 +190,9 @@ function exibeOperacaoEntrada(){
     document.getElementById('operacaoSaida').style.display = 'none';
     $("#operacaoEntrada").fadeIn(1000);
     $("#operacaoEntrada").fadeIn();
-    $('.js-example-basic-multiple').select2();
+    $('.js-example-basic-multiple').select2({
+        tags: true
+    });
 }
 
 function exibeOperacaoSaida(){
@@ -300,18 +302,55 @@ function executaOperacaoAbrirCancelaSaida(){
 }
 
 function registraOperacaoSaida(){
-    $("#btnFecharCancelaSaida").fadeIn(1000);
-    $("#btnFecharCancelaSaida").fadeIn();
-    document.getElementById('btnAbrirCancelaSaida').disabled = 'true';
+    var idRegistro = document.getElementById('veiculoSaida').value;
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        type: "POST",
+        data: "idRegistro="+idRegistro,
+        url: url+'/operacao/registrarSaida',
+        success: function(result){
+            var retorno = result.split("<registroOperacao>");
+            var retorno2 = retorno[1].split("</registroOperacao>");
+            if(retorno2[0] == "SUCESSO"){
+                $("#btnFecharCancelaSaida").fadeIn(1000);
+                $("#btnFecharCancelaSaida").fadeIn();
+                 document.getElementById('btnAbrirCancelaSaida').disabled = 'true';
+            }else{
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+        }
+    });
 }
 
 function executaOperacaoFechamentoCancelaSaida(){
-    $("#btnFecharCancelaSaida").fadeOut(1000);
-    $("#btnFecharCancelaSaida").fadeOut();
-    $("#btnAbrirCancelaSaida").fadeOut(1000);
-    $("#btnAbrirCancelaSaida").fadeOut();
-    limpaListaVeiculosSaida();
-    buscaVeiculosParaSaida();
+    var idRegistro = document.getElementById('veiculoSaida').value;
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        type: "POST",
+        data: "operacao="+idRegistro,
+        url: url+'/operacao/registrarFechamentoCancela/saida',
+        success: function(result){
+            var retorno = result.split("<registroOperacao>");
+            var retorno2 = retorno[1].split("</registroOperacao>");
+            if(retorno2[0] == "SUCESSO"){
+                $("#btnFecharCancelaSaida").fadeOut(1000);
+                $("#btnFecharCancelaSaida").fadeOut();
+                $("#btnAbrirCancelaSaida").fadeOut(1000);
+                $("#btnAbrirCancelaSaida").fadeOut();
+                limpaListaVeiculosSaida();
+                buscaVeiculosParaSaida();
+            }else{
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+        }
+    });
+    
 }
 
 function abreCancela(){

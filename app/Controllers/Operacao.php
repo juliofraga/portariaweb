@@ -66,6 +66,27 @@
             }  
         }
 
+        public function registrarSaida()
+        {
+            if($this->helper->sessionValidate()){
+                $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if($form == null or !isset($form)){
+                    echo $retornoRegistro;
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime)){
+                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $$form["idRegistro"], 0, $dateTime);
+                        echo "<registroOperacao>SUCESSO</registroOperacao>";
+                    }else{
+                        echo "<registroOperacao>ERRO</registroOperacao>";
+                    }
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
+            } 
+        }
+
         public function registrarFechamentoCancela($tipo)
         {
             if($this->helper->sessionValidate()){

@@ -86,7 +86,7 @@ $helper = new Helpers();
                         </div>
                     </div>
                 </div>
-                <div id="operacaoSaida" style="margin-top:30px; display:block;">
+                <div id="operacaoSaida" style="margin-top:30px; display:none;">
                     <h4>NOVA SAÍDA</h4>
                     <div class="row mt-4">
                         <div class="col-sm-12">
@@ -156,7 +156,7 @@ $helper = new Helpers();
                     <div class="row">
                         <?php foreach($dados["cameras"] as $camera){ ?>
                             <div class="col-sm-12 mt-5" id="camera_iframe_id_<?= $camera->id ?>">
-                                <label><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></label>
+                                <label><?= $camera->descricao ?></label>
                                 <iframe src="http://localhost/" height="100%" width="100%" allowfullscreen></iframe> 
                             </div>
                         <?php }?>

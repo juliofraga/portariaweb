@@ -1,18 +1,18 @@
 <?php
     $helper = new Helpers();
-    $_SESSION["pw_pessoa_consulta"] = $dados["filtro"];
+    $_SESSION["pw_motorista_consulta"] = $dados["filtro"];
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
             <h1>Motorista - Consulta</h1>
             <hr class="divisor_horizontal">
-            <form method="POST" action="<?= URL ?>/pessoa/consulta" id="form_busca_pessoa" name="form_busca_pessoa">
+            <form method="POST" action="<?= URL ?>/motorista/consulta" id="form_busca_motorista" name="form_busca_motorista">
                 <div class="row">
                     <div class="col-sm-5">
                         <div class="form-floating mb-3 mt-2 mb-5">
-                            <input class="form-control" type="text" id="descricao_ip" name="descricao_ip" placeholder="Descrição ou Endereço IP" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
-                            <label for="descricao_ip">Descrição ou Endereço IP</label>
+                            <input class="form-control" type="text" id="filtro" name="filtro" placeholder="Nome do Motorista ou CPF" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
+                            <label for="filtro">Nome do Motorista ou CPF</label>
                         </div>
                     </div>
                     <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
@@ -42,66 +42,58 @@
             <?php 
                 }
             ?>
-            <h6>Pessoas Cadastradas</h6>
+            <h6>Motoristas Cadastrados</h6>
             <div class="row mt-4">
-                <div class="col-sm-3">
-                    Descrição
+                <div class="col-sm-4">
+                    Nome
                 </div>
                 <div class="col-sm-2">
-                    Endereço IP
-                </div>
-                <div class="col-sm-3">
-                    Portaria
+                    CPF
                 </div>
                 <div class="col-sm-2">
-                    Situação
+                    RG
                 </div>
             </div>
             <hr class="divisor_horizontal">
             <?php 
-                foreach($dados["dados"] as $pessoa){
+                foreach($dados["dados"] as $motorista){
             ?>
                 <div class="row mt-4">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $pessoa->descricao ?>
+                            <?= $motorista->nome_completo ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $pessoa->endereco_ip ?>
+                            <?= $motorista->cpf ?>
                         </p>
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $pessoa->portaria ?>
-                        </p>
-                    </div>
-                    <div class="col-sm-2">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <?= $this->helper->retornaSituacao($pessoa->situacao) ?>
+                            <?= $motorista->rg ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
                         <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                            <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $pessoa->id ?>">Editar</a>
+                            <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $motorista->id ?>">Editar</a>
                         </p>
                     </div>
                 </div>
-                <div class="modal fade" id="modal-<?= $pessoa->id ?>">
+                <div class="modal fade" id="modal-<?= $motorista->id ?>">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title"><?= $pessoa->descricao ?></h4>
+                                <h4 class="modal-title"><?= $motorista->descricao ?></h4>
                                 <button type="button" class="btn-close" data-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
                                 <form method="POST" action="<?= URL ?>/pessoa/alterar" id="form_altera_pessoa" name="form_altera_pessoa">
                                     <div class="row mt-3">
-                                        <input type="hidden" id="id" name="id" value="<?= $pessoa->id ?>" required>
+                                        <input type="hidden" id="id" name="id" value="<?= $motorista->id ?>" required>
                                         <div class="col-sm-12">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição*" required value="<?= $pessoa->descricao ?>">
+                                                <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição*" required value="<?= $motorista->descricao ?>">
                                                 <label for="descricao">Descrição*</label>
                                             </div>
                                         </div>
@@ -109,7 +101,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $pessoa->endereco_ip ?>">
+                                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $motorista->endereco_ip ?>">
                                                 <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
                                             </div>
                                         </div>
@@ -117,7 +109,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $pessoa->url_foto ?>">
+                                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $motorista->url_foto ?>">
                                                 <label for="url_foto">URL Foto*</label>
                                             </div>
                                         </div>
@@ -125,7 +117,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $pessoa->url_video ?>">
+                                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $motorista->url_video ?>">
                                                 <label for="url_video">URL Vídeo*</label>
                                             </div>
                                         </div>
@@ -136,7 +128,7 @@
                                                 <select name="portaria" id="portaria" class="form-control">
                                                     <option value="">Selecione...</option>
                                                     <?php foreach($dados["portoes"] as $portaria){ ?>
-                                                        <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $pessoa->portoes_id) ?>>
+                                                        <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $motorista->portoes_id) ?>>
                                                             <?= $portaria->descricao ?>
                                                         </option>
                                                     <?php }?>
@@ -148,14 +140,14 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="mt-3">
-                                                <b>Data de Criação:</b> <?= $helper->formataDateTime($pessoa->created_at) ?>
+                                                <b>Data de Criação:</b> <?= $helper->formataDateTime($motorista->created_at) ?>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="mt-3">
-                                                <b>Última Alteração:</b> <?= $helper->formataDateTime($pessoa->updated_at) ?>
+                                                <b>Última Alteração:</b> <?= $helper->formataDateTime($motorista->updated_at) ?>
                                             </div>
                                         </div>
                                     </div>
@@ -163,11 +155,11 @@
                                         <div class="inline inline-block">
                                             <input type="submit" class="btn btn-secondary" style="margin-top:40px;" name="update" id="update" value="Alterar">
                                             <?php 
-                                                if($pessoa->situacao == 0){
+                                                if($motorista->situacao == 0){
                                             ?>
                                                     <input type="submit" class="btn btn-warning" style="margin-top:40px;" name="inativar" id="inativar" value="Inativar">
                                             <?php 
-                                                }else if($pessoa->situacao == 1){
+                                                }else if($motorista->situacao == 1){
                                             ?>
                                                     <input type="submit" class="btn btn-success" style="margin-top:40px;" name="ativar" id="ativar" value="Ativar">
                                             <?php 
