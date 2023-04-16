@@ -90,6 +90,17 @@
             }
         }
 
+        public function listaReles($portaria_id)
+        {
+            try {
+                $this->db->query("SELECT pl.rele1, pl.rele2, pl.rele3, pl.rele4 FROM placas pl, portoes p WHERE p.placas_id = pl.id and p.id = :portaria_id");
+                $this->db->bind("portaria_id", $portaria_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
         public function listaPlacasPorFiltro($filtro)
         {
             try {

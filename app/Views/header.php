@@ -23,6 +23,7 @@
                             Painel
                         </a>
                     </li>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['camera/novo', 'camera/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -37,6 +38,7 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/camera/consulta">Consulta</a></li>
                         </ul>
                     </li>
+                    <?php } ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['empresa/nova', 'empresa/consulta', 'veiculo/novo', 'veiculo/consulta', 'motorista/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -55,6 +57,7 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/motorista/consulta">Consulta Motorista</a></li>
                         </ul>
                     </li>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['placa/novo', 'placa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -70,6 +73,8 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/placa/consulta">Consulta</a></li>
                         </ul>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['portaria/novo', 'portaria/consulta', 'portaria/portaria_usuario']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -86,6 +91,8 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/portaria/portaria_usuario">Ligação Portaria x Usuários</a></li>
                         </ul>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['usuario/novo', 'usuario/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -100,7 +107,9 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/usuario/novo">Novo</a></li>
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/usuario/consulta">Consulta</a></li>
                         </ul>
-                    </li>              
+                    </li>
+                    <?php } ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu <?= $helper->verificaLinkAtivo(['configuracoes']) ?>" href="<?= URL ?>/configuracoes">
                             <center>
@@ -112,6 +121,8 @@
                             Configurações
                         </a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu" href="#">
                             <center>
@@ -123,6 +134,8 @@
                             Logs
                         </a>
                     </li>
+                    <?php } ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu" href="#">
                             <center>
@@ -133,6 +146,7 @@
                             Relatórios
                         </a>
                     </li>
+                    <?php } ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu" href="<?= URL ?>/login/logoff">
                             <center>

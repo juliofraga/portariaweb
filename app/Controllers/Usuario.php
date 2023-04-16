@@ -165,6 +165,61 @@
             }
         }
 
+        public function alterarsenha(){
+            $login = $_SESSION["pw_user_altsen"];
+            $id = $_SESSION["pw_id_altsen"];
+            $dados = [
+                'id' => $id,
+                "login" => $login,
+                'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
+            ];
+            $this->view('usuario/alterarsenha', $dados);
+        }
+
+        public function atualizarSenha(){
+            $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            if($form){
+                if(empty($form["senha"]) or empty($form["repetesenha"])){
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Não foi possível atualizar a senha, existem campos que não foram preenchidos, tente novamente!',
+                        $this->rotinaAlt
+                    );
+                    $this->helper->redirectPage("/usuario/alterarsenha/");
+                }else if($form["senha"] != $form["repetesenha"]){
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Não foi possível atualizar a senha, elas não conferem, tente novamente!',
+                        $this->rotinaAlt
+                    );
+                    $this->helper->redirectPage("/usuario/alterarsenha/");
+                }else if(strlen($form["senha"]) < 6){
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Não foi possível atualizar a senha, elas não possuem o mínimo de 6 caracteres!',
+                        $this->rotinaAlt
+                    );
+                    $this->helper->redirectPage("/usuario/alterarsenha/");
+                }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
+                    $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
+                    $dateTime = $this->helper->returnDateTime();
+                    if($this->usuarioModel->alteraUsuario($form, "senha_update", $dateTime)){
+                        $this->log->registraLog($form["id"], "Usuário", $form["id"], 1, $dateTime);
+                        $this->helper->redirectPage("/login/validaLogin/atualizaSenha");
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            'Erro ao atualizar a senha, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                            $this->rotinaAlt
+                        );
+                        $this->helper->redirectPage("/usuario/alterarsenha/");
+                    }
+                }
+            }else{
+                $this->view('pagenotfound');
+            }
+        }
+
         private function updateUsuario($form, $dateTime){
             $retorno = false;
             if(!empty($form["nome"])){

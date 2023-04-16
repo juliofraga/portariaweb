@@ -44,7 +44,7 @@ $helper = new Helpers();
                                     <label for="portaria">Portaria*</label>
                                 </div>
                                 <div class="col-sm-7">
-                                    <select class="js-example-basic-multiple w-100" name="usuario[]"  multiple="multiple" placeholder="Usuários" required>
+                                    <select class="js-example-basic-multiple w-100" name="usuario[]"  multiple="multiple" placeholder="Usuários">
                                         <?php foreach($dados["usuarios"] as $usuario){ ?>
                                             <option value="<?= $usuario->id ?>" <?= $helper->setMultiSelectUsuariosPortaria($dados["portaria_usuarios"], $usuario->id, $portaria->id) ?>><?= $usuario->login ?> - <?= $usuario->nome ?></option>
                                         <?php }?>

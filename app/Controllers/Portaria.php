@@ -175,31 +175,23 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if((isset($form["usuario"]) and $form["usuario"] != null) and !empty($form["portaria_id"])){
-                    $error = false;
-                    $this->portariaModel->removePortariaUsuarioPorId($form["portaria_id"]);
-                    foreach($form["usuario"] as $usuario){
-                        if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
-                            $error = true;
-                        }
+                $error = false;
+                $this->portariaModel->removePortariaUsuarioPorId($form["portaria_id"]);
+                foreach($form["usuario"] as $usuario){
+                    if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
+                        $error = true;
                     }
-                    if($error == false){
-                        $this->helper->setReturnMessage(
-                            $this->tipoSuccess,
-                            "Ligação Portaria x Usuario concluída com sucesso!",
-                            $this->rotinaCad
-                        );
-                    }else{
-                        $this->helper->setReturnMessage(
-                            $this->tipoError,
-                            "Ocorreu um problema na ligação Portaria x Usuario, tente novamente!",
-                            $this->rotinaCad
-                        );
-                    }
+                }
+                if($error == false){
+                    $this->helper->setReturnMessage(
+                        $this->tipoSuccess,
+                        "Ligação Portaria x Usuario concluída com sucesso!",
+                        $this->rotinaCad
+                    );
                 }else{
                     $this->helper->setReturnMessage(
                         $this->tipoError,
-                        "É obrigatório informar pelo menos um usuário ligado a portaria, tente novamente!",
+                        "Ocorreu um problema na ligação Portaria x Usuario, tente novamente!",
                         $this->rotinaCad
                     );
                 }

@@ -354,6 +354,10 @@ function executaOperacaoFechamentoCancelaSaida(){
 }
 
 function abreCancela(){
+    var rele1 = document.getElementById('rele1').value;
+    var rele2 = document.getElementById('rele2').value;
+    var rele3 = document.getElementById('rele3').value;
+    var rele4 = document.getElementById('rele4').value;
     return true;
 }
 

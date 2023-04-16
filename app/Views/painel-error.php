@@ -1,0 +1,6 @@
+<body> 
+    <div id="page-not-found">
+        <h3>FALTA DE PERMISSÃO DE ACESSO</h3>
+        <H6>CONTATE O ADMINISTRADOR DO SISTEMA PARA QUE ELE LHE DÊ O ACESSOS NECESSÁRIOS PARA A UTILIZAÇÃO DO SISTEMA</H6>
+    </div>
+</body>

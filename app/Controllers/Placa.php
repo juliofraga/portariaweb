@@ -132,6 +132,15 @@
             }
         }
 
+        public function listaReles($placa_id)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->placaModel->listaReles($placa_id);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function alterar(){
             if($this->helper->sessionValidate()){
                 $dateTime = $this->helper->returnDateTime();
