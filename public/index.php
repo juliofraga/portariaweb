@@ -19,17 +19,14 @@
         <link href="<?= URL ?>/public/css/modals.css" rel="stylesheet">
         
         <script src="<?= URL ?>/public/js/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://code.jquery.com/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+        <script src="<?= URL ?>/public/js/jquery-3.5.1.min.js"></script>
+        <script src="<?= URL ?>/public/js/jquery-2.2.4.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI=" crossorigin="anonymous"></script>
+        <script src="<?= URL ?>/public/js/jquery.mask.min.js"></script>
         <title><?= APP_NOME ?></title>
         <!-- Favicon-->
         <!-- <link rel="icon" type="image/x-icon" href="/public/assets/favicon.ico" /> -->
         <!-- Bootstrap Icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic" rel="stylesheet" type="text/css" />
+        <link href="<?= URL ?>/public/css/bootstrap-icons.css" rel="stylesheet" />
 
         <!-- MULTI SELECT -->
         <script src="<?= URL ?>/public/js/select2.min.js"></script>
@@ -70,5 +67,5 @@
     <script src="<?= URL ?>/public/js/functions.js"></script>
     <script src="<?= URL ?>/public/vendor/ckeditor/ckeditor.js"></script>
          <!-- Bootstrap core JS-->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="<?= URL ?>/public/js/bootstrap.min.js"></script>
  </html>
