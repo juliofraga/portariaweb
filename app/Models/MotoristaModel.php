@@ -44,7 +44,10 @@
         public function alterarMotorista($dados, $dataHora)
         {
             try {
-                $this->db->query("UPDATE pessoas SET updated_at = :updated_at WHERE id = :id");
+                $this->db->query("UPDATE pessoas SET nome_completo = :nome_completo, cpf = :cpf, rg = :rg, updated_at = :updated_at WHERE id = :id");
+                $this->db->bind("nome_completo", $dados["nome_completo"]);
+                $this->db->bind("cpf", $dados["cpf"]);
+                $this->db->bind("rg", $dados["rg"]);
                 $this->db->bind("updated_at", $dataHora);
                 $this->db->bind("id", $dados["id"]);
                 $this->db->execQuery();
@@ -111,6 +114,38 @@
                     return true;
                 else
                     return false;
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function validaCpf($motorista_id, $cpf)
+        {
+            try {
+                $this->db->query("SELECT id FROM pessoas WHERE cpf = :cpf and id <> :id");
+                $this->db->bind("id", $motorista_id);
+                $this->db->bind("cpf", $cpf);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return false;
+                else
+                    return true;
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
+
+        public function validaRg($motorista_id, $rg)
+        {
+            try {
+                $this->db->query("SELECT id FROM pessoas WHERE rg = :rg and id <> :id");
+                $this->db->bind("id", $motorista_id);
+                $this->db->bind("rg", $rg);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return false;
+                else
+                    return true;
             } catch (Throwable $th) {
                 return null;
             }

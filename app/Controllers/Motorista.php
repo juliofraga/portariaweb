@@ -132,33 +132,60 @@
         public function alterar()
         {
             if($this->helper->sessionValidate()){
-
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if($this->helper->validateFields($form, 'rg')){
+                    if($this->validaMotorista($form["id"], $form["cpf"], $form["rg"])){
+                        $dateTime = $this->helper->returnDateTime();
+                        if($this->motoristaModel->alterarMotorista($form, $dateTime)){
+                            $this->helper->setReturnMessage(
+                                $this->tipoSuccess,
+                                'Motorista atualizado com sucesso!',
+                                $this->rotinaCad
+                            );
+                            $this->log->registraLog($_SESSION['pw_id'], "Motorista", $form["id"], 1, $dateTime);
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Erro ao atualizar motorista, tente novamente!',
+                                $this->rotinaCad
+                            );
+                        }
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            'Este CPF ou RG já estão cadastrados para outro motorista, verifique novamente!',
+                            $this->rotinaCad
+                        );
+                    }
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Existem campos que não foram preenchidos, verifique novamente!',
+                        $this->rotinaCad
+                    );
+                }
+                $this->helper->redirectPage("/motorista/consulta");
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        private function updateMotorista($form, $dateTime)
+        public function validaMotorista($motorista_id, $cpf, $rg)
         {
             if($this->helper->sessionValidate()){
-
-            }else{
-                $this->helper->loginRedirect();
-            }
-        }
-
-        private function ativarInativarMotorista($id, $acao, $dateTime){
-            if($this->helper->sessionValidate()){
-
-            }else{
-                $this->helper->loginRedirect();
-            }
-        }
-
-        private function deletarMotorista($id)
-        {
-            if($this->helper->sessionValidate()){
-
+                if($this->motoristaModel->validaCpf($motorista_id, $cpf)){
+                    if(!empty($rg)){
+                        if($this->motoristaModel->validaRg($motorista_id, $rg)){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    }else{
+                        return true;
+                    }
+                }else{
+                    return false;
+                }
             }else{
                 $this->helper->loginRedirect();
             }

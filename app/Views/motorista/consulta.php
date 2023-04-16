@@ -84,56 +84,33 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title"><?= $motorista->descricao ?></h4>
+                                <h4 class="modal-title"><?= $motorista->nome_completo ?></h4>
                                 <button type="button" class="btn-close" data-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" action="<?= URL ?>/pessoa/alterar" id="form_altera_pessoa" name="form_altera_pessoa">
+                                <form method="POST" action="<?= URL ?>/motorista/alterar" id="form_altera_motorista" name="form_altera_motorista">
                                     <div class="row mt-3">
                                         <input type="hidden" id="id" name="id" value="<?= $motorista->id ?>" required>
                                         <div class="col-sm-12">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Descrição*" required value="<?= $motorista->descricao ?>">
-                                                <label for="descricao">Descrição*</label>
+                                                <input type="text" class="form-control" id="nome_completo" name="nome_completo" placeholder="Nome Completo*" required value="<?= $motorista->nome_completo ?>">
+                                                <label for="nome_completo">Nome Completo*</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $motorista->endereco_ip ?>">
-                                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
+                                                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF*" required value="<?= $motorista->cpf ?>" maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)'>
+                                                <label for="cpf">CPF*</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required value="<?= $motorista->url_foto ?>">
-                                                <label for="url_foto">URL Foto*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required value="<?= $motorista->url_video ?>">
-                                                <label for="url_video">URL Vídeo*</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-floating mt-3">
-                                                <select name="portaria" id="portaria" class="form-control">
-                                                    <option value="">Selecione...</option>
-                                                    <?php foreach($dados["portoes"] as $portaria){ ?>
-                                                        <option value="<?= $portaria->id ?>" <?= $this->helper->setSelected($portaria->id, $motorista->portoes_id) ?>>
-                                                            <?= $portaria->descricao ?>
-                                                        </option>
-                                                    <?php }?>
-                                                </select>
-                                                <label for="portaria">Portaria</label>
+                                                <input type="text" class="form-control" id="rg" name="rg" placeholder="RG*" value="<?= $motorista->rg ?>" maxlength="10">
+                                                <label for="rg">RG*</label>
                                             </div>
                                         </div>
                                     </div>
@@ -154,18 +131,6 @@
                                     <div class="form-group row">
                                         <div class="inline inline-block">
                                             <input type="submit" class="btn btn-secondary" style="margin-top:40px;" name="update" id="update" value="Alterar">
-                                            <?php 
-                                                if($motorista->situacao == 0){
-                                            ?>
-                                                    <input type="submit" class="btn btn-warning" style="margin-top:40px;" name="inativar" id="inativar" value="Inativar">
-                                            <?php 
-                                                }else if($motorista->situacao == 1){
-                                            ?>
-                                                    <input type="submit" class="btn btn-success" style="margin-top:40px;" name="ativar" id="ativar" value="Ativar">
-                                            <?php 
-                                                }
-                                            ?>
-                                            <input type="submit" class="btn btn-danger" style="margin-top:40px;" name="deletar" id="deletar" value="Deletar">
                                         </div>
                                     </div>
                                 </form>
