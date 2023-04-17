@@ -153,10 +153,10 @@
         {
             try {
                 if($attr == true){
-                    $this->db->query("SELECT id, descricao FROM portoes WHERE situacao = :situacao order by descricao ASC");
+                    $this->db->query("SELECT id, descricao FROM portoes WHERE situacao = :situacao and placas_id IS NOT NULL order by descricao ASC");
                     $this->db->bind("situacao", 0);
                 }else{
-                    $this->db->query("SELECT p.id, p.descricao FROM portoes p, portoes_pessoas pp WHERE p.id = pp.portoes_id and pp.usuarios_id = :usuario_id");
+                    $this->db->query("SELECT p.id, p.descricao FROM portoes p, portoes_pessoas pp WHERE p.id = pp.portoes_id and pp.usuarios_id = :usuario_id and placas_id IS NOT NULL");
                     $this->db->bind("usuario_id", $usuario_id);
                 }
                 return $this->db->results();

@@ -7,6 +7,7 @@
         public $empresa;
         public $placa;
         public $usuario;
+        public $configuracoes;
 
         public function __construct()
         {
@@ -15,6 +16,7 @@
             $this->portaria = new Portaria();
             $this->camera = new Camera();
             $this->placa = new Placa();
+            $this->configuracoes = new Configuracoes();
         }
 
         public function index()
@@ -33,6 +35,7 @@
                         "portaria_selecionada" => $portaria,
                         "cameras" => $this->camera->listaCamerasPortaria($portaria),
                         "reles" => $this->placa->listaReles($portaria),
+                        "emergencia" => $this->configuracoes->operadorEmergencia(),
                     ];
                     $this->view('painel', $dados);
                 }else{

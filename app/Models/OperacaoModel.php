@@ -68,8 +68,9 @@
         {
             try {
                 echo $portaria_id;
-                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id AND portaria_id = :portaria_id AND hora_abre_cancela_saida IS NULL");
+                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id AND o.portaria_id = :portaria_id AND o.hora_abre_cancela_saida IS NULL AND o.tipo = :tipo");
                 $this->db->bind("portaria_id", $portaria_id);
+                $this->db->bind("tipo", 'N');
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

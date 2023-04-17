@@ -1,6 +1,5 @@
 <?php 
-
-$helper = new Helpers();
+    $helper = new Helpers();
 ?>
 <script>
     $(document).ready(function() {
@@ -43,6 +42,17 @@ $helper = new Helpers();
                     </div>
                     <div class="col-sm-2 mt-2">
                         <button class="w-100 btn btn-danger btn-lg" name="novaSaida" id="novaSaida" onclick="exibeOperacaoSaida();">Nova Saída</button>
+                    </div>
+                    <?php if($dados["emergencia"]){ ?>
+                    <div class="col-sm-2 mt-2">
+                        <button class="w-100 btn btn-warning btn-lg" name="saidaEmergencia" id="saidaEmergencia" onclick="exibeOperacaoEmergencia();">Emergência</button>
+                    </div>
+                    <?php } ?>
+                </div>
+                <div id="operacaoEmergencia" style="margin-top:30px; display:none;">
+                    <h4>EMERGÊNCIA</h4>
+                    <div class="row mt-4">
+                        <textarea name="obsEmergencia" id="obsEmergencia" class="form-control" placeholder="Observação" rows="6"></textarea>
                     </div>
                 </div>
                 <div id="operacaoEntrada" style="margin-top:30px; display:none;">
@@ -114,6 +124,14 @@ $helper = new Helpers();
                     </div>
                     <div class="col-sm-6 mb-4">
                         <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancelaSaida" id="btnFecharCancelaSaida" style="display: none;" onclick="executaOperacaoFechamentoCancelaSaida()">Fechar Cancela</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 mb-4">
+                        <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancelaEmergencia" id="btnAbrirCancelaEmergencia" style="display: none;" onclick="executaOperacaoAbrirCancelaEmergencia();">Abrir Cancela</button>
+                    </div>
+                    <div class="col-sm-6 mb-4">
+                        <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancelaEmegrencia" id="btnFecharCancelaEmegrencia" style="display: none;" onclick="executaOperacaoFechamentoCancelaEmergencia()">Fechar Cancela</button>
                     </div>
                 </div>
                 <div class="row mt-4" id="alertaErrorAbrirCancela" style="display: none">

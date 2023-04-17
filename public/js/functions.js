@@ -188,6 +188,9 @@ function exibeOperacaoEntrada(){
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
     document.getElementById('operacaoSaida').style.display = 'none';
+    document.getElementById('operacaoEmergencia').style.display = 'none';
+    document.getElementById('btnAbrirCancelaEmergencia').style.display = 'none';
+    document.getElementById('btnFecharCancelaEmegrencia').style.display = 'none';
     $("#operacaoEntrada").fadeIn(1000);
     $("#operacaoEntrada").fadeIn();
     $('.js-example-basic-multiple').select2({
@@ -199,10 +202,24 @@ function exibeOperacaoSaida(){
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
     document.getElementById('operacaoEntrada').style.display = 'none';
+    document.getElementById('operacaoEmergencia').style.display = 'none';
+    document.getElementById('btnAbrirCancelaEmergencia').style.display = 'none';
+    document.getElementById('btnFecharCancelaEmegrencia').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
     limpaListaVeiculosSaida();
     buscaVeiculosParaSaida();
+}
+
+function exibeOperacaoEmergencia(){
+    escondeBtnAbrirCancela();
+    escondeBtnFecharCancela();
+    document.getElementById('operacaoEntrada').style.display = 'none';
+    document.getElementById('operacaoSaida').style.display = 'none';
+    $("#operacaoEmergencia").fadeIn(1000);
+    $("#operacaoEmergencia").fadeIn();
+    document.getElementById('btnAbrirCancelaEmergencia').style.display = 'block';
+    document.getElementById('btnFecharCancelaEmegrencia').style.display = 'block';
 }
 
 function buscaVeiculosParaSaida(){
