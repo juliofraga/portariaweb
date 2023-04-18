@@ -108,6 +108,42 @@
             }  
         }
 
+        public function registrarOperacaoEmergencia()
+        {
+            if($this->helper->sessionValidate()){
+                $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                if($form == null or !isset($form)){
+                    echo $retornoRegistro;
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $lastInsertId = $this->operacaoModel->registraOperacaoEmergencia($form, $dateTime);
+                    if($lastInsertId){
+                        $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
+                        echo "<registroOperacao>SUCESSO</registroOperacao>";
+                    }else{
+                        echo "<registroOperacao>ERRO</registroOperacao>";
+                    }
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
+            } 
+        }
+
+        public function fechaCancelaEmergencia()
+        {
+            if($this->helper->sessionValidate()){
+                $dateTime = $this->helper->returnDateTime();
+                if($this->operacaoModel->fechaCancelaEmergencia($dateTime)){
+                    echo "<registroOperacao>SUCESSO</registroOperacao>";
+                }else{
+                    echo "<registroOperacao>ERRO</registroOperacao>";
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
+            } 
+        }
+
         public function buscaVeiculosParaSaida()
         {
             if($this->helper->sessionValidate()){

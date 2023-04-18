@@ -64,6 +64,43 @@
             } 
         }
 
+        public function registraOperacaoEmergencia($dados, $dateTime)
+        {
+            try {
+                $this->db->query("INSERT INTO operacoes(hora_abre_cancela_entrada, usuarios_id, portaria_id, tipo, obs_emergencia)VALUES(:hora_abre_cancela_entrada, :usuarios_id, :portaria_id, :tipo, :obs_emergencia)");
+                $this->db->bind("hora_abre_cancela_entrada", $dateTime);
+                $this->db->bind("usuarios_id", $dados["usuario_id"]);
+                $this->db->bind("portaria_id", $dados["portaria_id"]);
+                $this->db->bind("tipo", "E");
+                $this->db->bind("obs_emergencia", $dados["observacao"]);
+                if($this->db->execQuery()){
+                    return $this->db->lastInsertId();
+                }else{
+                    return null;
+                }
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
+        public function fechaCancelaEmergencia($dateTime)
+        {
+            try {
+                $this->db->query("UPDATE operacoes SET hora_fecha_cancela_entrada = :dateTime WHERE hora_fecha_cancela_entrada IS NULL and tipo = :tipo ORDER BY :id ASC LIMIT :limit");
+                $this->db->bind("id", "id");
+                $this->db->bind("limit", 1);
+                $this->db->bind("tipo", "E");
+                $this->db->bind("dateTime", $dateTime);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
         public function buscaVeiculosParaSaida($portaria_id)
         {
             try {

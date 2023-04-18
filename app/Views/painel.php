@@ -43,7 +43,7 @@
                     <div class="col-sm-2 mt-2">
                         <button class="w-100 btn btn-danger btn-lg" name="novaSaida" id="novaSaida" onclick="exibeOperacaoSaida();">Nova Saída</button>
                     </div>
-                    <?php if($dados["emergencia"]){ ?>
+                    <?php if($dados["emergencia"] or $_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
                     <div class="col-sm-2 mt-2">
                         <button class="w-100 btn btn-warning btn-lg" name="saidaEmergencia" id="saidaEmergencia" onclick="exibeOperacaoEmergencia();">Emergência</button>
                     </div>
@@ -53,6 +53,9 @@
                     <h4>EMERGÊNCIA</h4>
                     <div class="row mt-4">
                         <textarea name="obsEmergencia" id="obsEmergencia" class="form-control" placeholder="Observação" rows="6"></textarea>
+                        <small id="avisoObservacao" class="form-text" style="color:red; display:none;">
+                            O campo observação é de preenchimento obrigatório.
+                        </small>
                     </div>
                 </div>
                 <div id="operacaoEntrada" style="margin-top:30px; display:none;">

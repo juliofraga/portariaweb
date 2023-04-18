@@ -219,7 +219,23 @@ function exibeOperacaoEmergencia(){
     $("#operacaoEmergencia").fadeIn(1000);
     $("#operacaoEmergencia").fadeIn();
     document.getElementById('btnAbrirCancelaEmergencia').style.display = 'block';
-    document.getElementById('btnFecharCancelaEmegrencia').style.display = 'block';
+}
+
+function executaOperacaoAbrirCancelaEmergencia(){
+    if(document.getElementById('obsEmergencia').value == ""){
+        document.getElementById('avisoObservacao').style.display = 'block';
+        document.getElementById('obsEmergencia').focus();
+    }else{
+        document.getElementById('avisoObservacao').style.display = 'none';
+        if(abreCancela()){
+            if(!capturaImagens()){
+                document.getElementById('alertaErrorCapturaImagens').style.display = 'block';
+            }
+            registraOperacaoEmergencia();
+        }else{
+            document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
+        }
+    }
 }
 
 function buscaVeiculosParaSaida(){
@@ -316,6 +332,65 @@ function executaOperacaoAbrirCancelaSaida(){
     }else{
         document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
     }
+}
+
+function executaOperacaoFechamentoCancelaEmergencia(){
+    var url = document.getElementById('txtUrl').value;
+    $.ajax({
+        type: "POST",
+        url: url+'/operacao/fechaCancelaEmergencia',
+        success: function(result){
+            try{
+                var retorno = result.split("<registroOperacao>");
+                var retorno2 = retorno[1].split("</registroOperacao>");
+                if(retorno2[0] == "SUCESSO"){
+                    $("#btnAbrirCancelaEmergencia").fadeOut(1000);
+                    $("#btnAbrirCancelaEmergencia").fadeOut();
+                    $("#btnFecharCancelaEmegrencia").fadeOut(1000);
+                    $("#btnFecharCancelaEmegrencia").fadeOut();
+                    document.getElementById('operacaoEmergencia').style.display = 'none';
+                    document.getElementById('alertaErrorRegistrarOperacao').style.display = 'none';
+                }else{
+                    document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+                }
+            }catch (error){
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+        }
+    });
+}
+
+function registraOperacaoEmergencia(){
+    var url = document.getElementById('txtUrl').value;
+    var portaria = document.getElementById('portaria_id').value;
+    var usuario = document.getElementById('loginOperador').value;
+    var observacao = document.getElementById('obsEmergencia').value;
+    $.ajax({
+        type: "POST",
+        data: "portaria_id="+portaria+"&usuario_id="+usuario+"&observacao="+observacao,
+        url: url+'/operacao/registrarOperacaoEmergencia',
+        success: function(result){
+            try{
+                var retorno = result.split("<registroOperacao>");
+                var retorno2 = retorno[1].split("</registroOperacao>");
+                if(retorno2[0] == "SUCESSO"){
+                    $("#btnFecharCancelaEmegrencia").fadeIn(1000);
+                    $("#btnFecharCancelaEmegrencia").fadeIn();
+                    document.getElementById('btnAbrirCancelaEmergencia').disabled = 'true';
+                }else{
+                    document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+                }
+            }catch (error){
+                document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar Operação');
+        }
+    });
 }
 
 function registraOperacaoSaida(){
