@@ -12,26 +12,26 @@
     });
 </script>
 <div id="conteudo" class="mb-5 mt-3">
-    <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
+    
+    <div class="container conteudo_consulta">
         <div class="row">
-            <div class="col-sm-1 mt-4"></div>
-            <div class="col-sm-2 mt-4">
-                <input type="hidden" id="txtUrl" value="<?= URL ?>">
-                <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
-                <input type="hidden" id="portaria_id" value="<?= $dados["portaria_selecionada"] ?>">
-                <input type="hidden" id="rele1" value="<?= $dados["reles"][0]->rele1 ?>">
-                <input type="hidden" id="rele2" value="<?= $dados["reles"][0]->rele2 ?>">
-                <input type="hidden" id="rele3" value="<?= $dados["reles"][0]->rele3 ?>">
-                <input type="hidden" id="rele4" value="<?= $dados["reles"][0]->rele4 ?>">
-                <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
-                    <?php foreach($dados["portarias"] as $portaria){ ?>
-                        <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
-                    <?php }?>
-                </select>
+            <div class="col-sm-2 mt-2">
+                <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
+                    <input type="hidden" id="txtUrl" value="<?= URL ?>">
+                    <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
+                    <input type="hidden" id="portaria_id" value="<?= $dados["portaria_selecionada"] ?>">
+                    <input type="hidden" id="rele1" value="<?= $dados["reles"][0]->rele1 ?>">
+                    <input type="hidden" id="rele2" value="<?= $dados["reles"][0]->rele2 ?>">
+                    <input type="hidden" id="rele3" value="<?= $dados["reles"][0]->rele3 ?>">
+                    <input type="hidden" id="rele4" value="<?= $dados["reles"][0]->rele4 ?>">
+                    <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
+                        <?php foreach($dados["portarias"] as $portaria){ ?>
+                            <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
+                        <?php }?>
+                    </select>
+                </form>
             </div>
         </div>
-    </form>
-    <div class="container conteudo_consulta">
         <div class="resultados_admin">
             <h1>Painel de Operações</h1>
             <hr class="divisor_horizontal">
