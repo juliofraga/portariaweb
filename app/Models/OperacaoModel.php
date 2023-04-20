@@ -113,5 +113,15 @@
                 return null;
             } 
         }
+
+        public function consultaOperacoes()
+        {
+            try {
+                $this->db->query("SELECT o.* FROM operacoes o");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
     }
 ?>

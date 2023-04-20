@@ -168,6 +168,15 @@
             }  
         }
 
+        public function consultaOperacoes()
+        {
+            if($this->helper->sessionValidate()){
+                return $this->operacaoModel->consultaOperacoes();
+            }else{
+                $this->helper->redirectPage("/login/");
+            }  
+        }
+
     }
 
 ?>
