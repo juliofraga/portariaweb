@@ -1,3 +1,8 @@
+<?php 
+
+$helper = new Helpers();
+
+?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
@@ -117,22 +122,25 @@
                     <?php foreach($dados["consulta"] as $consulta){?>
                         <div class="row mt-4 border-bottom">
                             <div class="col-sm-2">
-                                <?= $consulta->hora_abre_cancela_entrada ?>
+                                <?= $helper->formataDateTime($consulta->hora_abre_cancela_entrada) ?>
                             </div>
                             <div class="col-sm-2">
-                                <?= $consulta->hora_fecha_cancela_saida ?>
+                                <?= $helper->formataDateTime($consulta->hora_fecha_cancela_saida) ?>
                             </div>
                             <div class="col-sm-2">
-                                <?= $consulta->veiculos_id ?>
+                                <?= $consulta->placa ?>
                             </div>
                             <div class="col-sm-2">
-                                <?= $consulta->usuarios_id ?>
+                                <?= $consulta->nome ?>
                             </div>
                             <div class="col-sm-2">
-                                <?= $consulta->tipo ?>
+                                <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
                             </div>
-                            <div class="col-sm-1">
-                                <button class="w-100 btn btn-secondary btn-sm" name="consultar" id="consultar" value="consultar" type="submit">Consultar</button>
+                            <div class="col-sm-2">
+                                <form action="<?= URL ?>/consultas/detalhada" method="POST" target="_blank">
+                                    <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
+                                    <button class="w-100 btn btn-secondary btn-sm" name="consultar" id="consultar" value="consultar" type="submit">Consultar</button>
+                                </form>
                             </div>
                     </div>
                     <?php }?>

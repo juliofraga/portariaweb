@@ -46,5 +46,14 @@
                 $this->helper->loginRedirect();
             }
         }
+
+        public function detalhada()
+        {
+            if($this->helper->sessionValidate()){
+                $this->view('consultas/detalhada');
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
     }
 ?>

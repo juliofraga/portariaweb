@@ -124,7 +124,7 @@
                 $data = explode("-", $divisor[0]);
                 return $dateTime = $data[2]."/".$data[1]."/".$data[0]." - ".$divisor[1];
             }else{
-                return "00/00/00 00:00:00";
+                return "-";
             }
         }
 
@@ -472,6 +472,15 @@
                 return true;
             }else{
                 return false;
+            }
+        }
+
+        public function retornaTipoOperacao($valor)
+        {
+            if($valor == "N"){
+                return "Normal";
+            }else if($valor == "E"){
+                return "Emergência";
             }
         }
     } 

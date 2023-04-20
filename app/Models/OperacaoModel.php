@@ -117,7 +117,7 @@
         public function consultaOperacoes()
         {
             try {
-                $this->db->query("SELECT o.* FROM operacoes o");
+                $this->db->query("SELECT o.*, v.placa, u.nome FROM operacoes o, veiculos v, usuarios u WHERE o.veiculos_id = v.id and o.usuarios_id = u.id");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
