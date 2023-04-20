@@ -92,7 +92,7 @@ $helper = new Helpers();
                     </div>
                     <div class="col-sm-4">
                         <div class="form-floating mt-2">
-                            <button class="w-100 btn btn-danger btn-lg" name="limpar" id="limpar" value="limpar" type="clear">Limpar Filtros</button>
+                            <button class="w-100 btn btn-danger btn-lg" name="limpar" id="limpar" value="limpar" type="reset">Limpar Filtros</button>
                         </div>
                     </div>
                 </div>
@@ -109,13 +109,16 @@ $helper = new Helpers();
                         <div class="col-sm-2">
                             <b>Hora Saída</b>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <b>Veículo</b>
                         </div>
                         <div class="col-sm-2">
                             <b>Operador</b>
                         </div>
                         <div class="col-sm-2">
+                            <b>Portaria</b>
+                        </div>
+                        <div class="col-sm-1">
                             <b>Tipo</b>
                         </div>
                     </div>
@@ -127,13 +130,16 @@ $helper = new Helpers();
                             <div class="col-sm-2">
                                 <?= $helper->formataDateTime($consulta->hora_fecha_cancela_saida) ?>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-1">
                                 <?= $consulta->placa ?>
                             </div>
                             <div class="col-sm-2">
                                 <?= $consulta->nome ?>
                             </div>
                             <div class="col-sm-2">
+                                <?= $consulta->descricao ?>
+                            </div>
+                            <div class="col-sm-1">
                                 <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
                             </div>
                             <div class="col-sm-2">

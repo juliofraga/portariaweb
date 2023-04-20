@@ -29,8 +29,10 @@
                 $consulta = null;
                 $fezConsulta = false;
                 if(isset($form) and $form != null){
+                    $portaria = isset($form["portaria"]) ? $form["portaria"] : null;
+                    $operador = isset($form["operador"]) ? $form["operador"] : null;
                     $fezConsulta = true;
-                    $consulta = $this->operacao->consultaOperacoes();
+                    $consulta = $this->operacao->consultaOperacoes($portaria, $operador);
                 }
                 $dados = [
                     'portarias' => $this->portaria->listaPortarias(),

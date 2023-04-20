@@ -114,12 +114,33 @@
             } 
         }
 
-        public function consultaOperacoes()
+        public function consultaOperacoes($portarias = null, $operadores = null)
         {
             try {
-                $this->db->query("SELECT o.*, v.placa, u.nome FROM operacoes o, veiculos v, usuarios u WHERE o.veiculos_id = v.id and o.usuarios_id = u.id");
+                // Filtrar Portaria
+                $portaria = "";
+                if($portarias != null){
+                    $portaria .= "WHERE ";
+                    foreach($portarias as $port){
+                        $portaria .= "p.id = '$port' OR ";
+                    }
+                    $portaria = substr($portaria, 0, -4);
+                }
+                // Filtrar Operador
+                $operador = "";
+                if($operadores != null){
+                    $operador .= "WHERE ";
+                    foreach($operadores as $ope){
+                        $operador .= "u.id = '$ope' OR ";
+                    }
+                    $operador = substr($operador, 0, -4);
+                }
+                // FILTRO POR OPERADOR NAO TA FUNCIONANDO, VERIFICAR
+                $this->db->query("SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id $operador LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id $portaria ORDER BY o.id DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                echo $th;
+                echo "SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id $operador LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id $portaria ORDER BY o.id DESC";
                 return null;
             } 
         }
