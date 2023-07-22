@@ -7,18 +7,20 @@
         public $motorista;
         public $operacaoModel;
         public $log;
+        public $camera;
 
         public function __construct()
         {
             require "Motorista.php";
             require "Veiculo.php";
+            require "Camera.php";
             $this->helper = new Helpers();
             $this->log = new Logs();
             $this->veiculo = new Veiculo();
             $this->empresa = new Empresa();
             $this->motorista = new Motorista();
             $this->operacaoModel = $this->model('OperacaoModel');
-            
+            $this->camera = new Camera();
         }
 
         public function index()
@@ -174,7 +176,32 @@
                 return $this->operacaoModel->consultaOperacoes($portaria, $operador);
             }else{
                 $this->helper->redirectPage("/login/");
-            }  
+            } 
+        }
+
+        public function capturaImagem()
+        {
+            if($this->helper->sessionValidate()){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $cameras = $this->camera->listaCamerasPortaria($form["portaria"]);
+                if($form["tipo"] == "entrada"){
+                    $tipo = 0;
+                }else if($form["tipo"] == "saida"){
+                    $tipo = 1;
+                }else if($form["tipo"] == "emergencia"){
+                    $tipo = 2;
+                }
+                foreach($cameras as $c){
+                    $name = time();
+                    $endereco = URL."/public/camera_".$c->id.".php";
+                    $comando = WKHTMLTOIMAGE_INSTALACAO." --height 1100 --width 1800 " . $endereco . " ".DIR_CAPTURA_IMAGENS.$name.".jpg";
+                    exec($comando);
+                    //VERIFICAR COMO ATRELAR A IMAGEM A OPERAÇÃO
+                    //$this->operacaoModel->salvaImagemOperacao(DIR_CAPTURA_IMAGENS.$name.".jpg", $this->helper->returnDateTime(), 0, $tipo, );
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
+            } 
         }
 
     }

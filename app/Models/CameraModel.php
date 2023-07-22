@@ -34,11 +34,9 @@
                 if(!empty($dados["portaria"])){
                     $portao = $dados["portaria"];
                 }
-                $this->db->query("INSERT INTO cameras(descricao, endereco_ip, url_foto, url_video, created_at, portoes_id) VALUES (:descricao, :endereco_ip, :url_foto, :url_video, :created_at, :portoes_id)");
+                $this->db->query("INSERT INTO cameras(descricao, endereco_ip, created_at, portoes_id) VALUES (:descricao, :endereco_ip, :created_at, :portoes_id)");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
-                $this->db->bind("url_foto", $dados['url_foto']);
-                $this->db->bind("url_video", $dados['url_video']);
                 $this->db->bind("created_at", $dataHora);
                 $this->db->bind("portoes_id", $portao);
                 if($this->db->execQuery()){
@@ -58,11 +56,9 @@
                 if(!empty($dados["portaria"])){
                     $portao = $dados["portaria"];
                 }
-                $this->db->query("UPDATE cameras SET descricao = :descricao, endereco_ip = :endereco_ip, url_foto = :url_foto, url_video = :url_video, updated_at = :updated_at, portoes_id = :portoes_id WHERE id = :id");
+                $this->db->query("UPDATE cameras SET descricao = :descricao, endereco_ip = :endereco_ip, updated_at = :updated_at, portoes_id = :portoes_id WHERE id = :id");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
-                $this->db->bind("url_foto", $dados['url_foto']);
-                $this->db->bind("url_video", $dados['url_video']);
                 $this->db->bind("updated_at", $dataHora);
                 $this->db->bind("portoes_id", $portao);
                 $this->db->bind("id", $dados["id"]);

@@ -45,28 +45,20 @@
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($this->helper->validateFields($form, "portaria")){
-                    $form["endereco_ip"] = $this->helper->handleEnderecoIp($form["endereco_ip"]);
-                    if(!$this->cameraModel->verificaIp($form["endereco_ip"])){
-                        $dateTime = $this->helper->returnDateTime();
-                        $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
-                        if($lastInsertId != null){
-                            $this->helper->setReturnMessage(
-                                $this->tipoSuccess,
-                                'Câmera cadastrada com sucesso!',
-                                $this->rotinaCad
-                            );
-                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
-                        }else{
-                            $this->helper->setReturnMessage(
-                                $this->tipoError,
-                                'Não foi possível cadastrar a câmera, tente novamente!',
-                                $this->rotinaCad
-                            );
-                        }
+                    $dateTime = $this->helper->returnDateTime();
+                    $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
+                    if($lastInsertId != null){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            'Câmera cadastrada com sucesso!',
+                            $this->rotinaCad
+                        );
+                        $this->criaArquivoCamera($lastInsertId, $form['endereco_ip']);
+                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            "Não foi possível cadastrar a câmera, já existe outra câmera cadastrada com esse endereço IP (".$form["endereco_ip"]."), tente novamente informando outro endereço IP!",
+                            'Não foi possível cadastrar a câmera, tente novamente!',
                             $this->rotinaCad
                         );
                     }
@@ -195,32 +187,37 @@
             }
         }
 
+        private function criaArquivoCamera($camera_id, $endereco){
+            //criamos o arquivo 
+            $arquivo = fopen('camera_' . $camera_id . '.php','w'); 
+            //verificamos se foi criado 
+            if ($arquivo == false) die('Não foi possível criar o arquivo.'); 
+            //escrevemos no arquivo
+            $array = explode("http://", $endereco);
+            $endereco = "http://".CREDENCIAIS_CAMERA.$array[1];
+            $texto = '<iframe src="'.$endereco.'" height="100%" width="100%" allowfullscreen></iframe>'; 
+            fwrite($arquivo, $texto); 
+            //Fechamos o arquivo após escrever nele
+            fclose($arquivo); 
+        }
+
         private function updateCamera($form, $dateTime)
         {
             if($this->helper->sessionValidate()){
                 $retorno = false;
                 if($this->helper->validateFields($form, "portaria")){
-                    $form["endereco_ip"] = $this->helper->handleEnderecoIp($form["endereco_ip"]);
-                    if(!$this->cameraModel->verificaIp($form["endereco_ip"], $form["id"])){
-                        $dateTime = $this->helper->returnDateTime();
-                        if($this->cameraModel->alterarCamera($form, $dateTime)){
-                            $this->helper->setReturnMessage(
-                                $this->tipoSuccess,
-                                'Câmera alterada com sucesso!',
-                                $this->rotinaCad
-                            );
-                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
-                        }else{
-                            $this->helper->setReturnMessage(
-                                $this->tipoError,
-                                'Não foi possível alterar a câmera, tente novamente!',
-                                $this->rotinaCad
-                            );
-                        }
+                    $dateTime = $this->helper->returnDateTime();
+                    if($this->cameraModel->alterarCamera($form, $dateTime)){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            'Câmera alterada com sucesso!',
+                            $this->rotinaCad
+                        );
+                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            "Não foi possível alterar a câmera, já existe outra câmera cadastrada com esse endereço IP (".$form["endereco_ip"]."), tente novamente informando outro endereço IP!",
+                            'Não foi possível alterar a câmera, tente novamente!',
                             $this->rotinaCad
                         );
                     }

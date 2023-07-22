@@ -20,10 +20,10 @@
                     <input type="hidden" id="txtUrl" value="<?= URL ?>">
                     <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
                     <input type="hidden" id="portaria_id" value="<?= $dados["portaria_selecionada"] ?>">
-                    <input type="hidden" id="rele1" value="<?= $dados["reles"][0]->rele1 ?>">
-                    <input type="hidden" id="rele2" value="<?= $dados["reles"][0]->rele2 ?>">
-                    <input type="hidden" id="rele3" value="<?= $dados["reles"][0]->rele3 ?>">
-                    <input type="hidden" id="rele4" value="<?= $dados["reles"][0]->rele4 ?>">
+                    <input type="hidden" id="rele_abre_cancela" value="<?= $dados["reles"][0]->rele_abre_cancela ?>">
+                    <input type="hidden" id="rele_fecha_cancela" value="<?= $dados["reles"][0]->rele_fecha_cancela ?>">
+                    <input type="hidden" id="porta" value="<?= $dados["reles"][0]->porta ?>">
+                    <input type="hidden" id="endereco_ip_placa" value="<?= $dados["reles"][0]->endereco_ip ?>">
                     <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
                         <?php foreach($dados["portarias"] as $portaria){ ?>
                             <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
@@ -181,7 +181,7 @@
                         <?php foreach($dados["cameras"] as $camera){ ?>
                             <div class="col-sm-12 mt-5" id="camera_iframe_id_<?= $camera->id ?>">
                                 <label><?= $camera->descricao ?></label>
-                                <iframe src="http://localhost/" height="100%" width="100%" allowfullscreen></iframe> 
+                                <iframe src="http://localhost" height="100%" width="100%" allowfullscreen></iframe> 
                             </div>
                         <?php }?>
                     </div>

@@ -40,24 +40,8 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required>
-                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="url_foto" name="url_foto" placeholder="URL Foto*" required>
-                                <label for="url_foto">URL Foto*</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="url_video" name="url_video" placeholder="URL Vídeo*" required>
-                                <label for="url_video">URL Vídeo*</label>
+                                <input type="text" class="form-control" id="endereco" name="endereco_ip" placeholder="Endereço*" required>
+                                <label for="endereco_ip">Endereço*</label>
                             </div>
                         </div>
                     </div>

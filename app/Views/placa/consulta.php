@@ -50,7 +50,10 @@
                 <div class="col-sm-2">
                     Endereço IP
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-1">
+                    Porta
+                </div>
+                <div class="col-sm-2">
                     Portaria
                 </div>
                 <div class="col-sm-2">
@@ -61,29 +64,34 @@
             <?php 
                 foreach($dados["dados"] as $placa){
             ?>
-                <div class="row mt-4">
+                <div class="row mt-4 border-bottom mt-2">
                     <div class="col-sm-3">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                        <p class="pb-1 mb-0 large">
                             <?= $placa->descricao ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                        <p class="pb-1 mb-0 large">
                             <?= $placa->endereco_ip ?>
                         </p>
                     </div>
-                    <div class="col-sm-3">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                    <div class="col-sm-1">
+                        <p class="pb-1 mb-0 large">
+                            <?= $placa->porta ?>
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p class="pb-1 mb-0 large">
                             <?= $placa->portaria ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                        <p class="pb-1 mb-0 large">
                             <?= $this->helper->retornaSituacao($placa->situacao) ?>
                         </p>
                     </div>
                     <div class="col-sm-2">
-                        <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                        <p class="pb-1 mb-0 large">
                             <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $placa->id ?>">Editar</a>
                         </p>
                     </div>
@@ -107,36 +115,40 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-12">
+                                        <div class="col-sm-9">
                                             <div class="form-floating mt-3">
                                                 <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $placa->endereco_ip ?>">
                                                 <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
                                             </div>
                                         </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-floating mt-3">
+                                                <input type="text" class="form-control" id="porta" name="porta" placeholder="Porta*" required value="<?= $placa->porta ?>">
+                                                <label for="porta">Porta*</label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="rele1" name="rele1" placeholder="Relé 1*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);" value="<?= $placa->rele1 ?>">
-                                                <label for="rele1">Relé 1*</label>
+                                                <select class="form-control" id="rele_abre_cancela" name="rele_abre_cancela" placeholder="Relé Abre Cancela*" required>
+                                                    <option value="r1" <?= $helper->setSelected('r1', $placa->rele_abre_cancela) ?>>Relé 1</option>
+                                                    <option value="r2" <?= $helper->setSelected('r2', $placa->rele_abre_cancela) ?>>Relé 2</option>
+                                                    <option value="r3" <?= $helper->setSelected('r3', $placa->rele_abre_cancela) ?>>Relé 3</option>
+                                                    <option value="r4" <?= $helper->setSelected('r4', $placa->rele_abre_cancela) ?>>Relé 4</option>
+                                                </select>
+                                                <label for="rele_abre_cancela">Relé Abre Cancela*</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <div class="form-floating mt-3">
-                                            <input type="text" class="form-control" id="rele2" name="rele2" placeholder="Relé 2*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);" value="<?= $placa->rele2 ?>">
-                                                <label for="rele1">Relé 2*</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-floating mt-3">
-                                                <input type="text" class="form-control" id="rele3" name="rele3" placeholder="Relé 3*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);" value="<?= $placa->rele3 ?>">
-                                                <label for="rele1">Relé 3*</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-floating mt-3">
-                                            <input type="text" class="form-control" id="rele4" name="rele4" placeholder="Relé 4*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);" value="<?= $placa->rele4 ?>">
-                                                <label for="rele1">Relé 4*</label>
+                                                <select class="form-control" id="rele_fecha_cancela" name="rele_fecha_cancela" placeholder="Relé Fecha Cancela*" required>
+                                                    <option value="r1" <?= $helper->setSelected('r1', $placa->rele_fecha_cancela) ?>>Relé 1</option>
+                                                    <option value="r2" <?= $helper->setSelected('r2', $placa->rele_fecha_cancela) ?>>Relé 2</option>
+                                                    <option value="r3" <?= $helper->setSelected('r3', $placa->rele_fecha_cancela) ?>>Relé 3</option>
+                                                    <option value="r4" <?= $helper->setSelected('r4', $placa->rele_fecha_cancela) ?>>Relé 4</option>
+                                                </select>
+                                                <label for="rele_fecha_cancela">Relé Fecha Cancela*</label>
                                             </div>
                                         </div>
                                     </div>

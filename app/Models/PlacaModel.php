@@ -30,13 +30,12 @@
         public function cadastrarPlaca($dados, $dataHora)
         {
             try {
-                $this->db->query("INSERT INTO placas(descricao, endereco_ip, rele1, rele2, rele3, rele4, created_at) VALUES (:descricao, :endereco_ip, :rele1, :rele2, :rele3, :rele4, :created_at)");
+                $this->db->query("INSERT INTO placas(descricao, endereco_ip, porta, rele_abre_cancela, rele_fecha_cancela,created_at) VALUES (:descricao, :endereco_ip, :porta, :rele_abre_cancela, :rele_fecha_cancela, :created_at)");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
-                $this->db->bind("rele1", $dados['rele1']);
-                $this->db->bind("rele2", $dados['rele2']);
-                $this->db->bind("rele3", $dados['rele3']);
-                $this->db->bind("rele4", $dados['rele4']);
+                $this->db->bind("porta", $dados['porta']);
+                $this->db->bind("rele_abre_cancela", $dados['rele_abre_cancela']);
+                $this->db->bind("rele_fecha_cancela", $dados['rele_fecha_cancela']);
                 $this->db->bind("created_at", $dataHora);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
@@ -51,13 +50,12 @@
         public function alterarPlaca($dados, $dataHora)
         {
             try {
-                $this->db->query("UPDATE placas SET descricao = :descricao, endereco_ip = :endereco_ip, rele1 = :rele1, rele2 = :rele2, rele3 = :rele3, rele4 = :rele4, updated_at = :updated_at WHERE id = :id");
+                $this->db->query("UPDATE placas SET descricao = :descricao, endereco_ip = :endereco_ip, porta = :porta, rele_abre_cancela = :rele_abre_cancela, rele_fecha_cancela = :rele_fecha_cancela, updated_at = :updated_at WHERE id = :id");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
-                $this->db->bind("rele1", $dados['rele1']);
-                $this->db->bind("rele2", $dados['rele2']);
-                $this->db->bind("rele3", $dados['rele3']);
-                $this->db->bind("rele4", $dados['rele4']);
+                $this->db->bind("porta", $dados['porta']);
+                $this->db->bind("rele_abre_cancela", $dados['rele_abre_cancela']);
+                $this->db->bind("rele_fecha_cancela", $dados['rele_fecha_cancela']);
                 $this->db->bind("updated_at", $dataHora);
                 $this->db->bind("id", $dados["id"]);
                 $this->db->execQuery();
@@ -93,7 +91,7 @@
         public function listaReles($portaria_id)
         {
             try {
-                $this->db->query("SELECT pl.rele1, pl.rele2, pl.rele3, pl.rele4 FROM placas pl, portoes p WHERE p.placas_id = pl.id and p.id = :portaria_id");
+                $this->db->query("SELECT pl.endereco_ip, pl.porta, pl.rele_abre_cancela, pl.rele_fecha_cancela FROM placas pl, portoes p WHERE p.placas_id = pl.id and p.id = :portaria_id");
                 $this->db->bind("portaria_id", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {

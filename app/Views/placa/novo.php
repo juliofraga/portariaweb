@@ -38,36 +38,42 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-10">
                             <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required>
                                 <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
                             </div>
                         </div>
+                        <div class="col-sm-2">
+                            <div class="form-floating mt-3">
+                                <input type="text" class="form-control" id="porta" name="porta" placeholder="Porta*" required  onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="porta">Porta*</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="rele1" name="rele1" placeholder="Relé 1*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
-                                <label for="rele1">Relé 1*</label>
+                                <select class="form-control" id="rele_abre_cancela" name="rele_abre_cancela" placeholder="Relé Abre Cancela*" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="r1">Relé 1</option>
+                                    <option value="r2">Relé 2</option>
+                                    <option value="r3">Relé 3</option>
+                                    <option value="r4">Relé 4</option>
+                                </select>
+                                <label for="rele_abre_cancela">Relé Abre Cancela*</label>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-6">
                             <div class="form-floating mt-3">
-                            <input type="text" class="form-control" id="rele2" name="rele2" placeholder="Relé 2*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
-                                <label for="rele1">Relé 2*</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="rele3" name="rele3" placeholder="Relé 3*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
-                                <label for="rele1">Relé 3*</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-floating mt-3">
-                            <input type="text" class="form-control" id="rele4" name="rele4" placeholder="Relé 4*" required maxlength="2" onkeyup="limpaSeNaoNumerico(this);">
-                                <label for="rele1">Relé 4*</label>
+                                <select class="form-control" id="rele_fecha_cancela" name="rele_fecha_cancela" placeholder="Relé Fecha Cancela*" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="r1">Relé 1</option>
+                                    <option value="r2">Relé 2</option>
+                                    <option value="r3">Relé 3</option>
+                                    <option value="r4">Relé 4</option>
+                                </select>
+                                <label for="rele_fecha_cancela">Relé Fecha Cancela*</label>
                             </div>
                         </div>
                     </div>
