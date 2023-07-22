@@ -144,5 +144,20 @@
                 return null;
             } 
         }
+
+        public function salvaImagemOperacao($path, $dateTime, $abreFecha, $tipo, $operacao_id)
+        {
+            try {
+                $this->db->query("INSERT INTO imagens(url_imagem, created_at, tipo, tipo_operacao, operacoes_id) VALUES (:url_imagem, :created_at, :tipo, :tipo_operacao, :operacoes_id)");
+                $this->db->bind("url_imagem", $path);
+                $this->db->bind("created_at", $dateTime);
+                $this->db->bind("tipo", $abreFecha);
+                $this->db->bind("tipo_operacao", $tipo);
+                $this->db->bind("operacoes_id", $operacao_id);
+                $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
     }
 ?>
