@@ -13,14 +13,13 @@
         {
             require "Motorista.php";
             require "Veiculo.php";
-            require "Camera.php";
             $this->helper = new Helpers();
             $this->log = new Logs();
             $this->veiculo = new Veiculo();
             $this->empresa = new Empresa();
             $this->motorista = new Motorista();
             $this->operacaoModel = $this->model('OperacaoModel');
-            $this->camera = new Camera();
+            $this->camera = $this->model('CameraModel');
         }
 
         public function index()
