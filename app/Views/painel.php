@@ -181,7 +181,7 @@
                         <?php foreach($dados["cameras"] as $camera){ ?>
                             <div class="col-sm-12 mt-5" id="camera_iframe_id_<?= $camera->id ?>">
                                 <label><?= $camera->descricao ?></label>
-                                <iframe src="http://localhost" height="100%" width="100%" allowfullscreen></iframe> 
+                                <iframe src="http://45.181.21.19:3381/ISAPI/streaming/channels/1/picture" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                             </div>
                         <?php }?>
                     </div>

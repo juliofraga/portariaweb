@@ -114,33 +114,44 @@
             } 
         }
 
-        public function consultaOperacoes($portarias = null, $operadores = null)
+        public function consultaOperacoes($portarias = null, $operadores = null, $tipos = null)
         {
             try {
                 // Filtrar Portaria
                 $portaria = "";
                 if($portarias != null){
-                    $portaria .= "WHERE ";
-                    foreach($portarias as $port){
-                        $portaria .= "p.id = '$port' OR ";
+                    $portaria = "AND p.id IN (";
+                    for($i = 0; $i < count($portarias); $i++){
+                        $portaria .= "'$portarias[$i]',";
                     }
-                    $portaria = substr($portaria, 0, -4);
+                    $portaria = substr($portaria, 0, -1);
+                    $portaria .= ")";
                 }
+                
                 // Filtrar Operador
                 $operador = "";
                 if($operadores != null){
-                    $operador .= "WHERE ";
-                    foreach($operadores as $ope){
-                        $operador .= "u.id = '$ope' OR ";
+                    $operador = "AND u.id IN (";
+                    for($i = 0; $i < count($operadores); $i++){
+                        $operador .= "'$operadores[$i]',";
                     }
-                    $operador = substr($operador, 0, -4);
+                    $operador = substr($operador, 0, -1);
+                    $operador .= ")";
                 }
-                // FILTRO POR OPERADOR NAO TA FUNCIONANDO, VERIFICAR
-                $this->db->query("SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id $operador LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id $portaria ORDER BY o.id DESC");
+                // Filtrar Tipo
+                $tipo = "";
+                if($tipos != null){
+                    $tipo = "AND o.tipo IN (";
+                    for($i = 0; $i < count($tipos); $i++){
+                        $tipo .= "'$tipos[$i]',";
+                    }
+                    $tipo = substr($tipo, 0, -1);
+                    $tipo .= ")";
+                }
+
+                $this->db->query("SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id WHERE o.id > 0 $portaria $operador $tipo ORDER BY o.id DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
-                echo $th;
-                echo "SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id $operador LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id $portaria ORDER BY o.id DESC";
                 return null;
             } 
         }

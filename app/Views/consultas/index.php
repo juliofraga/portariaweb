@@ -14,7 +14,7 @@ $helper = new Helpers();
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="portaria[]" id="portaria"  multiple="multiple">
                                 <?php foreach($dados["portarias"] as $portaria){?>
-                                    <option value="<?= $portaria->id ?>"><?= $portaria->descricao ?></option>
+                                    <option value="<?= $portaria->id ?>" <?= $helper->setMultiSelect($portaria->id, $dados['portariasSelecionadas']) ?>><?= $portaria->descricao ?></option>
                                 <?php }?>
                             </select>
                         </div>
@@ -24,7 +24,7 @@ $helper = new Helpers();
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="operador[]" id="operador"  multiple="multiple">
                                 <?php foreach($dados["operadores"] as $operador){?>
-                                    <option value="<?= $operador->id ?>"><?= $operador->nome ?></option>
+                                    <option value="<?= $operador->id ?>" <?= $helper->setMultiSelect($operador->id, $dados['operadoresSelecionados']) ?>><?= $operador->nome ?></option>
                                 <?php }?>
                             </select>
                         </div>
@@ -33,8 +33,8 @@ $helper = new Helpers();
                     <div class="col-sm-4">
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="tipo[]" id="tipo"  multiple="multiple">
-                                <option value="N" selected>Normal</option>
-                                <option value="E">Emergencial</option>
+                                <option value="N" <?= $helper->setMultiSelect('N', $dados['tiposSelecionados']) ?>>Normal</option>
+                                <option value="E" <?= $helper->setMultiSelect('E', $dados['tiposSelecionados']) ?>>Emergencial</option>
                             </select>
                         </div>
                         <label for="tipo">Tipo</label>
@@ -145,7 +145,7 @@ $helper = new Helpers();
                             <div class="col-sm-2">
                                 <form action="<?= URL ?>/consultas/detalhada" method="POST" target="_blank">
                                     <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
-                                    <button class="w-100 btn btn-secondary btn-sm" name="consultar" id="consultar" value="consultar" type="submit">Consultar</button>
+                                    <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
                                 </form>
                             </div>
                     </div>

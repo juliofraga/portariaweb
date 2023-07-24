@@ -174,10 +174,10 @@
             }  
         }
 
-        public function consultaOperacoes($portaria = null, $operador = null)
+        public function consultaOperacoes($portaria = null, $operador = null, $tipo = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->operacaoModel->consultaOperacoes($portaria, $operador);
+                return $this->operacaoModel->consultaOperacoes($portaria, $operador, $tipo);
             }else{
                 $this->helper->redirectPage("/login/");
             } 

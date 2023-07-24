@@ -161,6 +161,8 @@
             try {
                 if($attr == null){
                     $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC");
+                }else if($attr == "todos"){
+                    $this->db->query("SELECT * FROM usuarios order by nome ASC");
                 }else if($attr == "operador"){
                     $this->db->query("SELECT * FROM usuarios WHERE perfil = :operador and situacao = :situacao order by nome ASC");
                     $this->db->bind("operador", "Operador");
