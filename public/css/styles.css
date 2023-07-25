@@ -11242,3 +11242,14 @@ label{
 .fonteMenu{
   font-size: 12px;
 }
+
+.tituloConsultaDetalhada {
+  font-family: calibri;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.textoConsultaDetalhada {
+  font-family: calibri;
+  font-size: 23px;
+}

@@ -174,7 +174,7 @@
         public function consultaOperacaoPorId($id)
         {
             try {
-                $this->db->query("SELECT o.* FROM operacoes o WHERE id = :id");
+                $this->db->query("SELECT o.*, pe.nome_completo, pe.cpf, e.razao_social, e.cnpj FROM operacoes o LEFT JOIN pessoas pe ON o.pessoas_id = pe.id INNER JOIN pessoas_has_veiculos phv ON o.pessoas_id = phv.pessoas_id INNER JOIN veiculos v ON phv.veiculos_id = v.id INNER JOIN empresas e ON e.id = v.empresas_id WHERE o.id = :id");
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
