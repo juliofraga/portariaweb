@@ -114,42 +114,68 @@
             } 
         }
 
-        public function consultaOperacoes($portarias = null, $operadores = null, $tipos = null)
+        public function consultaOperacoes($portarias = null, $operadores = null, $tipos = null, $empresas = null, $veiculos = null, $motoristas = null, $dataDe = null, $dataAte = null)
         {
             try {
                 // Filtrar Portaria
                 $portaria = "";
                 if($portarias != null){
-                    $portaria = "AND p.id IN (";
-                    for($i = 0; $i < count($portarias); $i++){
-                        $portaria .= "'$portarias[$i]',";
-                    }
-                    $portaria = substr($portaria, 0, -1);
-                    $portaria .= ")";
+                    $portaria = $this->formataWhereClause($portarias, "p.id");
                 }
                 
                 // Filtrar Operador
                 $operador = "";
                 if($operadores != null){
-                    $operador = "AND u.id IN (";
-                    for($i = 0; $i < count($operadores); $i++){
-                        $operador .= "'$operadores[$i]',";
-                    }
-                    $operador = substr($operador, 0, -1);
-                    $operador .= ")";
+                    $operador = $this->formataWhereClause($operadores, "u.id");
                 }
                 // Filtrar Tipo
                 $tipo = "";
                 if($tipos != null){
-                    $tipo = "AND o.tipo IN (";
-                    for($i = 0; $i < count($tipos); $i++){
-                        $tipo .= "'$tipos[$i]',";
-                    }
-                    $tipo = substr($tipo, 0, -1);
-                    $tipo .= ")";
+                    $tipo = $this->formataWhereClause($tipos, "o.tipo");
                 }
 
-                $this->db->query("SELECT o.*, u.nome, v.placa, p.descricao FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id WHERE o.id > 0 $portaria $operador $tipo ORDER BY o.id DESC");
+                // Filtrar Empresa
+                $empresa = "";
+                if($empresas != null){
+                    $empresa = $this->formataWhereClause($empresas, "v.empresas_id");
+                }
+
+                // Filtrar Veículo
+                $veiculo = "";
+                if($veiculos != null){
+                    $veiculo = $this->formataWhereClause($veiculos, "v.id");
+                }
+
+                // Filtrar Motorista
+                $motorista = "";
+                if($motoristas != null){
+                    $motorista = $this->formataWhereClause($motoristas, "o.pessoas_id");
+                }
+
+                // Filtrar Data Dê
+                $dataDeFiltro = "";
+                if($dataDe != null){
+                    $dataDeFiltro = " AND o.hora_abre_cancela_entrada >= '$dataDe 00:00:00'";
+                }
+
+                // Filtrar Data Até
+                $dataAteFiltro = "";
+                if($dataAte != null){
+                    $dataAteFiltro = " AND o.hora_abre_cancela_entrada <= '$dataAte 23:59:59'";
+                }
+
+                $this->db->query("SELECT o.*, v.placa, p.descricao, pe.nome_completo FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id LEFT JOIN pessoas pe ON o.pessoas_id = pe.id WHERE o.id > 0 $portaria $operador $tipo $empresa $veiculo $motorista $dataDeFiltro $dataAteFiltro ORDER BY o.id DESC");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
+        public function consultaOperacaoPorId($id)
+        {
+            try {
+                $this->db->query("SELECT o.* FROM operacoes o WHERE id = :id");
+                $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
@@ -169,6 +195,17 @@
             } catch (Throwable $th) {
                 return null;
             } 
+        }
+
+        private function formataWhereClause($valores, $field)
+        {
+            $retorno = "AND $field IN (";
+            for($i = 0; $i < count($valores); $i++){
+                $retorno .= "'$valores[$i]',";
+            }
+            $retorno = substr($retorno, 0, -1);
+            $retorno .= ")";
+            return $retorno;
         }
     }
 ?>

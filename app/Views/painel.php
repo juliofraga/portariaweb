@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="camerasPortaria">
+                <!--<div id="camerasPortaria">
                     <h4><u>Câmeras</u></h4>
                     <div class="row mt-3">
                         <?php foreach($dados["cameras"] as $camera){ ?>
@@ -185,7 +185,7 @@
                             </div>
                         <?php }?>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

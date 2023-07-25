@@ -45,7 +45,7 @@ $helper = new Helpers();
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="empresa[]" id="empresa"  multiple="multiple">
                                 <?php foreach($dados["empresas"] as $empresa){?>
-                                    <option value="<?= $empresa->id ?>"><?= $empresa->nome_fantasia ?> (<?= $empresa->cnpj ?>)</option>
+                                    <option value="<?= $empresa->id ?>" <?= $helper->setMultiSelect($empresa->id, $dados['empresasSelecionadas']) ?>><?= $empresa->nome_fantasia ?> (<?= $empresa->cnpj ?>)</option>
                                 <?php }?>
                             </select>
                         </div>
@@ -55,7 +55,7 @@ $helper = new Helpers();
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="veiculo[]" id="veiculo"  multiple="multiple">
                                 <?php foreach($dados["veiculos"] as $veiculo){?>
-                                    <option value="<?= $veiculo->id ?>"><?= $veiculo->placa ?></option>
+                                    <option value="<?= $veiculo->id ?>" <?= $helper->setMultiSelect($veiculo->id, $dados['veiculosSelecionados']) ?>><?= $veiculo->placa ?></option>
                                 <?php }?>
                             </select>
                         </div>
@@ -65,7 +65,7 @@ $helper = new Helpers();
                         <div class="form-floating mt-2">
                             <select class="js-example-basic-multiple w-100" name="motorista[]" id="motorista"  multiple="multiple">
                                 <?php foreach($dados["motoristas"] as $motorista){?>
-                                    <option value="<?= $motorista->id ?>"><?= $motorista->nome_completo ?> (<?= $motorista->cpf ?>)</option>
+                                    <option value="<?= $motorista->id ?>" <?= $helper->setMultiSelect($motorista->id, $dados['motoristasSelecionados']) ?>><?= $motorista->nome_completo ?> (<?= $motorista->cpf ?>)</option>
                                 <?php }?>
                             </select>
                         </div>
@@ -75,13 +75,13 @@ $helper = new Helpers();
                 <div class="row mt-2">
                     <div class="col-sm-2">
                         <div class="form-floating mt-2">
-                            <input type="date" class="form-control" id="dataDe" name="dataDe" placeholder="Data: Dê">
+                            <input type="date" class="form-control" id="dataDe" name="dataDe" placeholder="Data: Dê" value="<?= $dados["dataDeSelecionada"] ?>">
                         </div>
                         <label for="dataDe">Data: Dê</label>
                     </div>
                     <div class="col-sm-2">
                         <div class="form-floating mt-2">
-                            <input type="date" class="form-control" id="dataAte" name="dataAte" placeholder="Data: Até">
+                            <input type="date" class="form-control" id="dataAte" name="dataAte" placeholder="Data: Até" value="<?= $dados["dataAteSelecionada"] ?>">
                         </div>
                         <label for="dataAte">Data: Até</label>
                     </div>
@@ -92,7 +92,7 @@ $helper = new Helpers();
                     </div>
                     <div class="col-sm-4">
                         <div class="form-floating mt-2">
-                            <button class="w-100 btn btn-danger btn-lg" name="limpar" id="limpar" value="limpar" type="reset">Limpar Filtros</button>
+                            <button class="w-100 btn btn-danger btn-lg" name="limparFiltros" id="limparFiltros" value="limparFiltros" type="submit">Limpar Filtros</button>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ $helper = new Helpers();
                             <b>Veículo</b>
                         </div>
                         <div class="col-sm-2">
-                            <b>Operador</b>
+                            <b>Motorista</b>
                         </div>
                         <div class="col-sm-2">
                             <b>Portaria</b>
@@ -134,7 +134,7 @@ $helper = new Helpers();
                                 <?= $consulta->placa ?>
                             </div>
                             <div class="col-sm-2">
-                                <?= $consulta->nome ?>
+                                <?= $consulta->nome_completo ?>
                             </div>
                             <div class="col-sm-2">
                                 <?= $consulta->descricao ?>
@@ -143,7 +143,7 @@ $helper = new Helpers();
                                 <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
                             </div>
                             <div class="col-sm-2">
-                                <form action="<?= URL ?>/consultas/detalhada" method="POST" target="_blank">
+                                <form action="<?= URL ?>/consultas/detalhada/<?= $consulta->id ?>" method="POST" target="_blank">
                                     <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
                                     <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
                                 </form>

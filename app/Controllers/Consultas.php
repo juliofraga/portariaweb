@@ -26,31 +26,54 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                $consulta = null;
-                $fezConsulta = false;
+                if(isset($form["limparFiltros"])){
+                    $this->helper->redirectPage("/consultas/");
+                }
                 $operadoresSelecionados = null;
                 $portariasSelecionados = null;
-                $tipo = null;
+                $tiposSelecionados = null;
+                $empresasSelecionadas = null;
+                $veiculosSelecionados = null;
+                $motoristasSelecionados = null;
+                $dataDeSelecionada = $this->helper->returnDate();
+                $dataAteSelecionada = $this->helper->returnDate();
+                $consulta = $this->operacao->consultaOperacoes(null, null, null, null, null, null, $dataDeSelecionada, $dataAteSelecionada);
+                
                 if(isset($form) and $form != null){
                     $portaria = isset($form["portaria"]) ? $form["portaria"] : null;
                     $portariasSelecionados = $portaria;
                     $operador = isset($form["operador"]) ? $form["operador"] : null;
                     $operadoresSelecionados = $operador;
                     $tipo = isset($form["tipo"]) ? $form["tipo"] : null;
-                    $fezConsulta = true;
-                    $consulta = $this->operacao->consultaOperacoes($portaria, $operador, $tipo);
+                    $tiposSelecionados = $tipo;
+                    $empresa = isset($form["empresa"]) ? $form["empresa"] : null;
+                    $empresasSelecionadas = $empresa;
+                    $veiculo = isset($form["veiculo"]) ? $form["veiculo"] : null;
+                    $veiculosSelecionados = $veiculo;
+                    $motorista = isset($form["motorista"]) ? $form["motorista"] : null;
+                    $motoristasSelecionados = $motorista;
+                    $dataDe = isset($form["dataDe"]) ? $form["dataDe"] : null;
+                    $dataDeSelecionada = $dataDe;
+                    $dataAte = isset($form["dataAte"]) ? $form["dataAte"] : null;
+                    $dataAteSelecionada = $dataAte;
+                    $consulta = $this->operacao->consultaOperacoes($portaria, $operador, $tipo, $empresa, $veiculo, $motorista, $dataDe, $dataAte);
                 }
                 $dados = [
                     'portarias' => $this->portaria->listaPortarias(),
                     'operadores' => $this->usuario->listaUsuarios('todos'),
                     'operadoresSelecionados' => $operadoresSelecionados,
                     'portariasSelecionadas' => $portariasSelecionados,
-                    'tiposSelecionados' => $tipo,
+                    'tiposSelecionados' => $tiposSelecionados,
+                    'empresasSelecionadas' => $empresasSelecionadas,
+                    'veiculosSelecionados' => $veiculosSelecionados,
+                    'motoristasSelecionados' => $motoristasSelecionados,
+                    'dataDeSelecionada' => $dataDeSelecionada,
+                    'dataAteSelecionada' => $dataAteSelecionada,
                     'empresas' => $this->empresa->listaEmpresas(),
                     'veiculos' => $this->veiculo->listaVeiculos(),
                     'motoristas' => $this->motorista->listaMotoristas(),
                     'consulta' => $consulta,
-                    'fezConsulta' => $fezConsulta
+                    'fezConsulta' => true
                 ];
                 $this->view('consultas/index', $dados);
             }else{
@@ -58,10 +81,17 @@
             }
         }
 
-        public function detalhada()
+        public function detalhada($id = null)
         {
             if($this->helper->sessionValidate()){
-                $this->view('consultas/detalhada');
+                if($id == null){
+                    $this->view('pagenotfound');
+                }else{
+                    $dados = [
+                        'operacao' => $this->operacao->consultaOperacaoPorId($id)
+                    ];
+                    $this->view('consultas/detalhada', $dados);
+                }
             }else{
                 $this->helper->loginRedirect();
             }
