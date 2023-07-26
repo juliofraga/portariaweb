@@ -88,7 +88,8 @@
                     $this->view('pagenotfound');
                 }else{
                     $dados = [
-                        'operacao' => $this->operacao->consultaOperacaoPorId($id)
+                        'operacao' => $this->operacao->consultaOperacaoPorId($id),
+                        'imagens' => $this->operacao->buscaImagensOperacaoPorId($id),
                     ];
                     $this->view('consultas/detalhada', $dados);
                 }

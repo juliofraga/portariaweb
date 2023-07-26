@@ -489,5 +489,11 @@
                 return "Emergência";
             }
         }
+
+        public function formataUrlImagem($url)
+        {
+            $array = explode('/public/', $url);
+            return URL."/public/".$array[1];
+        }
     } 
 ?>

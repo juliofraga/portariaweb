@@ -192,6 +192,15 @@
             } 
         }
 
+        public function buscaImagensOperacaoPorId($id)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->operacaoModel->buscaImagensOperacaoPorId($id);
+            }else{
+                $this->helper->redirectPage("/login/");
+            }
+        }
+
         public function capturaImagem()
         {
             if($this->helper->sessionValidate()){
