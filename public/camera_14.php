@@ -1,1 +1,1 @@
-<iframe src="http://admin:13661366v@218.222.222.111." height="100%" width="100%" allowfullscreen></iframe>
+<iframe src="http://admin:13661366v@45.181.21.19:3384/ISAPI/streaming/channels/1/picture" height="100%" width="100%" allowfullscreen></iframe>

@@ -50,7 +50,7 @@
                     if($lastInsertId != null){
                         $this->helper->setReturnMessage(
                             $this->tipoSuccess,
-                            'Câmera cadastrada com sucesso!',
+                            'Câmera cadastrada com sucesso! Para aplicar a alteração, faça logoff do sistema e entre novamente!',
                             $this->rotinaCad
                         );
                         $this->criaArquivoCamera($lastInsertId, $form['endereco_ip']);

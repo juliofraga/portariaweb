@@ -84,6 +84,11 @@
                     if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação", $$form["idRegistro"], 0, $dateTime);
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
+                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $form["idRegistro"]);
+                        }
+                        $_SESSION['infoCapturaImagem'] = null;
+                        $_SESSION["contImagens"] = null;
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
@@ -127,6 +132,11 @@
                     if($lastInsertId){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
+                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
+                        }
+                        $_SESSION['infoCapturaImagem'] = null;
+                        $_SESSION["contImagens"] = null;
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
@@ -186,7 +196,9 @@
         public function consultaOperacaoPorId($id)
         {
             if($this->helper->sessionValidate()){
-                return $this->operacaoModel->consultaOperacaoPorId($id);
+                $tipoOperacao = $this->operacaoModel->retornaTipoOperacao($id);
+                $tipoOperacao = $tipoOperacao[0]->tipo;
+                return $this->operacaoModel->consultaOperacaoPorId($id, $tipoOperacao);
             }else{
                 $this->helper->redirectPage("/login/");
             } 

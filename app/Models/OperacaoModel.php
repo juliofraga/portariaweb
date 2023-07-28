@@ -171,10 +171,14 @@
             } 
         }
 
-        public function consultaOperacaoPorId($id)
+        public function consultaOperacaoPorId($id, $tipo)
         {
             try {
-                $this->db->query("SELECT o.*, pe.nome_completo, pe.cpf, e.razao_social, e.cnpj, v.placa, v.descricao, v.tipo, o.tipo as tipo_operacao, po.descricao as portaria_descricao, o.hora_abre_cancela_entrada, o.hora_fecha_cancela_entrada, o.hora_abre_cancela_saida, o.hora_fecha_cancela_saida, o.obs_emergencia, u.nome, u.login FROM operacoes o LEFT JOIN pessoas pe ON o.pessoas_id = pe.id INNER JOIN pessoas_has_veiculos phv ON o.pessoas_id = phv.pessoas_id INNER JOIN veiculos v ON phv.veiculos_id = v.id INNER JOIN empresas e ON e.id = v.empresas_id INNER JOIN portoes po ON o.portaria_id = po.id INNER JOIN usuarios u ON o.usuarios_id = u.id WHERE o.id = :id");
+                if($tipo == 'N'){
+                    $this->db->query("SELECT o.*, pe.nome_completo, pe.cpf, e.razao_social, e.cnpj, v.placa, v.descricao, v.tipo, o.tipo as tipo_operacao, po.descricao as portaria_descricao, o.hora_abre_cancela_entrada, o.hora_fecha_cancela_entrada, o.hora_abre_cancela_saida, o.hora_fecha_cancela_saida, o.obs_emergencia, u.nome, u.login FROM operacoes o LEFT JOIN pessoas pe ON o.pessoas_id = pe.id INNER JOIN pessoas_has_veiculos phv ON o.pessoas_id = phv.pessoas_id INNER JOIN veiculos v ON phv.veiculos_id = v.id INNER JOIN empresas e ON e.id = v.empresas_id INNER JOIN portoes po ON o.portaria_id = po.id INNER JOIN usuarios u ON o.usuarios_id = u.id WHERE o.id = :id");
+                }else if($tipo == "E"){
+                    $this->db->query("SELECT o.*, o.tipo as tipo_operacao, po.descricao as portaria_descricao, o.hora_abre_cancela_entrada, o.hora_fecha_cancela_entrada, o.hora_abre_cancela_saida, o.hora_fecha_cancela_saida, o.obs_emergencia, u.nome, u.login FROM operacoes o INNER JOIN portoes po ON o.portaria_id = po.id INNER JOIN usuarios u ON o.usuarios_id = u.id WHERE o.id = :id");
+                }
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
@@ -203,6 +207,17 @@
                 $this->db->bind("tipo_operacao", $tipo);
                 $this->db->bind("operacoes_id", $operacao_id);
                 $this->db->execQuery();
+            } catch (Throwable $th) {
+                return null;
+            } 
+        }
+
+        public function retornaTipoOperacao($id)
+        {
+            try {
+                $this->db->query("SELECT tipo FROM operacoes WHERE id = :id");
+                $this->db->bind("id", $id);
+                return $this->db->results();
             } catch (Throwable $th) {
                 return null;
             } 

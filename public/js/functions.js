@@ -139,7 +139,6 @@ function cpfCnpj(v){
 
     //Remove tudo o que não é dígito
     v=v.replace(/\D/g,"")
-    console.log(v.length);
     if(v.length > 11){
         //Coloca ponto entre o segundo e o terceiro dígitos
         v=v.replace(/^(\d{2})(\d)/,"$1.$2")
@@ -551,7 +550,6 @@ function capturaImagens(tipo){
         url: url+'/operacao/capturaImagem',
         success: function(result){
             console.log('Imagens capturadas com sucesso');
-            console.log(result);
             return true;
         },
         error: function(jqXHR, textStatus, errorThrown) {

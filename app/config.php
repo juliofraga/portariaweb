@@ -5,7 +5,7 @@
 		'HOST' => 'localhost',
 		'USUARIO' => 'root',
 		'SENHA' => '',
-		'BANCO' => 'portaria_web',
+		'BANCO' => 'db_portariaweb',
 		'PORTA' => '3306'
 	];
 
