@@ -189,7 +189,7 @@
         public function buscaImagensOperacaoPorId($id)
         {
             try {
-                $this->db->query("SELECT id, url_imagem FROM imagens WHERE operacoes_id = :id");
+                $this->db->query("SELECT id, url_imagem, tipo, tipo_operacao FROM imagens WHERE operacoes_id = :id");
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {

@@ -12,20 +12,22 @@ $tipoOperacao = [
     'N' => 'Normal',
     'E' => 'Emergencial'
 ];
+$tipoCancela = [
+    '0' => 'Abertura de cancela',
+    '1' => 'Fechamento de cancela'
+];
+$tipoOperacaoCancela = [
+    '0' => 'Entrada',
+    '1' => 'Saída'
+]
 
 ?>
 <style>
-    .modal-dialog {
-  width: 1200px;
-  height: 100%;
-  padding: 0;
-}
-
-.modal-content {
-  height: 100%;
-  width: 1200px;
-  border-radius: 0;
-}
+    .modal-content {
+        height: 100%;
+        width: 1200px;
+        margin-left: -200px;
+    }
 </style>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
@@ -112,14 +114,20 @@ $tipoOperacao = [
                 <div class="row">
                     <?php foreach($dados["imagens"] as $imagem){ ?>
                         <div class="col col-6">
-                            <a href="#" data-toggle="modal" data-target="#modal-<?= $imagem->id ?>">
-                                <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem responsiva">
-                            </a>
+                            <figure>
+                                <a href="#" data-toggle="modal" data-target="#modal-<?= $imagem->id ?>">
+                                    <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem responsiva">
+                                </a>
+                                <figcaption>
+                                    <?= $tipoOperacaoCancela[$imagem->tipo_operacao] ?> (<?= $tipoCancela[$imagem->tipo] ?>)
+                                </figcaption>
+                            </figure>
                         </div>
                         <div class="modal fade" id="modal-<?= $imagem->id ?>" tabindex="-1" role="dialog" style="z-index: 1100;" data-backdrop="static">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
+                                        <h4 class="modal-title"><?= $tipoOperacaoCancela[$imagem->tipo_operacao] ?> (<?= $tipoCancela[$imagem->tipo] ?>)</h4>
                                         <button type="button" class="btn-close" data-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">

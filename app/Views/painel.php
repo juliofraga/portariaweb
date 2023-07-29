@@ -165,6 +165,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mt-4" id="alertaErrorVeiculoNaoPodeEntrar" style="display: none">
+                    <div class="col-sm-12 mt-2">
+                        <div class="alert alert-danger" role="alert">
+                            Veículo não pode entrar!! Foi registrada uma entrada deste veículo, porém não roi registrada a saída, verifique!
+                        </div>
+                    </div>
+                </div>
                 <!--<div id="camerasPortaria">
                     <h4><u>Câmeras</u></h4>
                     <div class="row mt-3">

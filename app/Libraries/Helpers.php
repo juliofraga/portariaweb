@@ -322,7 +322,7 @@
         public function verificaLinkAtivo($url){
             $urlRequested = explode('portariaweb/', $_SERVER["REQUEST_URI"]);
             foreach($url as $url){
-                if($urlRequested[1] == $url){
+                if($urlRequested[1] == $url or strpos($urlRequested[1], $url) === 0){
                     return "active";
                 }
             }

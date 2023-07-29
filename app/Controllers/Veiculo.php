@@ -213,12 +213,17 @@
         public function retornaDescricaoTipoVeiculo($veiculo_id)
         {
             if($this->helper->sessionValidate()){
-                $veiculo = $this->veiculoModel->retornaDescricaoTipoVeiculo($veiculo_id);
-                if($veiculo){
-                    echo "<veiculo>".$veiculo[0]->descricao;
-                    echo "</veiculo>";
-                    echo "<tipoVeiculo>".$veiculo[0]->tipo;
-                    echo "</tipoVeiculo>";
+                if(!$this->veiculoModel->veiculoPodeEntrar($veiculo_id)){
+                    $veiculo = $this->veiculoModel->retornaDescricaoTipoVeiculo($veiculo_id);
+                    if($veiculo){
+                        echo "<veiculo>".$veiculo[0]->descricao;
+                        echo "</veiculo>";
+                        echo "<tipoVeiculo>".$veiculo[0]->tipo;
+                        echo "</tipoVeiculo>";
+                    }
+                    echo "<veiculoPodeEntrar>Sim</veiculoPodeEntrar>";
+                }else{
+                    echo "<veiculoPodeEntrar>Nao</veiculoPodeEntrar>";
                 }
             }else{
                 $this->helper->loginRedirect();

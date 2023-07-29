@@ -157,5 +157,21 @@
                 return null;
             }
         }
+
+        public function veiculoPodeEntrar($veiculo_id)
+        {
+            try {
+                $this->db->query("SELECT id FROM operacoes WHERE veiculos_id = :veiculo_id and tipo = :tipo and hora_abre_cancela_saida IS NULL");
+                $this->db->bind("veiculo_id", $veiculo_id);
+                $this->db->bind("tipo", 'N');
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                return null;
+            }
+        }
     }
 ?>

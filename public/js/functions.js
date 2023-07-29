@@ -190,6 +190,7 @@ function exibeOperacaoEntrada(){
     document.getElementById('operacaoEmergencia').style.display = 'none';
     document.getElementById('btnAbrirCancelaEmergencia').style.display = 'none';
     document.getElementById('btnFecharCancelaEmegrencia').style.display = 'none';
+    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
     $("#operacaoEntrada").fadeIn(1000);
     $("#operacaoEntrada").fadeIn();
     $('.js-example-basic-multiple').select2({
@@ -204,6 +205,7 @@ function exibeOperacaoSaida(){
     document.getElementById('operacaoEmergencia').style.display = 'none';
     document.getElementById('btnAbrirCancelaEmergencia').style.display = 'none';
     document.getElementById('btnFecharCancelaEmegrencia').style.display = 'none';
+    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
     $("#operacaoSaida").fadeIn(1000);
     $("#operacaoSaida").fadeIn();
     limpaListaVeiculosSaida();
@@ -218,6 +220,7 @@ function exibeOperacaoEmergencia(){
     $("#operacaoEmergencia").fadeIn(1000);
     $("#operacaoEmergencia").fadeIn();
     document.getElementById('btnAbrirCancelaEmergencia').style.display = 'block';
+    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
 }
 
 function executaOperacaoAbrirCancelaEmergencia(){
@@ -835,11 +838,21 @@ function buscaDescricaoVeiculo(veiculo){
         $.ajax({
             url: url+'/veiculo/retornaDescricaoTipoVeiculo/'+veiculo,
             success: function(result){
-                exibeDescricaoVeiculo(result);
-                selecionaTipoVeiculo(result);
+                var liberarEntrada = result.split("<veiculoPodeEntrar>");
+                liberarEntrada = liberarEntrada[1].split("</veiculoPodeEntrar>");
+                if(liberarEntrada[0] == "Sim"){
+                    desbloqueiaCampos();
+                    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
+                    exibeDescricaoVeiculo(result);
+                    selecionaTipoVeiculo(result);
+                    
+                }else{
+                    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'block';
+                    bloqueiaCampos();
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Veículo não encontrada');
+                console.log('Veículo não encontrado');
             }
         });
     }else{
@@ -851,6 +864,20 @@ function buscaDescricaoVeiculo(veiculo){
     setTimeout(() => {
         validaAbrirCancela();
     }, 500);
+}
+
+function bloqueiaCampos(){
+    document.getElementById('descricao').disabled = true;
+    document.getElementById('tipo').disabled = true;
+    document.getElementById('motorista').disabled = true;
+    document.getElementById('cpfMotorista').disabled = true;
+}
+
+function desbloqueiaCampos(){
+    document.getElementById('descricao').disabled = false;
+    document.getElementById('tipo').disabled = false;
+    document.getElementById('motorista').disabled = false;
+    document.getElementById('cpfMotorista').disabled = false;
 }
 
 function selecionaTipoVeiculo(result){
