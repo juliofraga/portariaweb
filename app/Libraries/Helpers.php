@@ -495,5 +495,24 @@
             $array = explode('/public/', $url);
             return URL."/public/".$array[1];
         }
+
+        public function calculaTempoTotal($entrada, $saida = null)
+        {
+            if($saida != null) {
+                $saida = strtotime($saida);
+            }else{
+                $saida = strtotime($this->returnDateTime());
+            }
+            $entrada = strtotime($entrada);
+            $total = $saida - $entrada;
+            $total = gmdate('d-H-i-s', $total);
+            $data = explode('-', $total);
+            $dia = $data[0] - 1;
+            $horas = $data[1];
+            $minutos = $data[2];
+            $segundos = $data[3];
+            $total = $dia . 'd ' . $horas . 'h ' . $minutos . 'm ' . $segundos . 's';
+            echo $total;
+        }
     } 
 ?>
