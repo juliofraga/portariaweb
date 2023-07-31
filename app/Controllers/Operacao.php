@@ -8,6 +8,7 @@
         public $operacaoModel;
         public $log;
         public $camera;
+        public $configuracaoModel;
 
         public function __construct()
         {
@@ -19,6 +20,7 @@
             $this->empresa = new Empresa();
             $this->motorista = new Motorista();
             $this->operacaoModel = $this->model('OperacaoModel');
+            $this->configuracaoModel = $this->model('ConfiguracaoModel');
             $this->camera = $this->model('CameraModel');
         }
 
@@ -107,9 +109,17 @@
                     echo $retornoRegistro;
                 }else{
                     $dateTime = $this->helper->returnDateTime();
-                    if($this->operacaoModel->fechaCancela($form["operacao"], $dateTime, $tipo)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $form["operacao"], 0, $dateTime);
+                    $id = $form["operacao"];
+                    if($this->operacaoModel->fechaCancela($id, $dateTime, $tipo)){
+                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $id, 0, $dateTime);
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
+                        if($this->configuracaoModel->opcaoAtiva(4) == true){
+                            for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                                $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $id);
+                            }
+                            $_SESSION['infoCapturaImagem'] = null;
+                            $_SESSION["contImagens"] = null;
+                        }
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
@@ -217,28 +227,32 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                $cameras = $this->camera->listaCamerasPortaria($form["portaria"]);
-                if($form["tipo"] == "entrada"){
-                    $tipo = 0;
-                }else if($form["tipo"] == "saida"){
-                    $tipo = 1;
-                }else if($form["tipo"] == "emergencia"){
-                    $tipo = 2;
+                $operacao = $form['operacao'];
+                $capturaFechamentoCancPerm = $this->configuracaoModel->opcaoAtiva(4);
+                if($operacao == 0 or ($operacao == 1 and $capturaFechamentoCancPerm == true)){
+                    $cameras = $this->camera->listaCamerasPortaria($form["portaria"]);
+                    if($form["tipo"] == "entrada"){
+                        $tipo = 0;
+                    }else if($form["tipo"] == "saida"){
+                        $tipo = 1;
+                    }else if($form["tipo"] == "emergencia"){
+                        $tipo = 2;
+                    }
+                    $x = 0;
+                    foreach($cameras as $c){
+                        $name = time();
+                        $endereco = URL."/public/camera_".$c->id.".php";
+                        $comando = WKHTMLTOIMAGE_INSTALACAO." --height 1100 --width 1800 " . $endereco . " ".DIR_CAPTURA_IMAGENS.$name.".jpg";
+                        exec($comando);
+                        $_SESSION['infoCapturaImagem'][$x] = [
+                            'path' => DIR_CAPTURA_IMAGENS.$name.".jpg",
+                            'abreFecha' => $operacao,
+                            'tipo' => $tipo
+                        ];
+                        $x++;
+                    }
+                    $_SESSION["contImagens"] = $x;
                 }
-                $x = 0;
-                foreach($cameras as $c){
-                    $name = time();
-                    $endereco = URL."/public/camera_".$c->id.".php";
-                    $comando = WKHTMLTOIMAGE_INSTALACAO." --height 1100 --width 1800 " . $endereco . " ".DIR_CAPTURA_IMAGENS.$name.".jpg";
-                    exec($comando);
-                    $_SESSION['infoCapturaImagem'][$x] = [
-                        'path' => DIR_CAPTURA_IMAGENS.$name.".jpg",
-                        'abreFecha' => 0,
-                        'tipo' => $tipo
-                    ];
-                    $x++;
-                }
-                $_SESSION["contImagens"] = $x;
             }else{
                 $this->helper->redirectPage("/login/");
             } 

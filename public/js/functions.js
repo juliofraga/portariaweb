@@ -341,9 +341,11 @@ function executaOperacaoFechamentoCancelaEmergencia(){
             response_status = response.status[0].r4;
         }
         if(response_status === 1){
+            capturaImagens('emergencia', 1);
             $.ajax({
                 type: "POST",
                 url: url+'/operacao/fechaCancelaEmergencia',
+                // FALTA REGISTRAR IMAGEM DO FECHAMENTO DA CANCELA NA EMERGÊNCIA
                 success: function(result){
                     try{
                         var retorno = result.split("<registroOperacao>");
@@ -454,6 +456,7 @@ function executaOperacaoFechamentoCancelaSaida(){
             response_status = response.status[0].r4;
         }
         if(response_status === 1){
+            capturaImagens('saida', 1);
             $.ajax({
                 type: "POST",
                 data: "operacao="+idRegistro,
@@ -513,7 +516,7 @@ function abreCancela(tipo){
                 response_status = response.status[0].r4;
             }
             if(response_status === 1){
-                capturaImagens(tipo);
+                capturaImagens(tipo, 0);
                 if(tipo == "entrada"){
                     registraOperacao();
                 }else if(tipo == "emergencia"){
@@ -544,12 +547,12 @@ function defineRele(rele){
     }
 }
 
-function capturaImagens(tipo){
+function capturaImagens(tipo, operacao){
     var portaria = document.getElementById('portaria_id').value;
     var url = document.getElementById('txtUrl').value;
     $.ajax({
         type: "POST",
-        data: "portaria="+portaria+"&tipo="+tipo,
+        data: "portaria="+portaria+"&tipo="+tipo+"&operacao="+operacao,
         url: url+'/operacao/capturaImagem',
         success: function(result){
             console.log('Imagens capturadas com sucesso');
@@ -630,6 +633,7 @@ function executaOperacaoFechamentoCancela(){
             response_status = response.status[0].r4;
         }
         if(response_status === 1){
+            capturaImagens('entrada', 1);
             $.ajax({
                 type: "POST",
                 data: "operacao="+idOperacao,
