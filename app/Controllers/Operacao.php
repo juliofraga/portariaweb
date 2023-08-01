@@ -142,6 +142,7 @@
                     if($lastInsertId){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
+                        echo "<idOperacaoEmergencia>" . $lastInsertId . "</idOperacaoEmergencia>";
                         for($x = 0; $x < $_SESSION["contImagens"]; $x++){
                             $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
                         }
@@ -159,9 +160,18 @@
         public function fechaCancelaEmergencia()
         {
             if($this->helper->sessionValidate()){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 $dateTime = $this->helper->returnDateTime();
-                if($this->operacaoModel->fechaCancelaEmergencia($dateTime)){
+                $id = $form['idOperacao'];
+                if($this->operacaoModel->fechaCancelaEmergencia($id, $dateTime)){
                     echo "<registroOperacao>SUCESSO</registroOperacao>";
+                    if($this->configuracaoModel->opcaoAtiva(4) == true){
+                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $id);
+                        }
+                        $_SESSION['infoCapturaImagem'] = null;
+                        $_SESSION["contImagens"] = null;
+                    }
                 }else{
                     echo "<registroOperacao>ERRO</registroOperacao>";
                 }

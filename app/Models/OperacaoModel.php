@@ -83,13 +83,11 @@
             } 
         }
 
-        public function fechaCancelaEmergencia($dateTime)
+        public function fechaCancelaEmergencia($id, $dateTime)
         {
             try {
-                $this->db->query("UPDATE operacoes SET hora_fecha_cancela_entrada = :dateTime WHERE hora_fecha_cancela_entrada IS NULL and tipo = :tipo ORDER BY :id ASC LIMIT :limit");
-                $this->db->bind("id", "id");
-                $this->db->bind("limit", 1);
-                $this->db->bind("tipo", "E");
+                $this->db->query("UPDATE operacoes SET hora_fecha_cancela_entrada = :dateTime WHERE id = :id");
+                $this->db->bind("id", $id);
                 $this->db->bind("dateTime", $dateTime);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)

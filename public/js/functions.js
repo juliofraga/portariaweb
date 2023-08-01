@@ -1,4 +1,5 @@
 var idOperacao;
+var idOperacaoEmergencia;
 
 $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
@@ -344,8 +345,8 @@ function executaOperacaoFechamentoCancelaEmergencia(){
             capturaImagens('emergencia', 1);
             $.ajax({
                 type: "POST",
+                data: "idOperacao="+idOperacaoEmergencia,
                 url: url+'/operacao/fechaCancelaEmergencia',
-                // FALTA REGISTRAR IMAGEM DO FECHAMENTO DA CANCELA NA EMERGÊNCIA
                 success: function(result){
                     try{
                         var retorno = result.split("<registroOperacao>");
@@ -392,6 +393,9 @@ function registraOperacaoEmergencia(){
                     $("#btnFecharCancelaEmegrencia").fadeIn(1000);
                     $("#btnFecharCancelaEmegrencia").fadeIn();
                     document.getElementById('btnAbrirCancelaEmergencia').disabled = 'true';
+                    retorno = result.split("<idOperacaoEmergencia>");
+                    retorno2 = retorno[1].split("</idOperacaoEmergencia>");
+                    idOperacaoEmergencia = retorno2[0];
                 }else{
                     document.getElementById('alertaErrorRegistrarOperacao').style.display = 'block';
                 }

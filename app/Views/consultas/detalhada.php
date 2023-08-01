@@ -18,7 +18,8 @@ $tipoCancela = [
 ];
 $tipoOperacaoCancela = [
     '0' => 'Entrada',
-    '1' => 'Saída'
+    '1' => 'Saída',
+    '2' => 'Emergencia'
 ]
 
 ?>
