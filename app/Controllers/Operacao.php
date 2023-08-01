@@ -51,9 +51,6 @@
                     if(!$this->motorista->verificaMotorista($form["motorista"])){
                         $form["motorista"] = $this->motorista->cadastrar($form["motorista"], $form["cpfMotorista"], $form["placa"]);
                     }
-                    // $form["empresa"] - ID da empresa
-                    // $form["placa"] - ID do veículo
-                    // $form["motorista"] - ID da pessoa
                     $dateTime = $this->helper->returnDateTime();
                     $lastInsertId = $this->operacaoModel->registrarOperacao($dateTime, $form["usuario"], $form["placa"], $form["motorista"], $form["portaria"]);
                     if($lastInsertId != null){
