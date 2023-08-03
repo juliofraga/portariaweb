@@ -1,5 +1,6 @@
 var idOperacao;
 var idOperacaoEmergencia;
+var usa_balanca;
 
 $(document).ready(function(){
     $('#endereco_ip').mask('999.999.999.999');
@@ -7,7 +8,21 @@ $(document).ready(function(){
 
 $(document).ready(function(){
     $("#placaVeiculo").mask('AAA-9A99');
- });
+});
+
+$(document).ready(function() {
+    usa_balanca = document.getElementById('usa_balanca');
+    if(usa_balanca){
+        usa_balanca = usa_balanca.value;
+        if(usa_balanca == 1){
+            usa_balanca = true;
+        }else{
+            usa_balanca = false;
+        }
+    }else{
+        usa_balanca = false;
+    }
+});
 
 function validaComplexidadeSenha(senha, complexidade){
     if(complexidade == null || complexidade == false){
@@ -1000,4 +1015,16 @@ function exibeEmpresa(result){
         opcao.value = id[0];
         empresa.options.add(opcao);
     }
+}
+
+function capturaPeso(){
+    $.ajax({
+        url: 'http://localhost/geraPeso/',
+        success: function(result){
+            document.getElementById("peso").value = result;
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Erro ao capturar peso');
+        }
+    });
 }

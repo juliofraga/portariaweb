@@ -12,7 +12,6 @@
     });
 </script>
 <div id="conteudo" class="mb-5 mt-3">
-    
     <div class="container conteudo_consulta">
         <div class="row">
             <div class="col-sm-2 mt-2">
@@ -24,6 +23,7 @@
                     <input type="hidden" id="rele_fecha_cancela" value="<?= $dados["reles"][0]->rele_fecha_cancela ?>">
                     <input type="hidden" id="porta" value="<?= $dados["reles"][0]->porta ?>">
                     <input type="hidden" id="endereco_ip_placa" value="<?= $dados["reles"][0]->endereco_ip ?>">
+                    <input type="hidden" id="usa_balanca" value="<?= USA_BALANCA ?>">
                     <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
                         <?php foreach($dados["portarias"] as $portaria){ ?>
                             <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
@@ -172,27 +172,19 @@
                         </div>
                     </div>
                 </div>
-                <!--<div id="camerasPortaria">
-                    <h4><u>Câmeras</u></h4>
-                    <div class="row mt-3">
-                        <?php foreach($dados["cameras"] as $camera){ ?>
-                            <div class="col-sm-2">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="camera__<?= $camera->id ?>" onchange="exibeEscondeCamera(this.checked, this.id);" checked>
-                                    <label class="form-check-label" for="flexSwitchCheckDefault" id="checkOpcao__<?= $camera->id ?>"><?= $camera->descricao ?></label>
-                                </div>
-                            </div>
-                        <?php }?>
+                <?php if(USA_BALANCA){ ?>
+                    <div class="row" id="telaCapturaPeso">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control-lg w-100" id="peso" name="peso" style="height:100px;font-size:50px;text-align:right;">
+                        </div>
+                        <div class="col-sm-1 mt-3">
+                            <h1>Kg</h1>
+                        </div>
+                        <div class="col-sm-3 mt-3">
+                            <button class="w-100 btn btn-secondary btn-lg" name="btnCapturaPeso" id="btnCapturaPeso" onclick="capturaPeso();">Capturar Peso</button>
+                        </div>
                     </div>
-                    <div class="row">
-                        <?php foreach($dados["cameras"] as $camera){ ?>
-                            <div class="col-sm-12 mt-5" id="camera_iframe_id_<?= $camera->id ?>">
-                                <label><?= $camera->descricao ?></label>
-                                <iframe src="http://45.181.21.19:3381/ISAPI/streaming/channels/1/picture" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-                            </div>
-                        <?php }?>
-                    </div>
-                </div> -->
+                <?php } ?>
             </div>
         </div>
     </div>
