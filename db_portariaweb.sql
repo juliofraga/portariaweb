@@ -1,0 +1,497 @@
+-- phpMyAdmin SQL Dump
+-- version 5.0.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Tempo de geração: 28-Jul-2023 às 12:52
+-- Versão do servidor: 10.4.17-MariaDB
+-- versão do PHP: 7.3.26
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `db_portariaweb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `cameras`
+--
+
+CREATE TABLE `cameras` (
+  `id` int(11) NOT NULL,
+  `descricao` varchar(100) NOT NULL,
+  `endereco_ip` char(255) NOT NULL,
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` varchar(45) DEFAULT NULL,
+  `portoes_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `configuracoes`
+--
+
+CREATE TABLE `configuracoes` (
+  `id` int(11) NOT NULL,
+  `titulo` varchar(60) NOT NULL,
+  `descricao` varchar(255) NOT NULL,
+  `valor` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Sim\n1 - Não',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `configuracoes`
+--
+
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES
+(1, 'Ativar complexidade de senha', 'Com esta opção ativada, a senha de acesso ao sistema deverá atender os seguintes requisitos: possuir no mínimo 8 caracteres; possuir pelo menos uma letra maiúscula; possuir pelo menos uma letra minúscula; ter números. Caso ela esteja desativada, o único r', 1, '2023-03-08 21:14:19', '2023-04-01 07:46:13'),
+(2, 'Bloqueio de conta por tentativas de acesso', 'Com esta opção ativada, se o usuário errar mais de 5 vezes a senha, o acesso será bloqueado, devendo ser liberado novamente por algum administrador. Caso esteja desativada, o usuário poderá errar a senha inúmeras vezes que não causará bloqueio da conta.', 0, '2023-03-11 18:58:14', '2023-04-16 07:07:01'),
+(3, 'Permitir operação de emergência para operador', 'Com esta opção ativada, além do administrador do sistema, o operador também poderá executar operações de emergência, ou seja, poderá abrir e fechar as cancelas sem registrar entrada de veículos.', 1, '2023-04-14 08:41:32', '2023-04-14 08:43:30'),
+(4, 'Capturar imagens no fechamento da cancela', 'Com esta opção ativa, serão capturadas também imagens no momento do fechamento da cancela. Se ela estiver desativada, serão capturadas imagens apenas na abertura da cancela.', 1, '2023-07-31 07:57:14', '2023-07-31 07:57:18');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `cookies`
+--
+
+CREATE TABLE `cookies` (
+  `id_cookie` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `nome` varchar(32) NOT NULL,
+  `valor` varchar(32) NOT NULL,
+  `hostname` varchar(45) NOT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `empresas`
+--
+
+CREATE TABLE `empresas` (
+  `id` int(11) NOT NULL,
+  `cnpj` char(19) NOT NULL,
+  `razao_social` varchar(100) DEFAULT NULL,
+  `nome_fantasia` varchar(100) NOT NULL,
+  `logradouro` varchar(100) DEFAULT NULL,
+  `numero` int(11) DEFAULT NULL,
+  `bairro` varchar(100) DEFAULT NULL,
+  `cidade` varchar(100) NOT NULL,
+  `estado` char(2) DEFAULT NULL,
+  `cep` char(9) DEFAULT NULL,
+  `complemento` varchar(100) DEFAULT NULL,
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `imagens`
+--
+
+CREATE TABLE `imagens` (
+  `id` int(11) NOT NULL,
+  `url_imagem` varchar(600) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `tipo` tinyint(4) NOT NULL COMMENT '0 - Abrir cancela\n1 - Fechar cancela',
+  `tipo_operacao` tinyint(4) DEFAULT NULL COMMENT '0 - Entrada\r\n1 - Saída',
+  `operacoes_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `id_classe` int(11) DEFAULT NULL,
+  `classe` varchar(20) NOT NULL,
+  `acao` tinyint(4) NOT NULL COMMENT '0 - Inserir\n1 - Alterar\n2 - Deletar',
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `operacoes`
+--
+
+CREATE TABLE `operacoes` (
+  `id` int(11) NOT NULL,
+  `hora_abre_cancela_entrada` datetime NOT NULL,
+  `hora_fecha_cancela_entrada` datetime DEFAULT NULL,
+  `hora_abre_cancela_saida` datetime DEFAULT NULL,
+  `hora_fecha_cancela_saida` datetime DEFAULT NULL,
+  `peso_entrada` varchar(50) DEFAULT NULL,
+  `peso_saida` varchar(50) DEFAULT NULL,
+  `usuarios_id` int(11) NOT NULL,
+  `veiculos_id` int(11) DEFAULT NULL,
+  `pessoas_id` int(11) DEFAULT NULL,
+  `portaria_id` int(11) NOT NULL,
+  `tipo` char(1) NOT NULL DEFAULT 'N' COMMENT 'N - Normal\r\nE - Emergência',
+  `obs_emergencia` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `pessoas`
+--
+
+CREATE TABLE `pessoas` (
+  `id` int(11) NOT NULL,
+  `nome_completo` varchar(200) NOT NULL,
+  `cpf` char(14) NOT NULL,
+  `rg` char(10) DEFAULT NULL,
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `pessoas_has_veiculos`
+--
+
+CREATE TABLE `pessoas_has_veiculos` (
+  `pessoas_id` int(11) NOT NULL,
+  `veiculos_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `placas`
+--
+
+CREATE TABLE `placas` (
+  `id` int(11) NOT NULL,
+  `descricao` varchar(100) NOT NULL,
+  `endereco_ip` char(15) NOT NULL,
+  `porta` int(11) NOT NULL,
+  `rele_abre_cancela` char(2) NOT NULL,
+  `rele_fecha_cancela` char(2) NOT NULL,
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `portoes`
+--
+
+CREATE TABLE `portoes` (
+  `id` int(11) NOT NULL,
+  `descricao` varchar(200) NOT NULL,
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `placas_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `portoes_pessoas`
+--
+
+CREATE TABLE `portoes_pessoas` (
+  `id` int(11) NOT NULL,
+  `portoes_id` int(11) NOT NULL,
+  `usuarios_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
+  `nome` varchar(70) NOT NULL,
+  `login` varchar(45) NOT NULL,
+  `senha` varchar(120) NOT NULL,
+  `primeiro_acesso` datetime DEFAULT NULL,
+  `ultimo_acesso` datetime DEFAULT NULL,
+  `alterar_senha` char(1) NOT NULL DEFAULT 'S',
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `perfil` varchar(45) NOT NULL,
+  `login_error` int(11) DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Extraindo dados da tabela `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nome`, `login`, `senha`, `primeiro_acesso`, `ultimo_acesso`, `alterar_senha`, `situacao`, `perfil`, `login_error`, `created_at`, `updated_at`) VALUES
+(1, 'Superadmin', 'superadmin', '$2y$10$tl8BJYryE5S7B9XNXZqTmeFrA.SvbJVAlc4GPB55tgtsTTIMc7XBW', '2023-04-06 06:55:12', '2023-07-28 07:50:06', 'N', 0, 'Superadmin', 0, '2023-03-31 08:39:22', NULL),
+(10, 'Administrador', 'administrador', '$2y$10$cVO.Y8kWsnlBD/1T3guDi.sdj0BQHqkm4VsciCkurrEoGT81YGO6G', '2023-04-16 08:44:03', '2023-04-16 09:09:49', 'N', 0, 'Administrador', 0, '2023-04-16 08:26:39', '2023-04-16 08:43:45'),
+(11, 'Operador', 'operador', '$2y$10$WaGq/OLAde5lu4Em/n0.jOUNya9R8GepkH7ykmu83T8EcSr5JnrcC', '2023-04-16 08:46:05', '2023-07-18 18:11:03', 'N', 0, 'Operador', 0, '2023-04-16 08:45:50', '2023-04-16 08:46:05');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `veiculos`
+--
+
+CREATE TABLE `veiculos` (
+  `id` int(11) NOT NULL,
+  `placa` char(8) NOT NULL,
+  `descricao` varchar(50) NOT NULL,
+  `tipo` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Não Informado\n1 - Carro\n2 - Caminhão\n3 - Moto\n4 - Outro',
+  `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `empresas_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices para tabela `cameras`
+--
+ALTER TABLE `cameras`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_cameras_portoes1_idx` (`portoes_id`);
+
+--
+-- Índices para tabela `configuracoes`
+--
+ALTER TABLE `configuracoes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `cookies`
+--
+ALTER TABLE `cookies`
+  ADD PRIMARY KEY (`id_cookie`);
+
+--
+-- Índices para tabela `empresas`
+--
+ALTER TABLE `empresas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `imagens`
+--
+ALTER TABLE `imagens`
+  ADD PRIMARY KEY (`id`,`operacoes_id`),
+  ADD KEY `fk_imagens_operacoes1_idx` (`operacoes_id`);
+
+--
+-- Índices para tabela `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `operacoes`
+--
+ALTER TABLE `operacoes`
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `fk_operacoes_usuarios1_idx` (`usuarios_id`),
+  ADD KEY `fk_operacoes_veiculos1_idx` (`veiculos_id`);
+
+--
+-- Índices para tabela `pessoas`
+--
+ALTER TABLE `pessoas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `pessoas_has_veiculos`
+--
+ALTER TABLE `pessoas_has_veiculos`
+  ADD PRIMARY KEY (`pessoas_id`,`veiculos_id`),
+  ADD KEY `fk_pessoas_has_veiculos_veiculos1_idx` (`veiculos_id`),
+  ADD KEY `fk_pessoas_has_veiculos_pessoas1_idx` (`pessoas_id`);
+
+--
+-- Índices para tabela `placas`
+--
+ALTER TABLE `placas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `portoes`
+--
+ALTER TABLE `portoes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_portoes_placas1_idx` (`placas_id`);
+
+--
+-- Índices para tabela `portoes_pessoas`
+--
+ALTER TABLE `portoes_pessoas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_veiculos_empresas_idx` (`empresas_id`);
+
+--
+-- AUTO_INCREMENT de tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `cameras`
+--
+ALTER TABLE `cameras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de tabela `configuracoes`
+--
+ALTER TABLE `configuracoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de tabela `cookies`
+--
+ALTER TABLE `cookies`
+  MODIFY `id_cookie` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `empresas`
+--
+ALTER TABLE `empresas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de tabela `imagens`
+--
+ALTER TABLE `imagens`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
+
+--
+-- AUTO_INCREMENT de tabela `operacoes`
+--
+ALTER TABLE `operacoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+
+--
+-- AUTO_INCREMENT de tabela `pessoas`
+--
+ALTER TABLE `pessoas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT de tabela `placas`
+--
+ALTER TABLE `placas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de tabela `portoes`
+--
+ALTER TABLE `portoes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de tabela `portoes_pessoas`
+--
+ALTER TABLE `portoes_pessoas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT de tabela `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `cameras`
+--
+ALTER TABLE `cameras`
+  ADD CONSTRAINT `fk_cameras_portoes1` FOREIGN KEY (`portoes_id`) REFERENCES `portoes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `imagens`
+--
+ALTER TABLE `imagens`
+  ADD CONSTRAINT `fk_imagens_operacoes1` FOREIGN KEY (`operacoes_id`) REFERENCES `operacoes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `operacoes`
+--
+ALTER TABLE `operacoes`
+  ADD CONSTRAINT `fk_operacoes_usuarios1` FOREIGN KEY (`usuarios_id`) REFERENCES `usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_operacoes_veiculos1` FOREIGN KEY (`veiculos_id`) REFERENCES `veiculos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `pessoas_has_veiculos`
+--
+ALTER TABLE `pessoas_has_veiculos`
+  ADD CONSTRAINT `fk_pessoas_has_veiculos_pessoas1` FOREIGN KEY (`pessoas_id`) REFERENCES `pessoas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_pessoas_has_veiculos_veiculos1` FOREIGN KEY (`veiculos_id`) REFERENCES `veiculos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `portoes`
+--
+ALTER TABLE `portoes`
+  ADD CONSTRAINT `fk_portoes_placas1` FOREIGN KEY (`placas_id`) REFERENCES `placas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Limitadores para a tabela `veiculos`
+--
+ALTER TABLE `veiculos`
+  ADD CONSTRAINT `fk_veiculos_empresas` FOREIGN KEY (`empresas_id`) REFERENCES `empresas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
