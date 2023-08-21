@@ -113,28 +113,45 @@
                     </div>
                 </div>
                 <hr>
-                <div class="row mt-4">
-                    <div class="col-sm-6 mt-2">
+                <div class="row">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancela" id="btnAbrirCancela" style="display: none;" onclick="executaOperacaoAbrirCancela();">Abrir Cancela</button>
                     </div>
-                    <div class="col-sm-6  mt-2">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancela" id="btnFecharCancela" style="display: none;" onclick="executaOperacaoFechamentoCancela()">Fechar Cancela</button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 mb-4">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancelaSaida" id="btnAbrirCancelaSaida" style="display: none;" onclick="executaOperacaoAbrirCancelaSaida();">Abrir Cancela</button>
                     </div>
-                    <div class="col-sm-6 mb-4">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancelaSaida" id="btnFecharCancelaSaida" style="display: none;" onclick="executaOperacaoFechamentoCancelaSaida()">Fechar Cancela</button>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 mb-4">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-warning btn-lg" name="btnAbrirCancelaEmergencia" id="btnAbrirCancelaEmergencia" style="display: none;" onclick="executaOperacaoAbrirCancelaEmergencia();">Abrir Cancela</button>
                     </div>
-                    <div class="col-sm-6 mb-4">
+                    <div class="col-sm-6">
                         <button class="w-100 btn btn-dark btn-lg" name="btnFecharCancelaEmegrencia" id="btnFecharCancelaEmegrencia" style="display: none;" onclick="executaOperacaoFechamentoCancelaEmergencia()">Fechar Cancela</button>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm-12 mt-1" style="display: none" id="alertaAbrindoCancela">
+                        <div class="alert alert-warning" role="alert">
+                            Abrindo a cancela...
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-1" style="display: none" id="alertaFechandoCancela">
+                        <div class="alert alert-warning" role="alert">
+                            Fechando a cancela...
+                        </div>
+                    </div>
+                    <div class="col-sm-12 mt-1" style="display: none" id="alertaCapturandoImagens">
+                        <div class="alert alert-warning" role="alert">
+                            Capturando imagens...
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-4" id="alertaErrorAbrirCancela" style="display: none">

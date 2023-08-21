@@ -511,6 +511,8 @@ function executaOperacaoFechamentoCancelaSaida(){
 
 function abreCancela(tipo){
     try {
+        $("#alertaAbrindoCancela").fadeIn(2000);
+        $("#alertaAbrindoCancela").fadeIn();
         var releAbreCancela = document.getElementById('rele_abre_cancela').value;
         rac = defineRele(releAbreCancela);
         var endereco_ip = document.getElementById('endereco_ip_placa').value;
@@ -535,7 +537,15 @@ function abreCancela(tipo){
                 response_status = response.status[0].r4;
             }
             if(response_status === 1){
+                $("#alertaAbrindoCancela").fadeOut(1500);
+                $("#alertaAbrindoCancela").fadeOut();
                 capturaImagens(tipo, 0);
+                setTimeout(() => {
+                    $("#alertaCapturandoImagens").fadeIn(1500);
+                    $("#alertaCapturandoImagens").fadeIn();
+                    $("#alertaCapturandoImagens").fadeOut(1500);
+                    $("#alertaCapturandoImagens").fadeOut();
+                }, 500);
                 if(tipo == "entrada"){
                     registraOperacao();
                 }else if(tipo == "emergencia"){
