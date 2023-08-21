@@ -558,7 +558,14 @@ function abreCancela(tipo){
                 document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
             }
         }
+        request.onerror = function(){
+            $("#alertaAbrindoCancela").fadeOut(1000);
+            $("#alertaAbrindoCancela").fadeOut();
+            document.getElementById('alertaErrorAbrirCancela').style.display = 'block'
+        }
     } catch (error) {
+        $("#alertaAbrindoCancela").fadeOut(1000);
+        $("#alertaAbrindoCancela").fadeOut();
         document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
     }
     
