@@ -65,20 +65,20 @@
         public function listaCamerasDisponiveis()
         {
             try {
-                $this->db->query("SELECT * FROM cameras WHERE portoes_id IS NULL order by descricao");
+                $this->db->query("SELECT c.* FROM cameras c LEFT JOIN camera_has_portaria cp ON cp.camera_id = c.id WHERE cp.camera_id IS NULL order by c.descricao");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
             }  
         }
 
-        public function inserePortariaCamera($camera_id, $portaria_id, $dateTime)
+        public function inserePortariaCamera($camera_id, $portaria_id, $tipo)
         {
             try {
-                $this->db->query("UPDATE cameras SET portoes_id = :portaria, updated_at = :dateTime WHERE id = :id");
+                $this->db->query("INSERT INTO camera_has_portaria(camera_id, portaria_id, entrada_saida) VALUES (:camera, :portaria, :tipo)");
                 $this->db->bind("portaria", $portaria_id);
-                $this->db->bind("dateTime", $dateTime);
-                $this->db->bind("id", $camera_id);
+                $this->db->bind("camera", $camera_id);
+                $this->db->bind("tipo", $tipo);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
                     return true;

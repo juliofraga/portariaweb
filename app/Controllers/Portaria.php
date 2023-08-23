@@ -55,8 +55,11 @@
                 if(!empty($form["descricao"])){
                     $dateTime = $this->helper->returnDateTime();
                     $lastInsertId = $this->portariaModel->cadastrarPortaria($form, $dateTime);
-                    if(isset($form["camera"]) and $form["camera"] != NULL){
-                        $this->ligaPortariaCamera($form["camera"], $lastInsertId, $dateTime);
+                    if(isset($form["cameraEntrada"]) and $form["cameraEntrada"] != NULL){
+                        $this->ligaPortariaCamera($form["cameraEntrada"], $lastInsertId, $dateTime, "E");
+                    }
+                    if(isset($form["cameraSaida"]) and $form["cameraSaida"] != NULL){
+                        $this->ligaPortariaCamera($form["cameraSaida"], $lastInsertId, $dateTime, "S");
                     }
                     if($lastInsertId != null){
                         $this->helper->setReturnMessage(
@@ -328,11 +331,11 @@
             }
         }
 
-        private function ligaPortariaCamera($cameras, $portaria_id, $dateTime)
+        private function ligaPortariaCamera($cameras, $portaria_id, $dateTime, $tipo = null)
         {
             if($this->helper->sessionValidate()){
                 foreach($cameras as $camera){
-                    $this->camera->inserePortariaCamera($camera, $portaria_id, $dateTime);
+                    $this->camera->inserePortariaCamera($camera, $portaria_id, $dateTime, $tipo);
                 }
             }else{
                 $this->helper->loginRedirect();

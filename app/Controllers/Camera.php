@@ -93,10 +93,10 @@
             }
         }
 
-        public function inserePortariaCamera($camera_id, $portaria_id, $dateTime)
+        public function inserePortariaCamera($camera_id, $portaria_id, $dateTime, $tipo)
         {
             if($this->helper->sessionValidate()){
-                if($this->cameraModel->inserePortariaCamera($camera_id, $portaria_id, $dateTime)){
+                if($this->cameraModel->inserePortariaCamera($camera_id, $portaria_id, $tipo)){
                     $this->log->registraLog($_SESSION['pw_id'], "Câmera", $camera_id, 1, $dateTime);
                 }
             }else{
