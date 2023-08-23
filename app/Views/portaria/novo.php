@@ -52,12 +52,22 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-sm-12">
-                            <select class="js-example-basic-multiple w-100" name="camera[]" id="camera"  multiple="multiple">
+                            <select class="js-example-basic-multiple w-100" name="cameraEntrada[]" id="cameraEntrada"  multiple="multiple">
                                 <?php foreach($dados["cameras"] as $camera){ ?>
                                     <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
                                 <?php }?>
                             </select>
-                            <label for="placa">Câmeras</label>
+                            <label for="cameraEntrada">Câmeras - Entrada</label>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            <select class="js-example-basic-multiple w-100" name="cameraSaida[]" id="cameraSaida"  multiple="multiple">
+                                <?php foreach($dados["cameras"] as $camera){ ?>
+                                    <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
+                                <?php }?>
+                            </select>
+                            <label for="cameraSaida">Câmeras - Saída</label>
                         </div>
                     </div>
                     <div class="row mt-4">

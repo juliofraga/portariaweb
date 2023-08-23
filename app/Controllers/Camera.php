@@ -44,7 +44,7 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if($this->helper->validateFields($form, "portaria")){
+                if($this->helper->validateFields($form)){
                     $dateTime = $this->helper->returnDateTime();
                     $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
                     if($lastInsertId != null){
@@ -112,7 +112,6 @@
                     $dados = [
                         'dados' =>  $this->listaCameras(),
                         'filtro' => null,
-                        'portoes' => $this->portariaModel->listaPortarias(),
                     ];
                 }else{
                     if($_SESSION["pw_camera_consulta"] == null or isset($form["descricao_ip"])){
@@ -124,7 +123,6 @@
                     $dados = [
                         'dados' =>  $this->listaCamerasPorFiltro($filtro),
                         'filtro' => $filtro,
-                        'portoes' => $this->portariaModel->listaPortarias(),
                     ];
                 }
                 $this->view('camera/consulta', $dados);

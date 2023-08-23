@@ -45,19 +45,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-floating mt-3">
-                                <select name="portaria" id="portaria" class="form-control">
-                                    <option value="">Selecione...</option>
-                                    <?php foreach($dados["portoes"] as $portaria){ ?>
-                                        <option value="<?= $portaria->id ?>"><?= $portaria->descricao ?></option>
-                                    <?php }?>
-                                </select>
-                                <label for="portaria">Portaria</label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row mt-4">
                         <div class="col-sm-12 mb-5">
                             <button class="w-100 btn btn-warning btn-lg" name="cadastrar" id="cadastrar" value="cadastrar">Cadastrar</button>

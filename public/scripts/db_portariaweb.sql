@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Jul-2023 às 12:52
+-- Tempo de geração: 23-Ago-2023 às 13:37
 -- Versão do servidor: 10.4.17-MariaDB
 -- versão do PHP: 7.3.26
 
@@ -33,8 +33,20 @@ CREATE TABLE `cameras` (
   `endereco_ip` char(255) NOT NULL,
   `situacao` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 - Ativo\n1 - Inativo',
   `created_at` datetime NOT NULL,
-  `updated_at` varchar(45) DEFAULT NULL,
-  `portoes_id` int(11) DEFAULT NULL
+  `updated_at` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `camera_has_portaria`
+--
+
+CREATE TABLE `camera_has_portaria` (
+  `id` int(11) NOT NULL,
+  `camera_id` int(11) NOT NULL,
+  `portaria_id` int(11) NOT NULL,
+  `entrada_saida` char(1) NOT NULL COMMENT 'E - Entrada\r\nS - Saída'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -250,7 +262,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `login`, `senha`, `primeiro_acesso`, `ultimo_acesso`, `alterar_senha`, `situacao`, `perfil`, `login_error`, `created_at`, `updated_at`) VALUES
-(1, 'Superadmin', 'superadmin', '$2y$10$tl8BJYryE5S7B9XNXZqTmeFrA.SvbJVAlc4GPB55tgtsTTIMc7XBW', '2023-04-06 06:55:12', '2023-07-28 07:50:06', 'N', 0, 'Superadmin', 0, '2023-03-31 08:39:22', NULL),
+(1, 'Superadmin', 'superadmin', '$2y$10$tl8BJYryE5S7B9XNXZqTmeFrA.SvbJVAlc4GPB55tgtsTTIMc7XBW', '2023-04-06 06:55:12', '2023-08-23 08:31:53', 'N', 0, 'Superadmin', 0, '2023-03-31 08:39:22', NULL),
 (10, 'Administrador', 'administrador', '$2y$10$cVO.Y8kWsnlBD/1T3guDi.sdj0BQHqkm4VsciCkurrEoGT81YGO6G', '2023-04-16 08:44:03', '2023-04-16 09:09:49', 'N', 0, 'Administrador', 0, '2023-04-16 08:26:39', '2023-04-16 08:43:45'),
 (11, 'Operador', 'operador', '$2y$10$WaGq/OLAde5lu4Em/n0.jOUNya9R8GepkH7ykmu83T8EcSr5JnrcC', '2023-04-16 08:46:05', '2023-07-18 18:11:03', 'N', 0, 'Operador', 0, '2023-04-16 08:45:50', '2023-04-16 08:46:05');
 
@@ -279,8 +291,13 @@ CREATE TABLE `veiculos` (
 -- Índices para tabela `cameras`
 --
 ALTER TABLE `cameras`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_cameras_portoes1_idx` (`portoes_id`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Índices para tabela `camera_has_portaria`
+--
+ALTER TABLE `camera_has_portaria`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices para tabela `configuracoes`
@@ -375,13 +392,19 @@ ALTER TABLE `veiculos`
 -- AUTO_INCREMENT de tabela `cameras`
 --
 ALTER TABLE `cameras`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `camera_has_portaria`
+--
+ALTER TABLE `camera_has_portaria`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes`
 --
 ALTER TABLE `configuracoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `cookies`
@@ -393,7 +416,7 @@ ALTER TABLE `cookies`
 -- AUTO_INCREMENT de tabela `empresas`
 --
 ALTER TABLE `empresas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `imagens`
@@ -405,37 +428,37 @@ ALTER TABLE `imagens`
 -- AUTO_INCREMENT de tabela `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=389;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `operacoes`
 --
 ALTER TABLE `operacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `pessoas`
 --
 ALTER TABLE `pessoas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `placas`
 --
 ALTER TABLE `placas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `portoes`
 --
 ALTER TABLE `portoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `portoes_pessoas`
 --
 ALTER TABLE `portoes_pessoas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
@@ -447,17 +470,11 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `veiculos`
 --
 ALTER TABLE `veiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restrições para despejos de tabelas
 --
-
---
--- Limitadores para a tabela `cameras`
---
-ALTER TABLE `cameras`
-  ADD CONSTRAINT `fk_cameras_portoes1` FOREIGN KEY (`portoes_id`) REFERENCES `portoes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Limitadores para a tabela `imagens`

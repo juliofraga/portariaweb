@@ -30,15 +30,10 @@
         public function cadastrarCamera($dados, $dataHora)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
-                }
-                $this->db->query("INSERT INTO cameras(descricao, endereco_ip, created_at, portoes_id) VALUES (:descricao, :endereco_ip, :created_at, :portoes_id)");
+                $this->db->query("INSERT INTO cameras(descricao, endereco_ip, created_at) VALUES (:descricao, :endereco_ip, :created_at)");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
                 $this->db->bind("created_at", $dataHora);
-                $this->db->bind("portoes_id", $portao);
                 if($this->db->execQuery()){
                     return $this->db->lastInsertId();
                 }else{
@@ -52,15 +47,10 @@
         public function alterarCamera($dados, $dataHora)
         {
             try {
-                $portao = null;
-                if(!empty($dados["portaria"])){
-                    $portao = $dados["portaria"];
-                }
-                $this->db->query("UPDATE cameras SET descricao = :descricao, endereco_ip = :endereco_ip, updated_at = :updated_at, portoes_id = :portoes_id WHERE id = :id");
+                $this->db->query("UPDATE cameras SET descricao = :descricao, endereco_ip = :endereco_ip, updated_at = :updated_at WHERE id = :id");
                 $this->db->bind("descricao", $dados['descricao']);
                 $this->db->bind("endereco_ip", $dados['endereco_ip']);
                 $this->db->bind("updated_at", $dataHora);
-                $this->db->bind("portoes_id", $portao);
                 $this->db->bind("id", $dados["id"]);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
@@ -102,7 +92,7 @@
         public function listaCameras($attr = null)
         {
             try {
-                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN portoes p on c.portoes_id = p.id");
+                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
@@ -113,7 +103,7 @@
         {
             try {
                 $filter = "c.descricao like '%". $filtro . "%' or c.endereco_ip like '%" . $filtro . "%'";
-                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN portoes p on c.portoes_id = p.id WHERE $filter order by c.descricao ASC");
+                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id WHERE $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
