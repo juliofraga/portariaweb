@@ -697,7 +697,10 @@ function executaOperacaoFechamentoCancela(){
         }else{
             document.getElementById('alertaErrorAbrirCancela').style.display = 'block';
         }
-    }    
+    }
+    request.onerror = function(){
+        document.getElementById('alertaErrorAbrirCancela').style.display = 'block'
+    }
 }
 
 function redefiniListaEmpresas(){

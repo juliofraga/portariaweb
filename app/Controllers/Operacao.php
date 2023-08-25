@@ -237,7 +237,7 @@
                 $operacao = $form['operacao'];
                 $capturaFechamentoCancPerm = $this->configuracaoModel->opcaoAtiva(4);
                 if($operacao == 0 or ($operacao == 1 and $capturaFechamentoCancPerm == true)){
-                    $cameras = $this->camera->listaCamerasPortaria($form["portaria"]);
+                    $cameras = $this->camera->listaCamerasPortaria($form["portaria"], $form["tipo"]);
                     if($form["tipo"] == "entrada"){
                         $tipo = 0;
                     }else if($form["tipo"] == "saida"){

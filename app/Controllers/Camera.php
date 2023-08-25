@@ -84,10 +84,10 @@
             }
         }
 
-        public function listaCamerasPortaria($portaria_id)
+        public function listaCamerasPortaria($portaria_id, $tipo = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->cameraModel->listaCamerasPortaria($portaria_id);
+                return $this->cameraModel->listaCamerasPortaria($portaria_id, $tipo);
             }else{
                 $this->helper->loginRedirect();
             }

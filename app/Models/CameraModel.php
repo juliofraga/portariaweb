@@ -145,9 +145,8 @@
         public function removeCamerasPortaria($portaria_id)
         {
             try {
-                $this->db->query("UPDATE cameras SET portoes_id = :nulo WHERE portoes_id = :id");
+                $this->db->query("DELETE FROM camera_has_portaria WHERE portaria_id = :id");
                 $this->db->bind("id", $portaria_id);
-                $this->db->bind("nulo", NULL);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
                     return true;
@@ -158,10 +157,16 @@
             }  
         }
 
-        public function listaCamerasPortaria($portaria_id)
+        public function listaCamerasPortaria($portaria_id, $tipo = null)
         {
             try {
-                $this->db->query("SELECT * FROM cameras WHERE portoes_id = :portaria ORDER BY id ASC");
+                if($tipo == null or $tipo == "emergencia"){
+                    $this->db->query("SELECT c.*, cp.entrada_saida FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id WHERE cp.portaria_id = :portaria ORDER BY c.id ASC");
+                }else if($tipo == "entrada"){
+                    $this->db->query("SELECT c.*, cp.entrada_saida FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id WHERE cp.portaria_id = :portaria AND cp.entrada_saida = 'E' ORDER BY c.id ASC");
+                }else if($tipo == "saida"){
+                    $this->db->query("SELECT c.*, cp.entrada_saida FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id WHERE cp.portaria_id = :portaria AND cp.entrada_saida = 'S' ORDER BY c.id ASC");
+                }
                 $this->db->bind("portaria", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {

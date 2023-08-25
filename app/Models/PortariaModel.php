@@ -60,8 +60,8 @@
                 }else if($attr == "ativo"){
                     $this->db->query("SELECT * FROM portoes WHERE situacao = :situacao order by descricao ASC");
                     $this->db->bind("situacao", 0);
-                }else if($attr == "todos"){   
-                    $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN cameras c ON p.id = c.portoes_id order by p.descricao ASC");
+                }else if($attr == "todos"){
+                    $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id order by p.descricao ASC");
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
@@ -83,7 +83,7 @@
         {
             try {
                 $filter = "p.descricao like '%". $filtro . "%'";
-                $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN cameras c ON p.id = c.portoes_id WHERE $filter order by p.descricao ASC");
+                $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id WHERE $filter order by p.descricao ASC");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

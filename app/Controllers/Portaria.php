@@ -239,7 +239,8 @@
                     $dateTime = $this->helper->returnDateTime();
                     if($this->portariaModel->alterarPortaria($form, $dateTime)){
                         $this->removeCamerasPortaria($form["id"]);
-                        $this->ligaPortariaCamera($form["camera"], $form["id"], $dateTime);
+                        $this->ligaPortariaCamera($form["cameraEntrada"], $form["id"], $dateTime, "E");
+                        $this->ligaPortariaCamera($form["cameraSaida"], $form["id"], $dateTime, "S");
                         $this->helper->setReturnMessage(
                             $this->tipoSuccess,
                             'Portaria alterada com sucesso!',

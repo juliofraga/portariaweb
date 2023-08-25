@@ -33,7 +33,7 @@
                     $dados = [
                         "portarias" => $portarias_usuario,
                         "portaria_selecionada" => $portaria,
-                        "cameras" => $this->camera->listaCamerasPortaria($portaria),
+                        //"cameras" => $this->camera->listaCamerasPortaria($portaria),
                         "reles" => $this->placa->listaReles($portaria),
                         "emergencia" => $this->configuracoes->operadorEmergencia(),
                     ];

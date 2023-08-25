@@ -134,12 +134,32 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
-                                                <label for="placa">Câmeras</label>
-                                                <select class="form-control" name="camera[]" id="camera"  multiple="multiple">
+                                                <label for="placa">Câmeras Entrada</label>
+                                                <select class="form-control" name="cameraEntrada[]" id="cameraEntrada"  multiple="multiple">
                                                     <option value = "">Selecione...</option>
                                                     <?php 
                                                         foreach($dados["dados"] as $cameraSelect){
-                                                            if($portaria->id == $cameraSelect->id and isset($cameraSelect->camera_id)){
+                                                            if($portaria->id == $cameraSelect->id and isset($cameraSelect->camera_id) and $cameraSelect->entrada_saida == "E"){
+                                                        ?>
+                                                        <option value="<?= $cameraSelect->camera_id ?>" selected><?= $cameraSelect->camera ?> - <?= $cameraSelect->ip_camera ?></option>
+                                                    <?php
+                                                            }
+                                                        }
+                                                    ?>
+                                                    <?php foreach($dados["cameras"] as $camera){ ?>
+                                                        <option value="<?= $camera->id ?>"><?= $camera->descricao ?> - <?= $camera->endereco_ip ?></option>
+                                                    <?php }?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-sm-12">
+                                                <label for="placa">Câmeras Saída</label>
+                                                <select class="form-control" name="cameraSaida[]" id="cameraSaida"  multiple="multiple">
+                                                    <option value = "">Selecione...</option>
+                                                    <?php 
+                                                        foreach($dados["dados"] as $cameraSelect){
+                                                            if($portaria->id == $cameraSelect->id and isset($cameraSelect->camera_id) and $cameraSelect->entrada_saida == "S"){
                                                         ?>
                                                         <option value="<?= $cameraSelect->camera_id ?>" selected><?= $cameraSelect->camera ?> - <?= $cameraSelect->ip_camera ?></option>
                                                     <?php
