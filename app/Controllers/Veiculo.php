@@ -57,6 +57,8 @@
                             $this->log->registraLog($_SESSION['pw_id'], "Veículo", $lastInsertId, 0, $dateTime);
                             if($tipo == "registro"){
                                 return $lastInsertId;
+                            }else if($tipo == null){
+                                $this->helper->redirectPage("/veiculo/consulta");
                             }
                         }else{
                             if($tipo == null){
@@ -65,6 +67,7 @@
                                     'Não foi possível cadastrar o veículo, tente novamente!',
                                     $this->rotinaCad
                                 );
+                                $this->helper->redirectPage("/veiculo/novo");
                             }
                         }
                     }else{
@@ -74,6 +77,7 @@
                                 "Não foi possível cadastrar o veículo, já existe outro veículo cadastrado com essa placa(".$form["placaVeiculo"].")",
                                 $this->rotinaCad
                             );
+                            $this->helper->redirectPage("/veiculo/novo");
                         }
                     }
                 }else{
@@ -83,10 +87,8 @@
                             'Existem campos que não foram preenchidos, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/veiculo/novo");
                     }
-                }
-                if($tipo == null){
-                    $this->helper->redirectPage("/veiculo/novo");
                 }
             }else{
                 $this->helper->loginRedirect();

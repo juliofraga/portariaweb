@@ -41,4 +41,5 @@
 </div>
 <?php
     $_SESSION["pw_rotina"] = null;
+    $_SESSION["pw_tipo"] = null;
 ?>

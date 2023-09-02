@@ -83,6 +83,7 @@
                                     'Empresa cadastrada com sucesso!',
                                     $this->rotinaCad
                                 );
+                                $this->helper->redirectPage("/empresa/consulta");
                             }
                             $this->log->registraLog($_SESSION['pw_id'], "Empresa", $lastInsertId, 0, $dateTime);
                             return $lastInsertId;
@@ -93,6 +94,7 @@
                                     'Não foi possível cadastrar a empresa, tente novamente!',
                                     $this->rotinaCad
                                 );
+                                $this->helper->redirectPage("/empresa/nova");
                             }
                         }
                     }else{
@@ -102,6 +104,7 @@
                                 "Não foi possível cadastrar a empresa, já existe outra empresa cadastrada com esse CNPJ / CPF(".$form["cnpj"].")",
                                 $this->rotinaCad
                             );
+                            $this->helper->redirectPage("/empresa/nova");
                         }
                     }
                 }else{
@@ -111,10 +114,8 @@
                             'CNPJ/CPF e Nome Fantasia são de preenchimento obrigatórios, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/empresa/nova");
                     }
-                }
-                if($tipo == null){
-                    $this->helper->redirectPage("/empresa/nova");
                 }
             }else{
                 $this->helper->loginRedirect();

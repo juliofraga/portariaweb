@@ -68,12 +68,14 @@
                             $this->rotinaCad
                         );
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $lastInsertId, 0, $dateTime);
+                        $this->helper->redirectPage("/portaria/consulta");
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
                             'Não foi possível cadastrar a portaria, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/portaria/novo");
                     }
                 }else{
                     $this->helper->setReturnMessage(
@@ -81,8 +83,8 @@
                         'A descrição deve ser informada, tente novamente!',
                         $this->rotinaCad
                     );
+                    $this->helper->redirectPage("/portaria/novo");
                 }
-                $this->helper->redirectPage("/portaria/novo");
             }else{
                 $this->helper->loginRedirect();
             }

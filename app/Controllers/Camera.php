@@ -55,12 +55,14 @@
                         );
                         $this->criaArquivoCamera($lastInsertId, $form['endereco_ip']);
                         $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
+                        $this->helper->redirectPage("/camera/consulta");
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
                             'Não foi possível cadastrar a câmera, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/camera/novo");
                     }
                 }else{
                     $this->helper->setReturnMessage(
@@ -68,8 +70,8 @@
                         'Existem campos que não foram preenchidos, verifique novamente!',
                         $this->rotinaCad
                     );
+                    $this->helper->redirectPage("/camera/novo");
                 }
-                $this->helper->redirectPage("/camera/novo");
             }else{
                 $this->helper->loginRedirect();
             }

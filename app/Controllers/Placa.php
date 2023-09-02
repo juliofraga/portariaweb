@@ -50,12 +50,14 @@
                             $this->rotinaCad
                         );
                         $this->log->registraLog($_SESSION['pw_id'], "Placa", $lastInsertId, 0, $dateTime);
+                        $this->helper->redirectPage("/placa/consulta");
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
                             'Não foi possível cadastrar a placa, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/placa/novo");
                     }
                 }else{
                     $this->helper->setReturnMessage(
@@ -63,8 +65,9 @@
                         'Existem campos que não foram preenchidos, verifique novamente!',
                         $this->rotinaCad
                     );
+                    $this->helper->redirectPage("/placa/novo");
                 }
-                $this->helper->redirectPage("/placa/novo");
+                
             }else{
                 $this->helper->loginRedirect();
             }

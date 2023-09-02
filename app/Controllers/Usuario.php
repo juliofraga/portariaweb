@@ -59,12 +59,14 @@
                                         $this->rotinaCad
                                     );
                                     $this->log->registraLog($_SESSION['pw_id'], "Usuário", $lastInsertId, 0, $dateTime);
+                                    $this->helper->redirectPage("/usuario/consulta");
                                 }else{
                                     $this->helper->setReturnMessage(
                                         $this->tipoError,
                                         'Não foi possível cadastrar o usuário, tente novamente!',
                                         $this->rotinaCad
                                     );
+                                    $this->helper->redirectPage("/usuario/novo");
                                 }
                             }else{
                                 $this->helper->setReturnMessage(
@@ -72,6 +74,7 @@
                                     'A senha deve ter no minimo 6 caracteres, tente novamente!',
                                     $this->rotinaCad
                                 );
+                                $this->helper->redirectPage("/usuario/novo");
                             }
                         }else{
                             $this->helper->setReturnMessage(
@@ -79,6 +82,7 @@
                                 'As senhas não conferem, tente novamente!',
                                 $this->rotinaCad
                             );
+                            $this->helper->redirectPage("/usuario/novo");
                         }
                     }else{
                         $this->helper->setReturnMessage(
@@ -86,6 +90,7 @@
                             'Não foi possível cadastrar o usuário, já existe um usuário cadastrado no sistema com este login, tente novamente informando outro login!',
                             $this->rotinaCad
                         );
+                        $this->helper->redirectPage("/usuario/novo");
                     }
                 }else{
                     $this->helper->setReturnMessage(
@@ -93,8 +98,8 @@
                         'Existem campos que não foram preenchidos, verifique novamente!',
                         $this->rotinaCad
                     );
+                    $this->helper->redirectPage("/usuario/novo");
                 }
-                $this->helper->redirectPage("/usuario/novo");
             }else{
                 $this->helper->loginRedirect();
             }
