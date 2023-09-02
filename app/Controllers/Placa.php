@@ -41,27 +41,19 @@
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($this->helper->validateFields($form)){
                     $form["endereco_ip"] = $this->helper->handleEnderecoIp($form["endereco_ip"]);
-                    if(!$this->placaModel->verificaIp($form["endereco_ip"])){
-                        $dateTime = $this->helper->returnDateTime();
-                        $lastInsertId = $this->placaModel->cadastrarPlaca($form, $dateTime);
-                        if($lastInsertId != null){
-                            $this->helper->setReturnMessage(
-                                $this->tipoSuccess,
-                                'Placa cadastrada com sucesso!',
-                                $this->rotinaCad
-                            );
-                            $this->log->registraLog($_SESSION['pw_id'], "Placa", $lastInsertId, 0, $dateTime);
-                        }else{
-                            $this->helper->setReturnMessage(
-                                $this->tipoError,
-                                'Não foi possível cadastrar a placa, tente novamente!',
-                                $this->rotinaCad
-                            );
-                        }
+                    $dateTime = $this->helper->returnDateTime();
+                    $lastInsertId = $this->placaModel->cadastrarPlaca($form, $dateTime);
+                    if($lastInsertId != null){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            'Placa cadastrada com sucesso!',
+                            $this->rotinaCad
+                        );
+                        $this->log->registraLog($_SESSION['pw_id'], "Placa", $lastInsertId, 0, $dateTime);
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            "Não foi possível cadastrar a placa, já existe outra placa cadastrada com esse endereço IP (".$form["endereco_ip"]."), tente novamente informando outro endereço IP!",
+                            'Não foi possível cadastrar a placa, tente novamente!',
                             $this->rotinaCad
                         );
                     }

@@ -23,7 +23,7 @@
                             Painel
                         </a>
                     </li>
-                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin") or $_SESSION['pw_tipo_perfil'] == md5("Administrador")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['camera/novo', 'camera/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>
@@ -57,7 +57,7 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/motorista/consulta">Consulta Motorista</a></li>
                         </ul>
                     </li>
-                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin") or $_SESSION['pw_tipo_perfil'] == md5("Administrador")){ ?>
                     <li class="nav-item dropdown">
                         <a class="nav-link fonteMenu dropdown-toggle <?= $helper->verificaLinkAtivo(['placa/novo', 'placa/consulta']) ?>" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">
                             <center>

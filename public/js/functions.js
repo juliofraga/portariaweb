@@ -31,7 +31,7 @@ $(document).ready(function(){
 
 
 function verificaStatusPlaca(){
-    var statusPlaca = document.getElementById("statusPlaca");
+    /*var statusPlaca = document.getElementById("statusPlaca");
     var url = document.getElementById("txtUrl");
     //var placa_ip = document.getElementById("endereco_ip_placa");
     var placa_ip = '192.168.0.100';
@@ -71,7 +71,7 @@ function verificaStatusPlaca(){
                 statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
             }
         });
-    }, 15000);
+    }, 15000);*/
 }
 
 function validaComplexidadeSenha(senha, complexidade){
