@@ -221,6 +221,13 @@
                     $this->db->bind("dataHora", $dateTime);
                     $this->db->bind("alterar_senha", "N");
                     $this->db->bind("id", $dados["id"]);
+                }else if ($rotina == "senha-nome"){
+                    $this->db->query("UPDATE usuarios SET nome = :nome, senha = :senha, updated_at = :dataHora, alterar_senha = :alterar_senha WHERE id = :id");
+                    $this->db->bind("senha", $dados["senha"]);
+                    $this->db->bind("nome", $dados["nome"]);
+                    $this->db->bind("dataHora", $dateTime);
+                    $this->db->bind("alterar_senha", "N");
+                    $this->db->bind("id", $dados["id"]);
                 }
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)

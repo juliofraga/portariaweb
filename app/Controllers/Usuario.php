@@ -145,12 +145,12 @@
             }
         }
 
-        public function alterar(){
+        public function alterar($tipo = null){
             if($this->helper->sessionValidate()){
                 $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
-                    if($this->updateUsuario($form, $dateTime))
+                    if($this->updateUsuario($form, $dateTime, $tipo))
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                 }else if(isset($form["inativar"])){
                     if($this->ativarInativarUsuario($form, "inativar", $dateTime))
@@ -159,7 +159,11 @@
                     if($this->ativarInativarUsuario($form, "ativar", $dateTime))
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                 }
-                $this->helper->redirectPage("/usuario/consulta");
+                if($tipo == null){
+                    $this->helper->redirectPage("/usuario/consulta");
+                }else if($tipo == "perfil"){
+                    $this->helper->redirectPage("/usuario/perfil");
+                }
             }else{
                 $this->helper->loginRedirect();
             }
@@ -220,7 +224,29 @@
             }
         }
 
-        private function updateUsuario($form, $dateTime){
+        public function perfil()
+        {
+            if($this->helper->sessionValidate()){
+                $dados = [
+                    'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
+                    'usuario' => $this->buscaUsuarioPorId($_SESSION['pw_id']),
+                ];
+                $this->view('usuario/perfil', $dados);
+            }else{
+                $this->view('pagenotfound');
+            }
+        }
+
+        private function buscaUsuarioPorId($id)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->usuarioModel->buscaUsuarioPorId($id);
+            }else{
+                $this->view('pagenotfound');
+            }
+        }
+
+        private function updateUsuario($form, $dateTime, $tipo){
             $retorno = false;
             if(!empty($form["nome"])){
                 $info = $this->usuarioModel->buscaUsuarioPorId($form["id"]);
@@ -259,18 +285,34 @@
                         if($this->configuracoes->complexidadeSenhaAtivo()){
                             if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\w$@]{6,}$/', $form["senha"])){
                                 $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
-                                    $this->helper->setReturnMessage(
-                                        $this->tipoSuccess,
-                                        'Usuário alterado com sucesso!',
-                                        $this->rotinaAlt
-                                    );
-                                }else{
-                                    $this->helper->setReturnMessage(
-                                        $this->tipoError,
-                                        'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                        $this->rotinaAlt
-                                    );
+                                if($tipo == null){
+                                    if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoSuccess,
+                                            'Usuário alterado com sucesso!',
+                                            $this->rotinaAlt
+                                        );
+                                    }else{
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoError,
+                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                            $this->rotinaAlt
+                                        );
+                                    }
+                                }else if($tipo == "perfil"){
+                                    if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoSuccess,
+                                            'Usuário alterado com sucesso!',
+                                            $this->rotinaAlt
+                                        );
+                                    }else{
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoError,
+                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                            $this->rotinaAlt
+                                        );
+                                    }
                                 }
                             }else{
                                 $this->helper->setReturnMessage(
@@ -288,18 +330,34 @@
                                 );
                             }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
                                 $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
-                                    $this->helper->setReturnMessage(
-                                        $this->tipoSuccess,
-                                        'Usuário alterado com sucesso!',
-                                        $this->rotinaAlt
-                                    );
-                                }else{
-                                    $this->helper->setReturnMessage(
-                                        $this->tipoError,
-                                        'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                        $this->rotinaAlt
-                                    );
+                                if($tipo == null){
+                                    if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoSuccess,
+                                            'Usuário alterado com sucesso!',
+                                            $this->rotinaAlt
+                                        );
+                                    }else{
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoError,
+                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                            $this->rotinaAlt
+                                        );
+                                    }
+                                }else if($tipo == "perfil"){
+                                    if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoSuccess,
+                                            'Usuário alterado com sucesso!',
+                                            $this->rotinaAlt
+                                        );
+                                    }else{
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoError,
+                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                            $this->rotinaAlt
+                                        );
+                                    }
                                 }
                             }
                         }
