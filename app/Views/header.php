@@ -149,7 +149,7 @@
                     <?php } ?>
                     <?php if($_SESSION['pw_tipo_perfil'] == md5("Operador")){ ?>
                     <li class="nav-item">
-                        <a class="nav-link fonteMenu" <?= $helper->verificaLinkAtivo(['perfil']) ?> href="<?= URL ?>/usuario/perfil">
+                        <a class="nav-link fonteMenu <?= $helper->verificaLinkAtivo(['usuario/perfil']) ?>" href="<?= URL ?>/usuario/perfil">
                             <center>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
