@@ -4,7 +4,14 @@
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
-        <div class="resultados_admin mt-2">
+        <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Usuários</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/usuario/novo">Novo</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Consulta</li>
+            </ol>
+        </nav>
+        <div class="resultados_admin">
             <h1>Usuário - Consulta</h1>
             <hr class="divisor_horizontal">
             <form method="POST" action="<?= URL ?>/usuario/consulta" id="form_busca_usuario" name="form_busca_usuario">

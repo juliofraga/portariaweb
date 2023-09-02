@@ -3,7 +3,14 @@
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
-        <div class="resultados_admin mt-2">
+        <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Usuários</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/usuario/consulta">Consulta</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Novo</li>
+            </ol>
+        </nav>
+        <div class="resultados_admin">
             <h1>Novo Usuário</h1>
             <form name="form_cad_usuario" id="form_cad_usuario" method="POST" action="<?= URL ?>/usuario/cadastrar/">
                 <hr class="divisor_horizontal">

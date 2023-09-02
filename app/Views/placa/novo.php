@@ -1,6 +1,13 @@
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
-        <div class="resultados_admin mt-2">
+        <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Placas</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/placa/consulta">Consulta</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Novo</li>
+            </ol>
+        </nav>
+        <div class="resultados_admin">
             <h1>Nova Placa</h1>
             <form name="form_cad_camera" id="form_cad_camera" method="POST" action="<?= URL ?>/placa/cadastrar/">
                 <hr class="divisor_horizontal">

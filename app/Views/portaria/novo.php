@@ -1,6 +1,14 @@
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
-        <div class="resultados_admin mt-2">
+        <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Portarias</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/consulta">Consulta</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/portaria_usuario">Ligação Portaria x Usuários</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Novo</li>
+            </ol>
+        </nav>
+        <div class="resultados_admin">
             <h1>Nova Portaria</h1>
             <form name="form_cad_portaria" id="form_cad_portaria" method="POST" action="<?= URL ?>/portaria/cadastrar/">
                 <hr class="divisor_horizontal">

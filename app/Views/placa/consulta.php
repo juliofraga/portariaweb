@@ -4,7 +4,14 @@
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
-        <div class="resultados_admin mt-2">
+        <nav aria-label="breadcrumb" class="mt-2">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Placas</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/placa/novo">Novo</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Consulta</li>
+            </ol>
+        </nav>
+        <div class="resultados_admin">
             <h1>Placas - Consulta</h1>
             <hr class="divisor_horizontal">
             <form method="POST" action="<?= URL ?>/placa/consulta" id="form_busca_placa" name="form_busca_placa">
