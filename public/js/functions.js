@@ -24,6 +24,56 @@ $(document).ready(function() {
     }
 });
 
+$(document).ready(function(){
+    verificaStatusPlaca();
+});
+
+
+
+function verificaStatusPlaca(){
+    var statusPlaca = document.getElementById("statusPlaca");
+    var url = document.getElementById("txtUrl");
+    //var placa_ip = document.getElementById("endereco_ip_placa");
+    var placa_ip = '192.168.0.100';
+    statusPlaca.innerHTML = "<b>Carregando status</b>";
+    var seg = 1;
+    var carregandoStatus = setInterval(() => {
+        if(seg==1){
+            statusPlaca.innerHTML = "<div><b>Carregando status.</b></div>";
+        }else if(seg==2){
+            statusPlaca.innerHTML = "<div><b>Carregando status..</b></div>";
+        }else if(seg==3){
+            statusPlaca.innerHTML = "<div><b>Carregando status...</b></div>";
+        }
+        if(seg == 3){
+            seg = 0;
+        }else{
+            seg++;
+        }
+    }, 500);
+    setInterval(() => {
+        clearInterval(carregandoStatus);
+        $.ajax({
+            type: "POST",
+            data: "placa_ip="+placa_ip,
+            url: url+'/placa/verificaStatusPlaca',
+            success: function(result){
+                console.log(result);
+                var retorno = result.split("<statusPlaca>");
+                var retorno2 = retorno[1].split("</statusPlaca>");
+                if(retorno2[0] == "online"){
+                    statusPlaca.innerHTML = "<div style='color:green'><b>Online</b></div>";
+                }else{
+                    statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
+            }
+        });
+    }, 15000);
+}
+
 function validaComplexidadeSenha(senha, complexidade){
     if(complexidade == null || complexidade == false){
         let tamanho = senha.length;

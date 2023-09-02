@@ -164,6 +164,23 @@
             }
         }
 
+        public function verificaStatusPlaca()
+        {
+            if($this->helper->sessionValidate()){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                echo "AQUI";
+                $placa_ip = $form["placa_ip"];
+                exec("ping $placa_ip", $saida, $retorno);
+                if ($saida[2] == "Esgotado o tempo limite do pedido." and $saida[3] == "Esgotado o tempo limite do pedido." and $saida[4] == "Esgotado o tempo limite do pedido.") {
+                    echo '<statusPlaca>Offline</statusPlaca>';
+                } else {
+                    echo '<statusPlaca>Online</statusPlaca>';
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function updatePlaca($form, $dateTime)
         {
             if($this->helper->sessionValidate()){

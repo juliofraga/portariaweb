@@ -14,7 +14,7 @@
 <div id="conteudo" class="mb-5 mt-3">
     <div class="container conteudo_consulta">
         <div class="row">
-            <div class="col-sm-2 mt-2">
+            <div class="col-sm-3 mt-2">
                 <form method="POST" action="<?= URL ?>/painel" name="form_seleciona_portaria" id="form_seleciona_portaria">
                     <input type="hidden" id="txtUrl" value="<?= URL ?>">
                     <input type="hidden" id="loginOperador" value="<?= $_SESSION["pw_id"] ?>">
@@ -29,6 +29,7 @@
                             <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
                         <?php }?>
                     </select>
+                  <!--  Status da Placa: <label id="statusPlaca"></label> -->
                 </form>
             </div>
         </div>
