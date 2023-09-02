@@ -4,7 +4,7 @@
  
 	spl_autoload_register(function ($classe){
 		$dir = [
-			'Libraries'
+			'Libraries',
 		];
 		
 		foreach($dir as $diretorio){

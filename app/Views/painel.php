@@ -29,7 +29,7 @@
                             <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
                         <?php }?>
                     </select>
-                  <!--  Status da Placa: <label id="statusPlaca"></label> -->
+                    Status da Placa: <label id="statusPlaca"></label>
                 </form>
             </div>
         </div>

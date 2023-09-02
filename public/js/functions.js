@@ -31,10 +31,10 @@ $(document).ready(function(){
 
 
 function verificaStatusPlaca(){
-    /*var statusPlaca = document.getElementById("statusPlaca");
-    var url = document.getElementById("txtUrl");
-    //var placa_ip = document.getElementById("endereco_ip_placa");
-    var placa_ip = '192.168.0.100';
+    console.log('carregando status');
+    var statusPlaca = document.getElementById("statusPlaca");
+    var porta = document.getElementById('porta').value;
+    var placa_endereco = "http://"+document.getElementById("endereco_ip_placa").value+":"+porta;
     statusPlaca.innerHTML = "<b>Carregando status</b>";
     var seg = 1;
     var carregandoStatus = setInterval(() => {
@@ -53,25 +53,17 @@ function verificaStatusPlaca(){
     }, 500);
     setInterval(() => {
         clearInterval(carregandoStatus);
-        $.ajax({
-            type: "POST",
-            data: "placa_ip="+placa_ip,
-            url: url+'/placa/verificaStatusPlaca',
-            success: function(result){
-                console.log(result);
-                var retorno = result.split("<statusPlaca>");
-                var retorno2 = retorno[1].split("</statusPlaca>");
-                if(retorno2[0] == "online"){
-                    statusPlaca.innerHTML = "<div style='color:green'><b>Online</b></div>";
-                }else{
-                    statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
-            }
-        });
-    }, 15000);*/
+        var request = new XMLHttpRequest();
+        request.open('GET', placa_endereco);
+        request.responseType = 'json';
+        request.send();
+        request.onload = function() {
+            statusPlaca.innerHTML = "<div style='color:green'><b>Online</b></div>";
+        }
+        request.onerror = function(){
+            statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
+        }
+    }, 10000);
 }
 
 function validaComplexidadeSenha(senha, complexidade){

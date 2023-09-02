@@ -135,7 +135,7 @@
                         </a>
                     </li>
                     <?php } ?>
-                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador")){ ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] != md5("Operador") or $_SESSION["opeViewCons"] == true){ ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu <?= $helper->verificaLinkAtivo(['consultas', 'consultas/detalhada']) ?>" href="<?= URL ?>/consultas">
                             <center>

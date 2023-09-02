@@ -23,6 +23,10 @@
         public function operadorEmergencia(){
             return $this->configuracaoModel->opcaoAtiva(3);
         }
+
+        public function operadorVisualizaConsultas(){
+            return $this->configuracaoModel->opcaoAtiva(5);
+        }
         
         public function index(){
             if($this->helper->sessionValidate()){

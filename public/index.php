@@ -4,6 +4,9 @@
     include './../app/config.php';
     include './../app/autoload.php';
     include './../app/Libraries/Helpers.php';
+    include './../app/Libraries/LoadOptions.php';
+    $loadOptions = new LoadOptions();
+    $loadOptions->setOptions();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
