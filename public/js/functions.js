@@ -360,7 +360,7 @@ function exibeEscondeCamera(valor, id){
 }
 
 function validaAbrirCancela(){
-    if(document.getElementById('empresa').value != '' && document.getElementById('cnpj').value.length > 17 && document.getElementById('placa').value != '' && document.getElementById('descricao').value != '' && document.getElementById('tipo').value != '' && document.getElementById('motorista').value != '' && document.getElementById('cpfMotorista').value.length > 13){
+    if(document.getElementById('empresa').value != '' && document.getElementById('cnpj').value.length > 13 && document.getElementById('placa').value != '' && document.getElementById('descricao').value != '' && document.getElementById('tipo').value != '' && document.getElementById('motorista').value != '' && document.getElementById('cpfMotorista').value.length > 13){
         exibeBtnAbrirCancela();
     }else{
         escondeBtnAbrirCancela();
