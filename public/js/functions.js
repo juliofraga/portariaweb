@@ -308,11 +308,11 @@ function buscaVeiculosParaSaida(){
                     opcao.text = "Não existe veículo para sair nesta portaria";
                     opcao.value = "";
                     listaSaida.options.add(opcao);
-                }else if(veiculoSaida.length > 1){
-                    opcao = document.createElement("option");
-                    opcao.text = "Selecione...";
-                    opcao.value = "";
-                    listaSaida.options.add(opcao);
+                }
+                if(veiculoSaida.length <= 10){
+                    listaSaida.setAttribute("size", veiculoSaida.length);
+                }else{
+                    listaSaida.setAttribute("size", 10);
                 }
                 for($i = 1; $i < veiculoSaida.length; $i++){
                     id = veiculoSaida[$i].split("<id>");

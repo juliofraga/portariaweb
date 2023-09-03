@@ -111,7 +111,7 @@
                     <h4>NOVA SAÍDA</h4>
                     <div class="row mt-4">
                         <div class="col-sm-12">
-                            <select class="form-control w-100" name="veiculoSaida" id="veiculoSaida" onchange="exibeBtnAbrirCancelaSaida();">
+                            <select class="form-select w-100" name="veiculoSaida" id="veiculoSaida" onchange="exibeBtnAbrirCancelaSaida();">
                             </select>
                             <label for="veiculo">Veículo</label>
                         </div>
