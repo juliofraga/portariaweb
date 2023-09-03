@@ -165,12 +165,15 @@
                 if(isset($form["update"])){
                     if($this->updateUsuario($form, $dateTime, $tipo))
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Usuário", null, null);
                 }else if(isset($form["inativar"])){
                     if($this->ativarInativarUsuario($form, "inativar", $dateTime))
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Usuário", null, null);
                 }else if(isset($form["ativar"])){
                     if($this->ativarInativarUsuario($form, "ativar", $dateTime))
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Usuário", null, null);
                 }
                 if($tipo == null){
                     $this->helper->redirectPage("/usuario/consulta");
@@ -190,18 +193,21 @@
                 "login" => $login,
                 'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
             ];
+            $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $id, null, null, "Alteração de senha");
             $this->view('usuario/alterarsenha', $dados);
         }
 
         public function atualizarSenha(){
             $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             if($form){
+                $dateTime = $this->helper->returnDateTime();
                 if(empty($form["senha"]) or empty($form["repetesenha"])){
                     $this->helper->setReturnMessage(
                         $this->tipoError,
                         'Não foi possível atualizar a senha, existem campos que não foram preenchidos, tente novamente!',
                         $this->rotinaAlt
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $form["id"], "Senha", "Alguns campos não foram preenchidos", null);
                     $this->helper->redirectPage("/usuario/alterarsenha/");
                 }else if($form["senha"] != $form["repetesenha"]){
                     $this->helper->setReturnMessage(
@@ -209,6 +215,7 @@
                         'Não foi possível atualizar a senha, elas não conferem, tente novamente!',
                         $this->rotinaAlt
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $form["id"], "Senha", "Senhas não conferem", null);
                     $this->helper->redirectPage("/usuario/alterarsenha/");
                 }else if(strlen($form["senha"]) < 6){
                     $this->helper->setReturnMessage(
@@ -216,12 +223,13 @@
                         'Não foi possível atualizar a senha, elas não possuem o mínimo de 6 caracteres!',
                         $this->rotinaAlt
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $form["id"], "Senha", "Senha não possui 6 caracteres", null);
                     $this->helper->redirectPage("/usuario/alterarsenha/");
                 }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
                     $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                    $dateTime = $this->helper->returnDateTime();
                     if($this->usuarioModel->alteraUsuario($form, "senha_update", $dateTime)){
                         $this->log->registraLog($form["id"], "Usuário", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $form["id"], "Senha", null, null);
                         $this->helper->redirectPage("/login/validaLogin/atualizaSenha");
                     }else{
                         $this->helper->setReturnMessage(
@@ -229,6 +237,7 @@
                             'Erro ao atualizar a senha, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
                             $this->rotinaAlt
                         );
+                        $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $form["id"], "Senha", "Erro ao alterar no banco de dados", null);
                         $this->helper->redirectPage("/usuario/alterarsenha/");
                     }
                 }
@@ -244,6 +253,7 @@
                     'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
                     'usuario' => $this->buscaUsuarioPorId($_SESSION['pw_id']),
                 ];
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Perfil");
                 $this->view('usuario/perfil', $dados);
             }else{
                 $this->view('pagenotfound');
@@ -386,7 +396,6 @@
             return $retorno;
         }
         
-        // Executa a rotina de ativação e inativação do usuário
         private function ativarInativarUsuario($form, $acao, $dateTime){
             if($this->helper->sessionValidate()){
                 $retorno = false;
