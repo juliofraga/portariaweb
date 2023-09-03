@@ -35,6 +35,7 @@
                 'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
             ];
             if($this->helper->sessionValidate()){
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Novo Usuário");
                 $this->view('usuario/novo', $dados);
             }else{
                 $this->helper->loginRedirect();
@@ -44,13 +45,13 @@
         public function cadastrar()
         {
             if($this->helper->sessionValidate()){
+                $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($this->helper->validateFields($form)){
                     if(!$this->usuarioModel->verificaLogin($form["login"])){
                         if($form["senha"] == $form["repetesenha"]){
                             if(strlen($form["senha"]) >= 6){
                                 $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                $dateTime = $this->helper->returnDateTime();
                                 $lastInsertId = $this->usuarioModel->cadastrarUsuario($form, $dateTime);
                                 if($lastInsertId != null){
                                     $this->helper->setReturnMessage(
@@ -59,6 +60,7 @@
                                         $this->rotinaCad
                                     );
                                     $this->log->registraLog($_SESSION['pw_id'], "Usuário", $lastInsertId, 0, $dateTime);
+                                    $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Usuário");
                                     $this->helper->redirectPage("/usuario/consulta");
                                 }else{
                                     $this->helper->setReturnMessage(
@@ -66,6 +68,7 @@
                                         'Não foi possível cadastrar o usuário, tente novamente!',
                                         $this->rotinaCad
                                     );
+                                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Erro ao gravar no banco de dados");
                                     $this->helper->redirectPage("/usuario/novo");
                                 }
                             }else{
@@ -74,6 +77,7 @@
                                     'A senha deve ter no minimo 6 caracteres, tente novamente!',
                                     $this->rotinaCad
                                 );
+                                $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha com menos de 6 caracteres");
                                 $this->helper->redirectPage("/usuario/novo");
                             }
                         }else{
@@ -82,6 +86,7 @@
                                 'As senhas não conferem, tente novamente!',
                                 $this->rotinaCad
                             );
+                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha não conferem");
                             $this->helper->redirectPage("/usuario/novo");
                         }
                     }else{
@@ -90,6 +95,7 @@
                             'Não foi possível cadastrar o usuário, já existe um usuário cadastrado no sistema com este login, tente novamente informando outro login!',
                             $this->rotinaCad
                         );
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Já existe usuário cadastrado no sistema com o mesmo login");
                         $this->helper->redirectPage("/usuario/novo");
                     }
                 }else{
@@ -98,6 +104,7 @@
                         'Existem campos que não foram preenchidos, verifique novamente!',
                         $this->rotinaCad
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Aguns campos não foram preenchidos");
                     $this->helper->redirectPage("/usuario/novo");
                 }
             }else{
@@ -108,6 +115,7 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Usuário");
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if((!isset($_SESSION["pw_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
