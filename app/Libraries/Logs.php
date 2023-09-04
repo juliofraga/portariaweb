@@ -15,7 +15,7 @@
 
         public function gravaLog($dateTime, $classe_id = null, $acao, $usuario, $classe = null, $motivo = null, $tela = null){
             $texto = "";
-            if($acao == "Adicionou" or $acao == "Alterou" or $acao == "Inativou" or $acao == "Ativou"){
+            if($acao == "Adicionou" or $acao == "Alterou" or $acao == "Inativou" or $acao == "Ativou" or $acao == "Removeu" or $acao == "Deletou"){
                 $texto = "[$dateTime] - Usuário ID $usuario $acao $classe ID: $classe_id \n";
             }else if($acao == "Tentou adicionar, mas sem sucesso" or $acao == "Tentou alterar, mas sem sucesso"){
                 if($classe_id == null){

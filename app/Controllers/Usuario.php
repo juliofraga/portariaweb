@@ -163,17 +163,20 @@
                 $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
-                    if($this->updateUsuario($form, $dateTime, $tipo))
+                    if($this->updateUsuario($form, $dateTime, $tipo)){
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                         $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Usuário", null, null);
+                    }
                 }else if(isset($form["inativar"])){
-                    if($this->ativarInativarUsuario($form, "inativar", $dateTime))
+                    if($this->ativarInativarUsuario($form, "inativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                         $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Usuário", null, null);
+                    }
                 }else if(isset($form["ativar"])){
-                    if($this->ativarInativarUsuario($form, "ativar", $dateTime))
+                    if($this->ativarInativarUsuario($form, "ativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
                         $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Usuário", null, null);
+                    }
                 }
                 if($tipo == null){
                     $this->helper->redirectPage("/usuario/consulta");
