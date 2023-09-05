@@ -33,6 +33,7 @@
                 $dados = [
                     'configuracoes' => $this->listaConfiguracoes(),
                 ];
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Configurações");
                 $this->view('configuracoes', $dados);
             }else{
                 $this->helper->loginRedirect();
@@ -56,6 +57,7 @@
                 }
                 $dateTime = $this->helper->returnDateTime();
                 if($this->configuracaoModel->AtualizaConfiguracao($id, $valor, $dateTime)){
+                    $this->log->gravaLog($dateTime, $id, "Alterou", $_SESSION['pw_id'], "Configurações", null, null);
                     $this->log->registraLog($_SESSION['pw_id'], "Configurações", $id, 1, $dateTime);
                     return true;
                 }else{
