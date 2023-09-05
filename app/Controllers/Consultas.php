@@ -8,6 +8,7 @@
         public $veiculo;
         public $motorista;
         public $operacao;
+        public $log;
 
         public function __construct()
         {
@@ -19,7 +20,8 @@
             $this->operacao = new Operacao();
             $this->veiculo = $this->operacao->veiculo;
             $this->empresa = $this->veiculo->empresa;
-            $this->motorista = $this->operacao->motorista;            
+            $this->motorista = $this->operacao->motorista;
+            $this->log = new Logs();         
         }
 
         public function index()
@@ -75,6 +77,7 @@
                     'consulta' => $consulta,
                     'fezConsulta' => true
                 ];
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consultas");
                 $this->view('consultas/index', $dados);
             }else{
                 $this->helper->loginRedirect();
@@ -91,6 +94,7 @@
                         'operacao' => $this->operacao->consultaOperacaoPorId($id),
                         'imagens' => $this->operacao->buscaImagensOperacaoPorId($id),
                     ];
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta detalhada ID: $id");
                     $this->view('consultas/detalhada', $dados);
                 }
             }else{
