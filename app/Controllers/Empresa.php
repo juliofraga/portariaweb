@@ -29,6 +29,7 @@
         public function nova()
         {
             if($this->helper->sessionValidate()){
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Nova Empresa");
                 $this->view('empresa/nova');
             }else{
                 $this->helper->redirectPage("/login/");
@@ -56,6 +57,7 @@
                         'filtro' => $filtro,
                     ];
                 }
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Empresa");
                 $this->view('empresa/consulta', $dados);
             }else{
                 $this->helper->redirectPage("/login/");
@@ -66,9 +68,9 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $dateTime = $this->helper->returnDateTime();
                 if((!empty($form["cnpj"]) and !empty($form["nome_fantasia"])) or ($tipo == "registro")){
                     if(!$this->verificaEmpresa($form["cnpj"]) and !$this->verificaEmpresa($cnpj)){
-                        $dateTime = $this->helper->returnDateTime();
                         if($tipo == "registro"){
                             $form = [
                                 "cnpj" => $cnpj,
@@ -77,6 +79,8 @@
                         }
                         $lastInsertId = $this->empresaModel->cadastrarEmpresa($form, $dateTime, $tipo);
                         if($lastInsertId != null){
+                            $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Empresa");
+                            $this->log->registraLog($_SESSION['pw_id'], "Empresa", $lastInsertId, 0, $dateTime);
                             if($tipo == null){
                                 $this->helper->setReturnMessage(
                                     $this->tipoSuccess,
@@ -85,9 +89,9 @@
                                 );
                                 $this->helper->redirectPage("/empresa/consulta");
                             }
-                            $this->log->registraLog($_SESSION['pw_id'], "Empresa", $lastInsertId, 0, $dateTime);
                             return $lastInsertId;
                         }else{
+                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Empresa", "Erro ao gravar no banco de dados");
                             if($tipo == null){
                                 $this->helper->setReturnMessage(
                                     $this->tipoError,
@@ -98,6 +102,7 @@
                             }
                         }
                     }else{
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Empresa", "Já existe empresa cadastrada com este CNPJ / CPF");
                         if($tipo == null){
                             $this->helper->setReturnMessage(
                                 $this->tipoError,
@@ -108,6 +113,7 @@
                         }
                     }
                 }else{
+                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Empresa", "Campos obrigatórios não foram preenchidos");
                     if($tipo == null){
                         $this->helper->setReturnMessage(
                             $this->tipoError,
@@ -170,14 +176,20 @@
                 $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
-                    if($this->updateEmpresa($form, $dateTime))
+                    if($this->updateEmpresa($form, $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Empresa", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Empresa", null, null);
+                    }
                 }else if(isset($form["inativar"])){
-                    if($this->ativarInativarEmpresa($form["id"], "inativar", $dateTime))
+                    if($this->ativarInativarEmpresa($form["id"], "inativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Empresa", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Empresa", null, null);
+                    }
                 }else if(isset($form["ativar"])){
-                    if($this->ativarInativarEmpresa($form["id"], "ativar", $dateTime))
+                    if($this->ativarInativarEmpresa($form["id"], "ativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Empresa", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Empresa", null, null);
+                    }
                 }
                 $this->helper->redirectPage("/empresa/consulta");
             }else{
