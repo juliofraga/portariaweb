@@ -2,10 +2,12 @@
     class OperacaoModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function registrarOperacao($dateTime, $usuario_id, $veiculo_id, $pessoa_id, $portaria_id)
@@ -23,7 +25,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
-                echo $th;
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -44,6 +46,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -60,6 +63,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -79,6 +83,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -95,6 +100,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -108,6 +114,7 @@
                 $this->db->bind("tipo", 'N');
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -165,6 +172,7 @@
                 $this->db->query("SELECT o.*, v.placa, p.descricao, pe.nome_completo FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id LEFT JOIN pessoas pe ON o.pessoas_id = pe.id WHERE o.id > 0 $portaria $operador $tipo $empresa $veiculo $motorista $dataDeFiltro $dataAteFiltro ORDER BY o.id DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -180,6 +188,7 @@
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -191,6 +200,7 @@
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -206,6 +216,7 @@
                 $this->db->bind("operacoes_id", $operacao_id);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -217,6 +228,7 @@
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }

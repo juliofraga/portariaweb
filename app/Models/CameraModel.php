@@ -2,10 +2,12 @@
     class CameraModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function verificaIp($ip, $camera_id = null) {
@@ -23,6 +25,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -40,6 +43,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -58,6 +62,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -68,6 +73,7 @@
                 $this->db->query("SELECT c.* FROM cameras c LEFT JOIN camera_has_portaria cp ON cp.camera_id = c.id WHERE cp.camera_id IS NULL order by c.descricao");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -85,6 +91,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -95,6 +102,7 @@
                 $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -106,6 +114,7 @@
                 $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id WHERE $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -123,6 +132,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -138,6 +148,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -153,6 +164,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -170,6 +182,7 @@
                 $this->db->bind("portaria", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }

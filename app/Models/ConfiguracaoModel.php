@@ -2,10 +2,12 @@
     class ConfiguracaoModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function listaConfiguracoes()
@@ -14,6 +16,7 @@
                 $this->db->query("SELECT * FROM configuracoes order by id ASC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -31,6 +34,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -47,6 +51,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }

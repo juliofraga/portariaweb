@@ -2,10 +2,12 @@
     class VeiculoModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function cadastrarVeiculo($dados, $dataHora)
@@ -23,6 +25,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -43,6 +46,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -58,6 +62,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -78,6 +83,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -88,6 +94,7 @@
                 $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -99,6 +106,7 @@
                 $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -116,6 +124,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -131,6 +140,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -143,6 +153,7 @@
                 $this->db->bind("empresa_id", $empresa_id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -154,6 +165,7 @@
                 $this->db->bind("veiculo_id", $veiculo_id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -170,6 +182,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }

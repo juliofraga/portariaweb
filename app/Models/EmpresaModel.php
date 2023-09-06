@@ -2,10 +2,12 @@
     class EmpresaModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function verificaEmpresa($cnpj, $empresa_id = null)
@@ -24,6 +26,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -57,6 +60,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -83,6 +87,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -98,6 +103,7 @@
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -109,6 +115,7 @@
                 $this->db->query("SELECT * FROM empresas WHERE $filter ORDER BY id");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -126,6 +133,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -141,6 +149,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -153,6 +162,7 @@
                 $this->db->bind("id", $empresa_id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }

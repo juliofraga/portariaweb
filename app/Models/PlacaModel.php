@@ -2,10 +2,12 @@
     class PlacaModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function verificaIp($ip, $placa_id = null) {
@@ -23,6 +25,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -43,6 +46,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -64,6 +68,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -74,6 +79,7 @@
                 $this->db->query("SELECT p.* FROM placas p LEFT JOIN portoes po ON p.id = po.placas_id WHERE po.placas_id IS NULL");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }  
         }
@@ -84,6 +90,7 @@
                 $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -95,6 +102,7 @@
                 $this->db->bind("portaria_id", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -106,6 +114,7 @@
                 $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id WHERE $filter order by pl.descricao ASC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -123,6 +132,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -138,6 +148,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
