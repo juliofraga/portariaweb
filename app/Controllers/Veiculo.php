@@ -33,6 +33,7 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $dateTime = $this->helper->returnDateTime();
                 if($this->helper->validateFields($form) or $tipo == "registro"){
                     if($tipo == "registro"){
                         $form = [
@@ -44,7 +45,6 @@
                     }
                     $form["placaVeiculo"] = strtoupper($form["placaVeiculo"]);
                     if(!$this->verificaPlaca($form["placaVeiculo"])){
-                        $dateTime = $this->helper->returnDateTime();
                         $lastInsertId = $this->veiculoModel->cadastrarVeiculo($form, $dateTime, $tipo);
                         if($lastInsertId != null){
                             if($tipo == null){
@@ -54,6 +54,7 @@
                                     $this->rotinaCad
                                 );
                             }
+                            $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Veículo");
                             $this->log->registraLog($_SESSION['pw_id'], "Veículo", $lastInsertId, 0, $dateTime);
                             if($tipo == "registro"){
                                 return $lastInsertId;
@@ -77,6 +78,7 @@
                                 "Não foi possível cadastrar o veículo, já existe outro veículo cadastrado com essa placa(".$form["placaVeiculo"].")",
                                 $this->rotinaCad
                             );
+                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Veículo", "Erro ao gravar no banco de dados");
                             $this->helper->redirectPage("/veiculo/novo");
                         }
                     }
@@ -87,6 +89,7 @@
                             'Existem campos que não foram preenchidos, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Veículo", "Alguns campos não foram preenchidos");
                         $this->helper->redirectPage("/veiculo/novo");
                     }
                 }
@@ -118,6 +121,7 @@
                 "empresas" => $this->empresa->listaEmpresas("ativas"),
             ];
             if($this->helper->sessionValidate()){
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Novo Veículo");
                 $this->view('veiculo/novo', $dados);
             }else{
                 $this->helper->redirectPage("/login/");
@@ -128,6 +132,7 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Veículo");
                 if((!isset($_SESSION["pw_veiculo_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
                         'dados' =>  $this->listaVeiculos(),
@@ -177,14 +182,20 @@
                 $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
-                    if($this->updateVeiculo($form, $dateTime))
+                    if($this->updateVeiculo($form, $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Veículo", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Veículo", null, null);
+                    }
                 }else if(isset($form["inativar"])){
-                    if($this->ativarInativarVeiculo($form["id"], "inativar", $dateTime))
+                    if($this->ativarInativarVeiculo($form["id"], "inativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Veículo", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Veículo", null, null);
+                    }
                 }else if(isset($form["ativar"])){
-                    if($this->ativarInativarVeiculo($form["id"], "ativar", $dateTime))
+                    if($this->ativarInativarVeiculo($form["id"], "ativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Veículo", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Veículo", null, null);
+                    }
                 }
                 $this->helper->redirectPage("/veiculo/consulta");
             }else{
