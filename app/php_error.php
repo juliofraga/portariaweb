@@ -1,13 +1,14 @@
 <?php
 
-	error_reporting(0);
-	ini_set('error_reporting', 0);
+	error_reporting(1);
+	ini_set('error_reporting', 1);
 	const LOG = false;
-
 
 	function phpErro($erro, $mensagem, $arquivo, $linha)
 	{
-
+		if(LOG){
+			gravaLogPHPError($erro, $mensagem, $arquivo, $linha);
+		}
 		switch ($erro){
 			case 2;
 				$css = 'alert-warning';
@@ -32,14 +33,19 @@
 			}
 		}
 
-		if (LOG){
-			$logs = "Erro: {$mensagem} no arquivo {$arquivo} na linha {$linha}\n";
-			error_log($logs, 3, "" . dirname(__FILE__) . "/logs/phperro.log");
-		}
-
 		if ($erro == 1 || $erro == 256){
 			die();
 		}
+	}
+
+	function gravaLogPHPError($erro, $mensagem, $arquivo, $linha)
+	{
+		$date = date('[Y-m-d Y:i:s]');
+		$msg = "$date - Erro: $erro, Mensagem: $mensagem. Arquivo $arquivo, Linha $linha \n";
+		$arquivo = "logs/".date('M_Y').".txt";
+		$fp = fopen($arquivo, "a+");
+		fwrite($fp, $msg);
+		fclose($fp);
 	}
 
 	//set_error_handler — Define uma função do usuário para manipular erros
