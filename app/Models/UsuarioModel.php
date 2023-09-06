@@ -2,10 +2,12 @@
     class UsuarioModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         //Verificar se login informado para cadastro já está cadastrado no sistema
@@ -20,6 +22,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }   
         }
@@ -39,6 +42,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -51,6 +55,7 @@
                 $this->db->bind("hostname", $hostname);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             } 
         }
@@ -66,6 +71,7 @@
                 else
                     return null;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -81,6 +87,7 @@
                 $this->db->bind("dataHora", $dataHora);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -93,6 +100,7 @@
                 $this->db->bind("acesso", $dataHora);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -106,6 +114,7 @@
                 $this->db->bind("acesso", $dataHora);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -117,6 +126,7 @@
                 $this->db->bind("id", $id);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -128,6 +138,7 @@
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -140,6 +151,7 @@
                 $this->db->bind("situacao", 2);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -152,6 +164,7 @@
                 $this->db->bind("valor", $valor);
                 $this->db->execQuery();
             } catch (\Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -170,6 +183,7 @@
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -181,6 +195,7 @@
                 $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' and $filter order by nome ASC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -192,6 +207,7 @@
                 $this->db->bind("id", $id);
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -235,6 +251,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }
         }
@@ -252,6 +269,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }

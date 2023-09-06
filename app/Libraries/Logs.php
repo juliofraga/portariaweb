@@ -2,18 +2,23 @@
 
     class Logs extends Controller{
 
+        private $arquivo;
+
         public function __construct()
         {
             $this->logModel = $this->model('LogModel');
+            $this->arquivo = "logs/".date('M_Y').".txt";
         }
 
 
         // Registra logs
-        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime){
+        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime)
+        {
             $this->logModel->registraLog($usuario, $classe, $id_classe, $acao, $dateTime);
         }
 
-        public function gravaLog($dateTime, $classe_id = null, $acao, $usuario, $classe = null, $motivo = null, $tela = null){
+        public function gravaLog($dateTime, $classe_id = null, $acao, $usuario, $classe = null, $motivo = null, $tela = null)
+        {
             $texto = "";
             if($acao == "Adicionou" or $acao == "Alterou" or $acao == "Inativou" or $acao == "Ativou" or $acao == "Removeu" or $acao == "Deletou"){
                 $texto = "[$dateTime] - Usuário ID $usuario $acao $classe ID: $classe_id\n";
@@ -28,9 +33,15 @@
             }else if($acao == "Fez logoff" or $acao == "Fez login" or $acao == "Falha no login" or $acao == "Usuário bloqueado"){
                 $texto = "[$dateTime] - Usuário ID $usuario $acao\n";
             }
-            $arquivo = "logs/".date('M_Y').".txt";
-            $fp = fopen($arquivo, "a+");
+            $fp = fopen($this->arquivo, "a+");
             fwrite($fp, $texto);
+            fclose($fp);
+        }
+
+        public function gravaLogDBError($error)
+        {
+            $fp = fopen($this->arquivo, "a+");
+            fwrite($fp, $error);
             fclose($fp);
         }
     }
