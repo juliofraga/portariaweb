@@ -55,6 +55,7 @@
                     $lastInsertId = $this->operacaoModel->registrarOperacao($dateTime, $form["usuario"], $form["placa"], $form["motorista"], $form["portaria"]);
                     if($lastInsertId != null){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação", $lastInsertId, 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Operação - Entrada de Veículo");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         echo "<idOperacao>$lastInsertId</idOperacao>";
                         for($x = 0; $x < $_SESSION["contImagens"]; $x++){
@@ -81,7 +82,8 @@
                 }else{
                     $dateTime = $this->helper->returnDateTime();
                     if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $$form["idRegistro"], 0, $dateTime);
+                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $form["idRegistro"], 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["idRegistro"], "Adicionou", $_SESSION['pw_id'], "Operação - Saída de Veículo");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         for($x = 0; $x < $_SESSION["contImagens"]; $x++){
                             $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $form["idRegistro"]);
@@ -109,6 +111,7 @@
                     $id = $form["operacao"];
                     if($this->operacaoModel->fechaCancela($id, $dateTime, $tipo)){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação", $id, 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $id, "Adicionou", $_SESSION['pw_id'], "Operação - Fechamento de Cancela");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         if($this->configuracaoModel->opcaoAtiva(4) == true){
                             for($x = 0; $x < $_SESSION["contImagens"]; $x++){
@@ -138,6 +141,7 @@
                     $lastInsertId = $this->operacaoModel->registraOperacaoEmergencia($form, $dateTime);
                     if($lastInsertId){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Operação - Emergência");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         echo "<idOperacaoEmergencia>" . $lastInsertId . "</idOperacaoEmergencia>";
                         for($x = 0; $x < $_SESSION["contImagens"]; $x++){
@@ -161,6 +165,7 @@
                 $dateTime = $this->helper->returnDateTime();
                 $id = $form['idOperacao'];
                 if($this->operacaoModel->fechaCancelaEmergencia($id, $dateTime)){
+                    $this->log->gravaLog($dateTime, $id, "Adicionou", $_SESSION['pw_id'], "Operação - Fechamento de Cancela (Emergência)");
                     echo "<registroOperacao>SUCESSO</registroOperacao>";
                     if($this->configuracaoModel->opcaoAtiva(4) == true){
                         for($x = 0; $x < $_SESSION["contImagens"]; $x++){
@@ -257,6 +262,7 @@
                             'tipo' => $tipo
                         ];
                         $x++;
+                        $this->log->gravaLog($this->helper->returnDateTime(), $c->id, "Adicionou", $_SESSION['pw_id'], "Imagem - Câmera");
                     }
                     $_SESSION["contImagens"] = $x;
                 }
