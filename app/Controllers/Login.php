@@ -14,6 +14,8 @@
             $this->usuarioModel = $this->model('UsuarioModel');
             $this->helper = new Helpers();
             $this->log = new Logs();
+            require "Configuracoes.php";
+            $this->configuracoes = new Configuracoes();
         }
 
         public function index(){
@@ -59,6 +61,7 @@
                             'Logoff realizado com sucesso',
                             $this->rotina
                         );
+                        $this->log->gravaLog($this->helper->returnDateTime(), null, "Fez logoff", $_SESSION['pw_id'], null, null, null);
                         $this->helper->removeCookie("logoff");
                     }else{
                         $this->helper->setReturnMessage(
@@ -108,8 +111,10 @@
                             $this->usuarioModel->registraPrimeiroAcesso($dados_usuario[0]->id, $dataHora);
                         }
                         $this->usuarioModel->registraAcesso($_SESSION['pw_id'], $dataHora);
+                        $this->log->gravaLog($dataHora, null, "Fez login", $_SESSION['pw_id'], null, null, null);
                         $this->helper->homeRedirect();
                     }else{
+                        $this->log->gravaLog($dataHora, null, "Falha no login", $dados_usuario[0]->id, null, null, null);
                         $this->log->registraLog($dados_usuario[0]->id, "Falha no login", null, 0, $dataHora);
                         $this->usuarioModel->registraErroLogin($dados_usuario[0]->id);
                         $this->bloqueiaUsuario($dados_usuario[0]->id);
@@ -141,6 +146,7 @@
             }
             $_SESSION = null;
             session_destroy();
+            $this->log->gravaLog($this->helper->returnDateTime(), null, "Fez logoff", $_SESSION['pw_id'], null, null, null);
             $this->helper->redirectPage("/login/");
         }
 
@@ -156,12 +162,13 @@
 		}
 
         private function bloqueiaUsuario($id){
-           /* if($this->configuracoes->bloqueioContaAtivo()){
+            if($this->configuracoes->bloqueioContaAtivo()){
                 $erros = $this->usuarioModel->retornaLoginError($id);
                 if($erros[0]->login_error >= 5){
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Usuário bloqueado", $id, null, null, null);
                     $this->usuarioModel->bloqueiaUsuario($id);
                 }
-            }*/
+            }
         }
 
     }

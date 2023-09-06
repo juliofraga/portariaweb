@@ -429,7 +429,8 @@
         public function retornaSituacao($situacao){
             $situacoes = [
                 0 => 'Ativo',
-                1 => 'Inativo'
+                1 => 'Inativo',
+                2 => 'Bloqueado'
             ];
             return $situacoes[$situacao];
         }
