@@ -137,6 +137,7 @@
         }
 
         public function logoff(){
+            $this->log->gravaLog($this->helper->returnDateTime(), null, "Fez logoff", $_SESSION['pw_id'], null, null, null);
             if(isset($_SESSION['pw_session_id'])){
                 if(isset($_COOKIE["pw_log"])){
                     $this->usuarioModel->removeCookie($_SESSION['pw_id'], $_COOKIE["pw_log"]);
@@ -146,7 +147,6 @@
             }
             $_SESSION = null;
             session_destroy();
-            $this->log->gravaLog($this->helper->returnDateTime(), null, "Fez logoff", $_SESSION['pw_id'], null, null, null);
             $this->helper->redirectPage("/login/");
         }
 
