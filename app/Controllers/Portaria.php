@@ -42,6 +42,7 @@
                     "placas" => $this->placa->listaPlacasDisponiveis(),
                     "cameras" => $this->camera->listaCamerasDisponiveis(),
                 ];
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Nova Portaria");
                 $this->view('portaria/novo', $dados);
             }else{
                 $this->helper->loginRedirect();
@@ -52,8 +53,8 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $dateTime = $this->helper->returnDateTime();
                 if(!empty($form["descricao"])){
-                    $dateTime = $this->helper->returnDateTime();
                     $lastInsertId = $this->portariaModel->cadastrarPortaria($form, $dateTime);
                     if(isset($form["cameraEntrada"]) and $form["cameraEntrada"] != NULL){
                         $this->ligaPortariaCamera($form["cameraEntrada"], $lastInsertId, $dateTime, "E");
@@ -67,6 +68,7 @@
                             'Portaria cadastrada com sucesso!',
                             $this->rotinaCad
                         );
+                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Portaria");
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $lastInsertId, 0, $dateTime);
                         $this->helper->redirectPage("/portaria/consulta");
                     }else{
@@ -75,6 +77,7 @@
                             'Não foi possível cadastrar a portaria, tente novamente!',
                             $this->rotinaCad
                         );
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Portaria", "Erro ao gravar no banco de dados");
                         $this->helper->redirectPage("/portaria/novo");
                     }
                 }else{
@@ -83,6 +86,7 @@
                         'A descrição deve ser informada, tente novamente!',
                         $this->rotinaCad
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Portaria", "O campo descrição não foi preenchido");
                     $this->helper->redirectPage("/portaria/novo");
                 }
             }else{
@@ -94,6 +98,7 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Portaria");
                 if((!isset($_SESSION["pw_portaria_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
                         'dados' =>  $this->listaPortarias("todos"),
@@ -144,17 +149,25 @@
                 $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if(isset($form["update"])){
-                    if($this->updatePortaria($form, $dateTime))
+                    if($this->updatePortaria($form, $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Portaria", null, null);
+                    }
                 }else if(isset($form["inativar"])){
-                    if($this->ativarInativarPortaria($form["id"], "inativar", $dateTime))
+                    if($this->ativarInativarPortaria($form["id"], "inativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Portaria", null, null);
+                    }
                 }else if(isset($form["ativar"])){
-                    if($this->ativarInativarPortaria($form["id"], "ativar", $dateTime))
+                    if($this->ativarInativarPortaria($form["id"], "ativar", $dateTime)){
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $form["id"], 1, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Portaria", null, null);
+                    }
                 }else if(isset($form["deletar"])){
-                    if($this->deletarPortaria($form["id"]))
+                    if($this->deletarPortaria($form["id"])){
                         $this->log->registraLog($_SESSION['pw_id'], "Portaria", $form["id"], 2, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["id"], "Deletou", $_SESSION['pw_id'], "Portaria", null, null);
+                    }
                 }
                 $this->helper->redirectPage("/portaria/consulta");
             }else{
@@ -170,6 +183,7 @@
                     "usuarios" => $this->usuario->listaUsuarios("operador"),
                     "portaria_usuarios"=> $this->listaPortariasUsuarios()
                 ];
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Ligação Portaria x Usuário");
                 $this->view("portaria/portaria_usuario", $dados);
             }else{
                 $this->helper->loginRedirect();
@@ -179,9 +193,11 @@
         public function ligar_portaria_usuario()
         {
             if($this->helper->sessionValidate()){
+                $dateTime = $this->helper->returnDateTime();
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 $error = false;
                 $this->portariaModel->removePortariaUsuarioPorId($form["portaria_id"]);
+                $this->log->gravaLog($dateTime, $form["portaria_id"], "Removeu", $_SESSION['pw_id'], "Ligação de usuários com a portaria");
                 foreach($form["usuario"] as $usuario){
                     if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
                         $error = true;
@@ -193,6 +209,7 @@
                         "Ligação Portaria x Usuario concluída com sucesso!",
                         $this->rotinaCad
                     );
+                    $this->log->gravaLog($dateTime, $form["portaria_id"], "Adicionou", $_SESSION['pw_id'], "Ligação do usuário $usuario com a portaria");
                 }else{
                     $this->helper->setReturnMessage(
                         $this->tipoError,
