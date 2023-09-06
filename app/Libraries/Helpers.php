@@ -7,7 +7,7 @@
 
         public function __construct()
         {
-            date_default_timezone_set('America/Sao_Paulo');   
+            date_default_timezone_set(TIMEZONE);   
         }
 
         public function sessionValidate(){
@@ -109,8 +109,10 @@
         }
 
         public function setMultiSelect($valor, $array){
-            if(in_array($valor, $array)){
-                echo "selected";
+            if(is_array($array)){
+                if(in_array($valor, $array)){
+                    echo "selected";
+                }
             }
         }
 
