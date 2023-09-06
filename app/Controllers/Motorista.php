@@ -34,6 +34,7 @@
                 if($lastInsertId != null){
                     $this->motoristaModel->ligaMotoristaVeiculo($lastInsertId, $veiculo_id);
                     $this->log->registraLog($_SESSION['pw_id'], "Motorista", $lastInsertId, 0, $dateTime);
+                    $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Motorista");
                     return $lastInsertId;
                 }
             }else{
@@ -44,6 +45,7 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
+                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Motorista");
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if((!isset($_SESSION["pw_motorista_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
@@ -133,9 +135,9 @@
         {
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $dateTime = $this->helper->returnDateTime();
                 if($this->helper->validateFields($form, 'rg')){
                     if($this->validaMotorista($form["id"], $form["cpf"], $form["rg"])){
-                        $dateTime = $this->helper->returnDateTime();
                         if($this->motoristaModel->alterarMotorista($form, $dateTime)){
                             $this->helper->setReturnMessage(
                                 $this->tipoSuccess,
@@ -143,12 +145,14 @@
                                 $this->rotinaCad
                             );
                             $this->log->registraLog($_SESSION['pw_id'], "Motorista", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Motorista");
                         }else{
                             $this->helper->setReturnMessage(
                                 $this->tipoError,
                                 'Erro ao atualizar motorista, tente novamente!',
                                 $this->rotinaCad
                             );
+                            $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $_SESSION['pw_id'], "Motorista", "Erro ao gravar no banco de dados");
                         }
                     }else{
                         $this->helper->setReturnMessage(
@@ -156,6 +160,7 @@
                             'Este CPF ou RG já estão cadastrados para outro motorista, verifique novamente!',
                             $this->rotinaCad
                         );
+                        $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $_SESSION['pw_id'], "Motorista", "CPF ou RG já estão cadastrados no sistema");
                     }
                 }else{
                     $this->helper->setReturnMessage(
@@ -163,6 +168,7 @@
                         'Existem campos que não foram preenchidos, verifique novamente!',
                         $this->rotinaCad
                     );
+                    $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $_SESSION['pw_id'], "Motorista", "Existem campos que não foram preenchidos");
                 }
                 $this->helper->redirectPage("/motorista/consulta");
             }else{

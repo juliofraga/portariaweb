@@ -112,8 +112,8 @@
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-floating mt-3">
-                                                        <input type="text" class="form-control" id="rg" name="rg" placeholder="RG*" value="<?= $motorista->rg ?>" maxlength="10">
-                                                        <label for="rg">RG*</label>
+                                                        <input type="text" class="form-control" id="rg" name="rg" placeholder="RG" value="<?= $motorista->rg ?>" maxlength="10">
+                                                        <label for="rg">RG</label>
                                                     </div>
                                                 </div>
                                             </div>
