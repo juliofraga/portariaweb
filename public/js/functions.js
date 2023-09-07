@@ -237,11 +237,13 @@ function buscaCep(cep){
     
 }
 
-function submitSelecao(){
+function selecionaPortaria(){
+    gravaLog('selecionaPortaria');
     document.form_seleciona_portaria.submit();
 }
 
 function exibeOperacaoEntrada(){
+    gravaLog('exibeOperacaoEntrada');
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
     document.getElementById('operacaoSaida').style.display = 'none';
@@ -257,6 +259,7 @@ function exibeOperacaoEntrada(){
 }
 
 function exibeOperacaoSaida(){
+    gravaLog('exibeOperacaoSaida');
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
     document.getElementById('operacaoEntrada').style.display = 'none';
@@ -271,6 +274,7 @@ function exibeOperacaoSaida(){
 }
 
 function exibeOperacaoEmergencia(){
+    gravaLog('exibeOperacaoEmergencia');
     escondeBtnAbrirCancela();
     escondeBtnFecharCancela();
     document.getElementById('operacaoEntrada').style.display = 'none';
@@ -282,6 +286,7 @@ function exibeOperacaoEmergencia(){
 }
 
 function executaOperacaoAbrirCancelaEmergencia(){
+    gravaLog('executaOperacaoAbrirCancelaEmergencia');
     if(document.getElementById('obsEmergencia').value == ""){
         document.getElementById('avisoObservacao').style.display = 'block';
         document.getElementById('obsEmergencia').focus();
@@ -360,20 +365,24 @@ function validaAbrirCancela(){
 }
 
 function executaOperacaoAbrirCancela(){
+    gravaLog('executaOperacaoAbrirCancela');
     abreCancela('entrada');
 }
 
 function exibeBtnAbrirCancelaSaida(){
+    gravaLog('exibeBtnAbrirCancelaSaida');
     $("#btnAbrirCancelaSaida").fadeIn(1000);
     $("#btnAbrirCancelaSaida").fadeIn();
     document.getElementById('btnAbrirCancelaSaida').removeAttribute("disabled");
 }
 
 function executaOperacaoAbrirCancelaSaida(){
+    gravaLog('executaOperacaoAbrirCancelaSaida');
     abreCancela("saida")
 }
 
 function executaOperacaoFechamentoCancelaEmergencia(){
+    gravaLog('executaOperacaoFechamentoCancelaEmergencia');
     var url = document.getElementById('txtUrl').value;
     var releFechaCancela = document.getElementById('rele_fecha_cancela').value;
     var rfa = defineRele(releFechaCancela);
@@ -491,6 +500,7 @@ function registraOperacaoSaida(){
 }
 
 function executaOperacaoFechamentoCancelaSaida(){
+    gravaLog('executaOperacaoFechamentoCancelaSaida');
     var idRegistro = document.getElementById('veiculoSaida').value;
     var url = document.getElementById('txtUrl').value;
     var releFechaCancela = document.getElementById('rele_fecha_cancela').value;
@@ -552,6 +562,7 @@ function executaOperacaoFechamentoCancelaSaida(){
 }
 
 function abreCancela(tipo){
+    gravaLog('abreCancela');
     try {
         $("#alertaAbrindoCancela").fadeIn(2000);
         $("#alertaAbrindoCancela").fadeIn();
@@ -626,6 +637,7 @@ function defineRele(rele){
 }
 
 function capturaImagens(tipo, operacao){
+    gravaLog('capturaImagens');
     var portaria = document.getElementById('portaria_id').value;
     var url = document.getElementById('txtUrl').value;
     $.ajax({
@@ -686,6 +698,7 @@ function fechaCancela(){
 }
 
 function executaOperacaoFechamentoCancela(){
+    gravaLog('executaOperacaoFechamentoCancela');
     var url = document.getElementById('txtUrl').value;
     var releFechaCancela = document.getElementById('rele_fecha_cancela').value;
     var rfa = defineRele(releFechaCancela);
@@ -763,6 +776,7 @@ function escondeBtnAbrirCancela(){
 }
 
 function exibeBtnFecharCancela(){
+    gravaLog('exibeBtnFecharCancela');
     $("#btnFecharCancela").fadeIn(1000);
     $("#btnFecharCancela").fadeIn(); 
 }
@@ -1087,6 +1101,20 @@ function capturaPeso(){
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log('Erro ao capturar peso');
+        }
+    });
+}
+
+function gravaLog(funcao){
+    var url = document.getElementById('txtUrl').value;
+    var mensagem = funcao;
+    $.ajax({
+        type: "POST",
+        data: "mensagem="+mensagem,
+        url: url+'/logs/gravaLogFrontEnd',
+        success: function(result){},
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log('Falha ao registrar log');
         }
     });
 }

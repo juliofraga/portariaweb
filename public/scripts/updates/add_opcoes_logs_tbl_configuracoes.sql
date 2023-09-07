@@ -1,0 +1,4 @@
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES (NULL, 'Ativa logs backend', 'Com essa opção ativa, serão capturados os logs do backend', '0', '2023-09-07 08:50:25', NULL);
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES (NULL, 'Ativa logs frontend', 'Com essa opção ativa, serão capturados os logs do frontend', '1', '2023-09-07 08:52:27', NULL);
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES (NULL, 'Ativa logs de erros DB', 'Com essa opção ativa, serão capturados os logs erros do banco de dados', '0', '2023-09-07 08:53:09', NULL);
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES (NULL, 'Ativa logs de erros PHP', 'Com essa opção ativa, serão capturados os logs erros do PHP', '1', '2023-09-07 08:54:10', NULL);

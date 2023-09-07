@@ -24,7 +24,7 @@
                     <input type="hidden" id="porta" value="<?= $dados["reles"][0]->porta ?>">
                     <input type="hidden" id="endereco_ip_placa" value="<?= $dados["reles"][0]->endereco_ip ?>">
                     <input type="hidden" id="usa_balanca" value="<?= USA_BALANCA ?>">
-                    <select class="form-control" name="portaria" id="portaria" onchange="submitSelecao();">
+                    <select class="form-control" name="portaria" id="portaria" onchange="selecionaPortaria();">
                         <?php foreach($dados["portarias"] as $portaria){ ?>
                             <option value="<?= $portaria->id ?>" <?= $helper->setSelected($portaria->id, $dados["portaria_selecionada"]) ?>><?= $portaria->descricao ?></option>
                         <?php }?>

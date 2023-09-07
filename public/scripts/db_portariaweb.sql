@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23-Ago-2023 às 13:37
+-- Tempo de geração: 07-Set-2023 às 13:55
 -- Versão do servidor: 10.4.17-MariaDB
 -- versão do PHP: 7.3.26
 
@@ -70,9 +70,14 @@ CREATE TABLE `configuracoes` (
 
 INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES
 (1, 'Ativar complexidade de senha', 'Com esta opção ativada, a senha de acesso ao sistema deverá atender os seguintes requisitos: possuir no mínimo 8 caracteres; possuir pelo menos uma letra maiúscula; possuir pelo menos uma letra minúscula; ter números. Caso ela esteja desativada, o único r', 1, '2023-03-08 21:14:19', '2023-04-01 07:46:13'),
-(2, 'Bloqueio de conta por tentativas de acesso', 'Com esta opção ativada, se o usuário errar mais de 5 vezes a senha, o acesso será bloqueado, devendo ser liberado novamente por algum administrador. Caso esteja desativada, o usuário poderá errar a senha inúmeras vezes que não causará bloqueio da conta.', 0, '2023-03-11 18:58:14', '2023-04-16 07:07:01'),
+(2, 'Bloqueio de conta por tentativas de acesso', 'Com esta opção ativada, se o usuário errar mais de 5 vezes a senha, o acesso será bloqueado, devendo ser liberado novamente por algum administrador. Caso esteja desativada, o usuário poderá errar a senha inúmeras vezes que não causará bloqueio da conta.', 1, '2023-03-11 18:58:14', '2023-09-06 08:30:30'),
 (3, 'Permitir operação de emergência para operador', 'Com esta opção ativada, além do administrador do sistema, o operador também poderá executar operações de emergência, ou seja, poderá abrir e fechar as cancelas sem registrar entrada de veículos.', 1, '2023-04-14 08:41:32', '2023-04-14 08:43:30'),
-(4, 'Capturar imagens no fechamento da cancela', 'Com esta opção ativa, serão capturadas também imagens no momento do fechamento da cancela. Se ela estiver desativada, serão capturadas imagens apenas na abertura da cancela.', 1, '2023-07-31 07:57:14', '2023-07-31 07:57:18');
+(4, 'Capturar imagens no fechamento da cancela', 'Com esta opção ativa, serão capturadas também imagens no momento do fechamento da cancela. Se ela estiver desativada, serão capturadas imagens apenas na abertura da cancela.', 1, '2023-07-31 07:57:14', '2023-09-05 08:13:44'),
+(5, 'Permitir consultas de operações para operador', 'Com esta opção ativada, além do administrador do sistema, o operador também poderá visualizar a tela de consultas de operações.', 0, '2023-09-02 14:35:08', '2023-09-05 08:13:47'),
+(6, 'Ativa logs backend', 'Com essa opção ativa, serão capturados os logs do backend', 0, '2023-09-07 08:50:25', NULL),
+(7, 'Ativa logs frontend', 'Com essa opção ativa, serão capturados os logs do frontend', 1, '2023-09-07 08:52:27', NULL),
+(8, 'Ativa logs de erros DB', 'Com essa opção ativa, serão capturados os logs erros do banco de dados', 0, '2023-09-07 08:53:09', NULL),
+(9, 'Ativa logs de erros PHP', 'Com essa opção ativa, serão capturados os logs erros do PHP', 1, '2023-09-07 08:54:10', NULL);
 
 -- --------------------------------------------------------
 
@@ -262,9 +267,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `login`, `senha`, `primeiro_acesso`, `ultimo_acesso`, `alterar_senha`, `situacao`, `perfil`, `login_error`, `created_at`, `updated_at`) VALUES
-(1, 'Superadmin', 'superadmin', '$2y$10$tl8BJYryE5S7B9XNXZqTmeFrA.SvbJVAlc4GPB55tgtsTTIMc7XBW', '2023-04-06 06:55:12', '2023-08-23 08:31:53', 'N', 0, 'Superadmin', 0, '2023-03-31 08:39:22', NULL),
-(10, 'Administrador', 'administrador', '$2y$10$cVO.Y8kWsnlBD/1T3guDi.sdj0BQHqkm4VsciCkurrEoGT81YGO6G', '2023-04-16 08:44:03', '2023-04-16 09:09:49', 'N', 0, 'Administrador', 0, '2023-04-16 08:26:39', '2023-04-16 08:43:45'),
-(11, 'Operador', 'operador', '$2y$10$WaGq/OLAde5lu4Em/n0.jOUNya9R8GepkH7ykmu83T8EcSr5JnrcC', '2023-04-16 08:46:05', '2023-07-18 18:11:03', 'N', 0, 'Operador', 0, '2023-04-16 08:45:50', '2023-04-16 08:46:05');
+(1, 'Superadmin', 'superadmin', '$2y$10$tl8BJYryE5S7B9XNXZqTmeFrA.SvbJVAlc4GPB55tgtsTTIMc7XBW', '2023-04-06 06:55:12', '2023-09-07 08:37:51', 'N', 0, 'Superadmin', 0, '2023-03-31 08:39:22', NULL),
+(10, 'Administrador', 'administrador', '$2y$10$f9iwfTLcXqD5l2ofn6dgHuuJPsWYPXcNBOw4g21wROH8M/uf5g6Ke', '2023-04-16 08:44:03', '2023-09-02 14:06:04', 'S', 0, 'Administrador', 0, '2023-04-16 08:26:39', '2023-09-07 08:46:10'),
+(11, 'Operador', 'operador', '$2y$10$9o76bVc9hzKWgXT4Wf5hvO/cKemv3zQt4xSqgvh0uB8l6QzhOzgLC', '2023-04-16 08:46:05', '2023-09-06 08:32:40', 'S', 0, 'Operador', 0, '2023-04-16 08:45:50', '2023-09-07 08:45:57');
 
 -- --------------------------------------------------------
 
@@ -381,8 +386,7 @@ ALTER TABLE `usuarios`
 -- Índices para tabela `veiculos`
 --
 ALTER TABLE `veiculos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_veiculos_empresas_idx` (`empresas_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -398,13 +402,13 @@ ALTER TABLE `cameras`
 -- AUTO_INCREMENT de tabela `camera_has_portaria`
 --
 ALTER TABLE `camera_has_portaria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de tabela `configuracoes`
 --
 ALTER TABLE `configuracoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `cookies`
@@ -428,7 +432,7 @@ ALTER TABLE `imagens`
 -- AUTO_INCREMENT de tabela `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `operacoes`
@@ -464,7 +468,7 @@ ALTER TABLE `portoes_pessoas`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `veiculos`
@@ -501,12 +505,6 @@ ALTER TABLE `pessoas_has_veiculos`
 --
 ALTER TABLE `portoes`
   ADD CONSTRAINT `fk_portoes_placas1` FOREIGN KEY (`placas_id`) REFERENCES `placas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Limitadores para a tabela `veiculos`
---
-ALTER TABLE `veiculos`
-  ADD CONSTRAINT `fk_veiculos_empresas` FOREIGN KEY (`empresas_id`) REFERENCES `empresas` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
