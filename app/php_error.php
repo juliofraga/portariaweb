@@ -2,11 +2,10 @@
 
 	error_reporting(1);
 	ini_set('error_reporting', 1);
-	const LOG = true;
 
 	function phpErro($erro, $mensagem, $arquivo, $linha)
 	{
-		if(LOG){
+		if($_SESSION['pw_grava_logs_erros_php']){
 			gravaLogPHPError($erro, $mensagem, $arquivo, $linha);
 		}
 		switch ($erro){

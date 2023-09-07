@@ -25,13 +25,15 @@
         }
 
         public function gravaLogFrontEnd(){
-            $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-            $dateTime = $this->helper->returnDateTime();
-            $texto = "[$dateTime] - Usuário ID " . $_SESSION['pw_id'] . " chamou a função " .$form["mensagem"]."()\n";
-            $arquivo = "logs/".date('M_Y').".txt";
-            $fp = fopen($arquivo, "a+");
-            fwrite($fp, $texto);
-            fclose($fp);
+            if($_SESSION['pw_grava_logs_fe']){
+                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                $dateTime = $this->helper->returnDateTime();
+                $texto = "[$dateTime] - Usuário ID " . $_SESSION['pw_id'] . " chamou a função " .$form["mensagem"]."()\n";
+                $arquivo = "logs/".date('M_Y').".txt";
+                $fp = fopen($arquivo, "a+");
+                fwrite($fp, $texto);
+                fclose($fp);
+            }
         }
     }
 

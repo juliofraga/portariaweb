@@ -1,3 +1,6 @@
+<?php 
+    $superadmin = $_SESSION['pw_tipo_perfil'] == md5("Superadmin") ? true : false;
+?>
 <input type="hidden" value="<?= URL ?>" id="txtUrl">
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
@@ -7,6 +10,9 @@
             <?php
                 $i = 1;
                 foreach($dados["configuracoes"] as $configuracao){
+                    if($superadmin == false and in_array($configuracao->id, CONFIGURACOES_ADMIN)){
+                        continue;
+                    }
             ?>
                     <div class="row mt-4">
                         <div class="col-sm-12">

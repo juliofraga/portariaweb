@@ -27,6 +27,22 @@
         public function operadorVisualizaConsultas(){
             return $this->configuracaoModel->opcaoAtiva(5);
         }
+
+        public function ativaLogsBackend(){
+            return $this->configuracaoModel->opcaoAtiva(6);
+        }
+
+        public function ativaLogsFrontend(){
+            return $this->configuracaoModel->opcaoAtiva(7);
+        }
+
+        public function ativaLogsErrosDB(){
+            return $this->configuracaoModel->opcaoAtiva(8);
+        }
+
+        public function ativaLogsErrosPHP(){
+            return $this->configuracaoModel->opcaoAtiva(9);
+        }
         
         public function index(){
             if($this->helper->sessionValidate()){
@@ -59,6 +75,7 @@
                 if($this->configuracaoModel->AtualizaConfiguracao($id, $valor, $dateTime)){
                     $this->log->gravaLog($dateTime, $id, "Alterou", $_SESSION['pw_id'], "Configurações", null, null);
                     $this->log->registraLog($_SESSION['pw_id'], "Configurações", $id, 1, $dateTime);
+                    $this->atualizaSessions();
                     return true;
                 }else{
                     return false;
@@ -66,6 +83,13 @@
             }else{
                 $this->helper->loginRedirect();
             }
+        }
+
+        private function atualizaSessions(){
+            $_SESSION['pw_grava_logs_be'] = $this->ativaLogsBackend();
+            $_SESSION['pw_grava_logs_fe'] = $this->ativaLogsFrontend();
+            $_SESSION['pw_grava_logs_erros_db'] = $this->ativaLogsErrosDB();
+            $_SESSION['pw_grava_logs_erros_php'] = $this->ativaLogsErrosPHP();
         }
         
     }

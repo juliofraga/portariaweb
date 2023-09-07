@@ -159,6 +159,10 @@
             $_SESSION['pw_login'] = $dados[0]->login;
             $_SESSION['pw_session_id'] = md5($ip)."-_-".md5($hostname)."-_-".md5($num);
             $_SESSION['pw_tipo_perfil'] = md5($dados[0]->perfil);
+            $_SESSION['pw_grava_logs_be'] = $this->configuracoes->ativaLogsBackend();
+            $_SESSION['pw_grava_logs_fe'] = $this->configuracoes->ativaLogsFrontend();
+            $_SESSION['pw_grava_logs_erros_db'] = $this->configuracoes->ativaLogsErrosDB();
+            $_SESSION['pw_grava_logs_erros_php'] = $this->configuracoes->ativaLogsErrosPHP();
 		}
 
         private function bloqueiaUsuario($id){
