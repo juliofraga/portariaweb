@@ -10,10 +10,15 @@
             $this->helper = new Helpers(); 
         }
 
-        // Registra logs
-
         public function index(){
-            $this->view('pagenotfound');
+            if($this->helper->sessionValidate()){
+                $dados = [
+                    'dados' => $this->logModel->listaLogs(),
+                ];
+                $this->view('/logs/index', $dados);
+            }else{
+                $this->helper->redirectPage("/login/");
+            }
         }
         
         public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime){
@@ -25,14 +30,18 @@
         }
 
         public function gravaLogFrontEnd(){
-            if($_SESSION['pw_grava_logs_fe']){
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                $dateTime = $this->helper->returnDateTime();
-                $texto = "[$dateTime] - Usuário ID " . $_SESSION['pw_id'] . " chamou a função " .$form["mensagem"]."()\n";
-                $arquivo = "logs/".date('M_Y').".txt";
-                $fp = fopen($arquivo, "a+");
-                fwrite($fp, $texto);
-                fclose($fp);
+            if($this->helper->sessionValidate()){
+                if($_SESSION['pw_grava_logs_fe']){
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    $dateTime = $this->helper->returnDateTime();
+                    $texto = "[$dateTime] - Usuário ID " . $_SESSION['pw_id'] . " chamou a função " .$form["mensagem"]."()\n";
+                    $arquivo = LOGS;
+                    $fp = fopen($arquivo, "a+");
+                    fwrite($fp, $texto);
+                    fclose($fp);
+                }
+            }else{
+                $this->helper->redirectPage("/login/");
             }
         }
     }

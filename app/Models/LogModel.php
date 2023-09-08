@@ -27,7 +27,7 @@
         // Retorna os logs registrados
         public function listaLogs(){
             try {
-                $this->db->query("SELECT l.*, u.login FROM logs l, usuarios u WHERE l.usuarios_id = u.id order by l.created_at DESC");
+                $this->db->query("SELECT * FROM logs ORDER BY created_at DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
