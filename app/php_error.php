@@ -42,7 +42,7 @@
 		date_default_timezone_set(TIMEZONE);
 		$date = date('[Y-m-d Y:i:s]');
 		$msg = "$date - Erro: $erro, Mensagem: $mensagem. Arquivo $arquivo, Linha $linha \n";
-		$arquivo = "logs/".date('M_Y').".txt";
+		$arquivo = LOGS;
 		$fp = fopen($arquivo, "a+");
 		fwrite($fp, $msg);
 		fclose($fp);

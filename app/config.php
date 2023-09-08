@@ -20,5 +20,6 @@
 	define('DIR_CAPTURA_IMAGENS', 'C:/xampp/htdocs/portariaweb/public/assets/img/');
 	define('USA_BALANCA', false);
 	define('CONFIGURACOES_ADMIN', [6, 7, 8, 9]);
+	Define('LOGS', 'C:/xampp/htdocs/portariaweb/app/Logs/'.date('M_Y').'.txt');
 	
 ?>

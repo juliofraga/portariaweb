@@ -7,7 +7,7 @@
         public function __construct()
         {
             $this->logModel = $this->model('LogModel');
-            $this->arquivo = "logs/".date('M_Y').".txt";
+            $this->arquivo = LOGS;
         }
 
 
