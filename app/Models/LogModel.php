@@ -27,7 +27,7 @@
         // Retorna os logs registrados
         public function listaLogs(){
             try {
-                $this->db->query("SELECT * FROM logs ORDER BY created_at DESC");
+                $this->db->query("SELECT l.*, u.login, c.descricao as camera, conf.titulo, p.nome_completo as motorista FROM logs l INNER JOIN usuarios u ON l.usuario_id = u.id LEFT JOIN cameras c on l.id_classe = c.id LEFT JOIN configuracoes conf ON l.id_classe = conf.id LEFT JOIN pessoas p ON l.id_classe = p.id ORDER BY l.created_at DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

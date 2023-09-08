@@ -1,5 +1,10 @@
 <?php
     $helper = new Helpers();
+    $acao = [
+        0 => 'Inserir',
+        1 => 'Alterar',
+        2 => 'Deletar'
+    ]
 ?>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
@@ -53,30 +58,30 @@
                     <?php 
                         foreach($dados["dados"] as $log){
                     ?>
-                        <div class="row mt-4">
+                        <div class="row mt-4 border-bottom">
                             <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $log->usuario_id ?>
+                                <p class="pb-1 mb-0 large  ">
+                                    <?= $log->login ?>
                                 </p>
                             </div>
                             <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                <p class="pb-1 mb-0 large mt-2 ">
                                     <?= $log->classe ?>
                                 </p>
                             </div>
                             <div class="col-sm-4">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $log->id_classe ?>
+                                <p class="pb-1 mb-0 large mt-2 ">
+                                    <?= $this->helper->formataLogRetorno($log) ?>
                                 </p>
                             </div>
                             <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $log->acao ?>
+                                <p class="pb-1 mb-0 large mt-2 ">
+                                    <?= $log->classe == 'Login' ? 'Fez login' : $acao[$log->acao] ?>
                                 </p>
                             </div>
                             <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $log->created_at ?>
+                                <p class="pb-1 mb-0 large mt-2 ">
+                                    <?= $this->helper->formataDateTime($log->created_at) ?>
                                 </p>
                             </div>
                         </div>

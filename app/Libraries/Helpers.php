@@ -517,5 +517,24 @@
             $total = $dia . 'd ' . $horas . 'h ' . $minutos . 'm ' . $segundos . 's';
             echo $total;
         }
+
+        public function formataLogRetorno($log)
+        {
+            if ($log->classe == 'Câmera'){
+                if(empty($log->camera)){
+                    return $log->id_classe;
+                }else{
+                    return $log->camera;
+                }
+            } else if ($log->classe == "Configurações") {
+                return $log->titulo;
+                
+            } else if ($log->classe == "Motorista") {
+                return $log->motorista;
+                
+            } else {
+                return $log->id_classe;
+            }
+        }
     } 
 ?>
