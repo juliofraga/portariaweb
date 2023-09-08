@@ -54,7 +54,13 @@
                             'Câmera cadastrada com sucesso! Para aplicar a alteração, faça logoff do sistema e entre novamente!',
                             $this->rotinaCad
                         );
-                        $this->criaArquivoCamera($lastInsertId, $form['endereco_ip']);
+                        if($this->criaArquivoCamera($lastInsertId, $form['endereco_ip']) === false){
+                            $this->helper->setReturnMessage(
+                                $this->tipoWarning,
+                                'Câmera cadastrada com sucesso, porém parece que o endereço informado não está correto e a captura de imagens pode não funcionar corretamente. Verifique se foi informado http:// ou https:// no endereço da câmera.',
+                                $this->rotinaCad
+                            );
+                        }
                         $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Câmera");
                         $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
                         $this->helper->redirectPage("/camera/consulta");
@@ -208,6 +214,9 @@
             $array = explode("http://", $endereco);
             if($array[0] == $endereco){
                 $array = explode("https://", $endereco);
+                if(count($array) == 1){
+                    return false;
+                }
                 $endereco = "https://".CREDENCIAIS_CAMERA.$array[1];
             }else{
                 $endereco = "http://".CREDENCIAIS_CAMERA.$array[1];
@@ -215,7 +224,8 @@
             $texto = '<iframe src="'.$endereco.'" height="100%" width="100%" allowfullscreen></iframe>'; 
             fwrite($arquivo, $texto);
             $this->log->gravaLog($this->helper->returnDateTime(), $camera_id, "Adicionou", $_SESSION['pw_id'], "Arquivo câmera", null, null);
-            fclose($arquivo); 
+            fclose($arquivo);
+            return true;
         }
 
         private function updateCamera($form, $dateTime)
@@ -294,6 +304,7 @@
                         "Câmera deletada com sucesso!",
                         $this->rotinaCad
                     );
+                    exec('del camera_' . $id . '.php');
                     $retorno = true;
                 }else{
                     $this->helper->setReturnMessage(
