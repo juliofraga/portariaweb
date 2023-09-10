@@ -27,7 +27,18 @@
         // Retorna os logs registrados
         public function listaLogs(){
             try {
-                $this->db->query("SELECT l.*, u.login, c.descricao as camera, conf.titulo, p.nome_completo as motorista FROM logs l INNER JOIN usuarios u ON l.usuario_id = u.id LEFT JOIN cameras c on l.id_classe = c.id LEFT JOIN configuracoes conf ON l.id_classe = conf.id LEFT JOIN pessoas p ON l.id_classe = p.id ORDER BY l.created_at DESC");
+                $this->db->query("SELECT l.*, u.login, c.descricao as camera, conf.titulo, p.nome_completo as motorista, e.razao_social, v.placa, pl.descricao as placa_desc, pl.endereco_ip as placa_ip, por.descricao as portaria, usu.login as usu_login
+                FROM logs l 
+                INNER JOIN usuarios u ON l.usuario_id = u.id 
+                LEFT JOIN cameras c on l.id_classe = c.id 
+                LEFT JOIN configuracoes conf ON l.id_classe = conf.id 
+                LEFT JOIN pessoas p ON l.id_classe = p.id 
+                LEFT JOIN empresas e ON l.id_classe = e.id 
+                LEFT JOIN veiculos v ON l.id_classe = v.id 
+                LEFT JOIN placas pl ON l.id_classe = pl.id 
+                LEFT JOIN portoes por ON l.id_classe = por.id 
+                LEFT JOIN usuarios usu ON l.id_classe = usu.id
+                ORDER BY l.created_at DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;

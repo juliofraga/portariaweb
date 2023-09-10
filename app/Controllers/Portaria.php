@@ -198,9 +198,11 @@
                 $error = false;
                 $this->portariaModel->removePortariaUsuarioPorId($form["portaria_id"]);
                 $this->log->gravaLog($dateTime, $form["portaria_id"], "Removeu", $_SESSION['pw_id'], "Ligação de usuários com a portaria");
-                foreach($form["usuario"] as $usuario){
-                    if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
-                        $error = true;
+                if(isset($form["usuario"])){
+                    foreach($form["usuario"] as $usuario){
+                        if(!$this->portariaModel->ligaUsuarioPortaria($form["portaria_id"], $usuario)){
+                            $error = true;
+                        }
                     }
                 }
                 if($error == false){
@@ -209,6 +211,9 @@
                         "Ligação Portaria x Usuario concluída com sucesso!",
                         $this->rotinaCad
                     );
+                    if(!isset($usuario)){
+                        $usuario = '';
+                    }
                     $this->log->gravaLog($dateTime, $form["portaria_id"], "Adicionou", $_SESSION['pw_id'], "Ligação do usuário $usuario com a portaria");
                 }else{
                     $this->helper->setReturnMessage(

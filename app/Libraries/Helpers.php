@@ -532,6 +532,21 @@
             } else if ($log->classe == "Motorista") {
                 return $log->motorista;
                 
+            }else if ($log->classe == "Empresa") {
+                return $log->razao_social;
+                
+            }else if ($log->classe == "Veículo") {
+                return $log->placa;
+                
+            }else if ($log->classe == "Placa") {
+                return $log->placa_desc . " (". $log->placa_ip . ")";
+                
+            }else if ($log->classe == "Portaria") {
+                return $log->portaria;
+                
+            }else if ($log->classe == "Usuário") {
+                return $log->usu_login;
+                
             } else {
                 return $log->id_classe;
             }

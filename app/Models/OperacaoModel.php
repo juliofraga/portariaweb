@@ -119,7 +119,7 @@
             } 
         }
 
-        public function consultaOperacoes($portarias = null, $operadores = null, $tipos = null, $empresas = null, $veiculos = null, $motoristas = null, $dataDe = null, $dataAte = null)
+        public function consultaOperacoes($portarias = null, $operadores = null, $tipos = null, $empresas = null, $veiculos = null, $motoristas = null, $dataDe = null, $dataAte = null, $id = null)
         {
             try {
                 // Filtrar Portaria
@@ -169,7 +169,13 @@
                     $dataAteFiltro = " AND o.hora_abre_cancela_entrada <= '$dataAte 23:59:59'";
                 }
 
-                $this->db->query("SELECT o.*, v.placa, p.descricao, pe.nome_completo FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id LEFT JOIN pessoas pe ON o.pessoas_id = pe.id WHERE o.id > 0 $portaria $operador $tipo $empresa $veiculo $motorista $dataDeFiltro $dataAteFiltro ORDER BY o.id DESC");
+                // Filtrar ID
+                $idFiltro = "";
+                if($id != null){
+                    $idFiltro = " AND o.id = '$id'";
+                }
+
+                $this->db->query("SELECT o.*, v.placa, p.descricao, pe.nome_completo FROM operacoes o INNER JOIN usuarios u ON o.usuarios_id = u.id  LEFT JOIN veiculos v ON o.veiculos_id = v.id INNER JOIN portoes p ON o.portaria_id = p.id LEFT JOIN pessoas pe ON o.pessoas_id = pe.id WHERE o.id > 0 $portaria $operador $tipo $empresa $veiculo $motorista $dataDeFiltro $dataAteFiltro $idFiltro ORDER BY o.id DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);

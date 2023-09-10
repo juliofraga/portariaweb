@@ -85,12 +85,18 @@ $helper = new Helpers();
                         </div>
                         <label for="dataAte">Data: Até</label>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
+                        <div class="form-floating mt-2">
+                            <input type="text" class="form-control" id="id" name="id" placeholder="ID" value="<?= $dados["idFiltro"] ?>">
+                        </div>
+                        <label for="id">ID</label>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-floating mt-2">
                             <button class="w-100 btn btn-success btn-lg" name="consultar" id="consultar" value="consultar" type="submit">Consultar</button>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         <div class="form-floating mt-2">
                             <button class="w-100 btn btn-danger btn-lg" name="limparFiltros" id="limparFiltros" value="limparFiltros" type="submit">Limpar Filtros</button>
                         </div>
@@ -103,6 +109,9 @@ $helper = new Helpers();
                     <center>Não foram encontrados resultados com os filtros informados, tente novamente informando outros dados!</center>
                 <?php }else{?>
                     <div class="row mt-2">
+                        <div class="col-sm-2">
+                            <b>ID</b>
+                        </div>
                         <div class="col-sm-2">
                             <b>Hora Entrada</b>
                         </div>
@@ -124,6 +133,9 @@ $helper = new Helpers();
                     </div>
                     <?php foreach($dados["consulta"] as $consulta){?>
                         <div class="row mt-4 border-bottom">
+                            <div class="col-sm-1">
+                                <?= $consulta->id ?>
+                            </div>
                             <div class="col-sm-2">
                                 <?= $helper->formataDateTime($consulta->hora_abre_cancela_entrada) ?>
                             </div>
@@ -142,7 +154,7 @@ $helper = new Helpers();
                             <div class="col-sm-1">
                                 <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
                             </div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-1">
                                 <form action="<?= URL ?>/consultas/detalhada/<?= $consulta->id ?>" method="POST" target="_blank">
                                     <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
                                     <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>

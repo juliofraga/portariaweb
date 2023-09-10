@@ -206,10 +206,10 @@
             }  
         }
 
-        public function consultaOperacoes($portaria = null, $operador = null, $tipo = null, $empresa = null, $veiculo = null, $motorista = null, $dataDe = null, $dataAte = null)
+        public function consultaOperacoes($portaria = null, $operador = null, $tipo = null, $empresa = null, $veiculo = null, $motorista = null, $dataDe = null, $dataAte = null, $id = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->operacaoModel->consultaOperacoes($portaria, $operador, $tipo, $empresa, $veiculo, $motorista, $dataDe, $dataAte);
+                return $this->operacaoModel->consultaOperacoes($portaria, $operador, $tipo, $empresa, $veiculo, $motorista, $dataDe, $dataAte, $id);
             }else{
                 $this->helper->redirectPage("/login/");
             } 

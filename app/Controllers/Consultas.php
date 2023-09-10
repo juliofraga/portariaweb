@@ -40,6 +40,7 @@
                 $dataDeSelecionada = $this->helper->returnDate();
                 $dataAteSelecionada = $this->helper->returnDate();
                 $consulta = $this->operacao->consultaOperacoes(null, null, null, null, null, null, $dataDeSelecionada, $dataAteSelecionada);
+                $idFiltro = null;
                 
                 if(isset($form) and $form != null){
                     $portaria = isset($form["portaria"]) ? $form["portaria"] : null;
@@ -58,7 +59,9 @@
                     $dataDeSelecionada = $dataDe;
                     $dataAte = isset($form["dataAte"]) ? $form["dataAte"] : null;
                     $dataAteSelecionada = $dataAte;
-                    $consulta = $this->operacao->consultaOperacoes($portaria, $operador, $tipo, $empresa, $veiculo, $motorista, $dataDe, $dataAte);
+                    $idFiltro = isset($form["id"]) ? $form["id"] : null;
+                    $consulta = $this->operacao->consultaOperacoes($portaria, $operador, $tipo, $empresa, $veiculo, $motorista, $dataDe, $dataAte, $idFiltro);
+                    
                 }
                 $dados = [
                     'portarias' => $this->portaria->listaPortarias(),
@@ -75,7 +78,8 @@
                     'veiculos' => $this->veiculo->listaVeiculos(),
                     'motoristas' => $this->motorista->listaMotoristas(),
                     'consulta' => $consulta,
-                    'fezConsulta' => true
+                    'fezConsulta' => true,
+                    'idFiltro' => $idFiltro,
                 ];
                 $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consultas");
                 $this->view('consultas/index', $dados);
