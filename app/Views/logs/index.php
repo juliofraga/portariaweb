@@ -15,21 +15,21 @@
                 <div class="row mb-5">
                     <div class="col-sm-3">
                         <div class="form-floating mt-2">
-                            <input class="form-control" type="datetime-local" id="dataDe" name="dataDe" placeholder="Dê" value="" disabled/>
+                            <input class="form-control" type="datetime-local" id="dataDe" name="dataDe" placeholder="Dê" value="<?= isset($dados["dataDe"]) ? $dados["dataDe"] : '' ?>"/>
                             <label for="dataDe">Dê:</label>
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-floating mt-2">
-                            <input class="form-control" type="datetime-local" id="dataAte" name="dataAte" placeholder="Até" value="" disabled/>
+                            <input class="form-control" type="datetime-local" id="dataAte" name="dataAte" placeholder="Até" value="<?= isset($dados["dataAte"]) ? $dados["dataAte"] : '' ?>"/>
                             <label for="dataAte">Até:</label>
                         </div>
                     </div>
                     <div class="col-sm-2 mt-2" style="padding-top: 6px;">
-                        <button class="w-100 btn btn-secondary btn-lg" type="submit" name="buscar" disabled>Buscar</button>
+                        <button class="w-100 btn btn-secondary btn-lg" type="submit" name="buscar">Buscar</button>
                     </div>
                     <div class="col-sm-2 mt-2" style="padding-top: 6px;">
-                        <button class="w-100 btn btn-warning btn-lg" type="submit" name="limpar" disabled>Limpar</button>
+                        <button class="w-100 btn btn-warning btn-lg" type="submit" name="limpar">Limpar</button>
                     </div>
                 </div>
             </form>

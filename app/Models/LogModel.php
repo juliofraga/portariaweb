@@ -6,6 +6,7 @@
         public function __construct()
         {
             $this->db = new Database();
+            
         }
 
         // Efetua o registro dos logs
@@ -19,14 +20,21 @@
                 $this->db->bind("dateTime", $dateTime);
                 $this->db->execQuery();
             } catch (Throwable $th) {
-                echo $th;
                 return null;
             }
         }
 
         // Retorna os logs registrados
-        public function listaLogs(){
+        public function listaLogs($dtInicio = null, $dtFim = null, $today){
             try {
+                $filtroData = " AND l.created_at >= '" . $today . " 00:00:01'";
+                if($dtInicio != null and $dtFim != null){
+                    $filtroData = " AND l.created_at >= '" . $dtInicio . "' AND l.created_at <= '" . $dtFim . "'";
+                }else if($dtInicio != null and $dtFim == null){
+                    $filtroData = " AND l.created_at >= '" . $dtInicio . "'";
+                }else if($dtInicio == null and $dtFim != null){
+                    $filtroData = " AND l.created_at <= '" . $dtFim . "'";
+                }
                 $this->db->query("SELECT l.*, u.login, c.descricao as camera, conf.titulo, p.nome_completo as motorista, e.razao_social, v.placa, pl.descricao as placa_desc, pl.endereco_ip as placa_ip, por.descricao as portaria, usu.login as usu_login
                 FROM logs l 
                 INNER JOIN usuarios u ON l.usuario_id = u.id 
@@ -38,6 +46,7 @@
                 LEFT JOIN placas pl ON l.id_classe = pl.id 
                 LEFT JOIN portoes por ON l.id_classe = por.id 
                 LEFT JOIN usuarios usu ON l.id_classe = usu.id
+                WHERE l.id > 1 $filtroData
                 ORDER BY l.created_at DESC");
                 return $this->db->results();
             } catch (Throwable $th) {
