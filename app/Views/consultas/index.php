@@ -132,35 +132,37 @@ $helper = new Helpers();
                         </div>
                     </div>
                     <?php foreach($dados["consulta"] as $consulta){?>
-                        <div class="row mt-4 border-bottom">
-                            <div class="col-sm-1">
-                                <?= $consulta->id ?>
+                        <div class="addHoverLine">
+                            <div class="row mt-4 border-bottom">
+                                <div class="col-sm-1">
+                                    <?= $consulta->id ?>
+                                </div>
+                                <div class="col-sm-2">
+                                    <?= $helper->formataDateTime($consulta->hora_abre_cancela_entrada) ?>
+                                </div>
+                                <div class="col-sm-2">
+                                    <?= $helper->formataDateTime($consulta->hora_fecha_cancela_saida) ?>
+                                </div>
+                                <div class="col-sm-1">
+                                    <?= $consulta->placa ?>
+                                </div>
+                                <div class="col-sm-2">
+                                    <?= $consulta->nome_completo ?>
+                                </div>
+                                <div class="col-sm-2">
+                                    <?= $consulta->descricao ?>
+                                </div>
+                                <div class="col-sm-1">
+                                    <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
+                                </div>
+                                <div class="col-sm-1">
+                                    <form action="<?= URL ?>/consultas/detalhada/<?= $consulta->id ?>" method="POST" target="_blank">
+                                        <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
+                                        <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="col-sm-2">
-                                <?= $helper->formataDateTime($consulta->hora_abre_cancela_entrada) ?>
-                            </div>
-                            <div class="col-sm-2">
-                                <?= $helper->formataDateTime($consulta->hora_fecha_cancela_saida) ?>
-                            </div>
-                            <div class="col-sm-1">
-                                <?= $consulta->placa ?>
-                            </div>
-                            <div class="col-sm-2">
-                                <?= $consulta->nome_completo ?>
-                            </div>
-                            <div class="col-sm-2">
-                                <?= $consulta->descricao ?>
-                            </div>
-                            <div class="col-sm-1">
-                                <?= $helper->retornaTipoOperacao($consulta->tipo) ?>
-                            </div>
-                            <div class="col-sm-1">
-                                <form action="<?= URL ?>/consultas/detalhada/<?= $consulta->id ?>" method="POST" target="_blank">
-                                    <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
-                                    <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
-                                </form>
-                            </div>
-                    </div>
+                        </div>
                     <?php }?>
             <?php }}?>
         </div>

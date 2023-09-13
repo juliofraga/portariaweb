@@ -11253,3 +11253,7 @@ label{
   font-family: calibri;
   font-size: 18px;
 }
+
+.addHoverLine :hover{
+  background-color: #E6E6E6;
+}

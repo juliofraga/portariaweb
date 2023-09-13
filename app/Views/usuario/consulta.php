@@ -71,31 +71,33 @@
                     <?php 
                         foreach($dados["dados"] as $usuarios){
                     ?>
-                        <div class="row mt-4">
-                            <div class="col-sm-3">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $usuarios->nome ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $usuarios->login ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $usuarios->perfil ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $this->helper->retornaSituacao($usuarios->situacao) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $usuarios->id ?>">Editar</a>
-                                </p>
+                        <div class="addHoverLine">
+                            <div class="row mt-4">
+                                <div class="col-sm-3">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $usuarios->nome ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $usuarios->login ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $usuarios->perfil ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $this->helper->retornaSituacao($usuarios->situacao) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $usuarios->id ?>">Editar</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal fade" id="modal-<?= $usuarios->id ?>">

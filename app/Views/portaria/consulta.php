@@ -72,40 +72,40 @@
                                 $portariaTemp = $portaria->id;
                     ?>  
                             <hr class="divisor_horizontal">
-                            <div class="row">
-                                <div class="col-sm-4">
-                                    <p class="pb-1 mb-0 large">
-                                        <?= $portaria->descricao ?>
-                                    </p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <p class="pb-1 mb-0 large">
-                                        <?= $portaria->placa ?> - <?= $portaria->ip_placa ?>
-                                    </p>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="pb-1 mb-0 large">
-                                        <?= $this->helper->retornaSituacao($portaria->situacao) ?>
-                                    </p>
-                                </div>
-                                <div class="col-sm-2">
-                                    <p class="pb-1 mb-0 large">
-                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $portaria->id ?>">Editar</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <?php
-                                        $cameras = "";
-                                        foreach($dados["dados"] as $camera){
-                                            if($portaria->id == $camera->id){
-                                                $cameras .= "$camera->camera ($camera->ip_camera) - ";
+                            <div class="addHoverLine">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <p class="pb-1 mb-0 large">
+                                            <?= $portaria->descricao ?>
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <p class="pb-1 mb-0 large">
+                                            <?= $portaria->placa ?> - <?= $portaria->ip_placa ?>
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p class="pb-1 mb-0 large">
+                                            <?= $this->helper->retornaSituacao($portaria->situacao) ?>
+                                        </p>
+                                    </div>
+                                     <div class="col-sm-12">
+                                        <?php
+                                            $cameras = "";
+                                            foreach($dados["dados"] as $camera){
+                                                if($portaria->id == $camera->id){
+                                                    $cameras .= "$camera->camera ($camera->ip_camera) - ";
+                                                }
                                             }
-                                        }
-                                        $cameras = substr($cameras, 0, -2);
-                                    ?>
-                                    <i><b>Câmeras: </b><?= $cameras == " () " ? "" : $cameras ?></i>
+                                            $cameras = substr($cameras, 0, -2);
+                                        ?>
+                                        <i><b>Câmeras: </b><?= $cameras == " () " ? "" : $cameras ?></i>
+                                    </div>
+                                    <div class="col-sm-2 mt-2">
+                                        <p class="pb-1 mb-0 large">
+                                            <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $portaria->id ?>">Editar</a>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <?php } ?>

@@ -81,36 +81,38 @@
                     <?php 
                         foreach($dados["dados"] as $veiculo){
                     ?>
-                        <div class="row mt-4">
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $veiculo->descricao ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $veiculo->placa ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $tipos[$veiculo->tipo] ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $veiculo->nome_fantasia ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $this->helper->retornaSituacao($veiculo->situacao) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $veiculo->id ?>">Editar</a>
-                                </p>
+                        <div class="addHoverLine">
+                            <div class="row mt-4">
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $veiculo->descricao ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $veiculo->placa ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $tipos[$veiculo->tipo] ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $veiculo->nome_fantasia ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $this->helper->retornaSituacao($veiculo->situacao) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $veiculo->id ?>">Editar</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal fade" id="modal-<?= $veiculo->id ?>">

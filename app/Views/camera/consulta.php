@@ -71,31 +71,33 @@
                     <?php 
                         foreach($dados["dados"] as $camera){
                     ?>
-                        <div class="row mt-4">
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $camera->descricao ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-5">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $camera->endereco_ip ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2">
-                                    <?= $camera->portaria ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $this->helper->retornaSituacao($camera->situacao) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $camera->id ?>">Editar</a>
-                                </p>
+                        <div class="addHoverLine">
+                            <div class="row mt-4">
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $camera->descricao ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-5">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $camera->endereco_ip ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2">
+                                        <?= $camera->portaria ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $this->helper->retornaSituacao($camera->situacao) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $camera->id ?>">Editar</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal fade" id="modal-<?= $camera->id ?>">

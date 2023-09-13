@@ -71,31 +71,33 @@
                     <?php 
                         foreach($dados["dados"] as $empresa){
                     ?>
-                        <div class="row mt-4">
-                            <div class="col-sm-3">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $empresa->cnpj ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $empresa->razao_social ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-3">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $empresa->nome_fantasia ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <?= $this->helper->retornaSituacao($empresa->situacao) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                    <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $empresa->id ?>">Editar</a>
-                                </p>
+                        <div class="addHoverLine">
+                            <div class="row mt-4">
+                                <div class="col-sm-3">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $empresa->cnpj ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $empresa->razao_social ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $empresa->nome_fantasia ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <?= $this->helper->retornaSituacao($empresa->situacao) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large border-bottom mt-2 ">
+                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $empresa->id ?>">Editar</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal fade" id="modal-<?= $empresa->id ?>">

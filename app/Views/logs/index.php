@@ -58,31 +58,33 @@
                     <?php 
                         foreach($dados["dados"] as $log){
                     ?>
-                        <div class="row mt-4 border-bottom">
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large  ">
-                                    <?= $log->login ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large mt-2 ">
-                                    <?= $log->classe ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-4">
-                                <p class="pb-1 mb-0 large mt-2 ">
-                                    <?= $this->helper->formataLogRetorno($log) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large mt-2 ">
-                                    <?= $log->classe == 'Login' ? 'Fez login' : $acao[$log->acao] ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large mt-2 ">
-                                    <?= $this->helper->formataDateTime($log->created_at) ?>
-                                </p>
+                        <div class="addHoverLine">                        
+                            <div class="row mt-4 border-bottom">
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large  ">
+                                        <?= $log->login ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large mt-2 ">
+                                        <?= $log->classe ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-4">
+                                    <p class="pb-1 mb-0 large mt-2 ">
+                                        <?= $this->helper->formataLogRetorno($log) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large mt-2 ">
+                                        <?= $log->classe == 'Login' ? 'Fez login' : $acao[$log->acao] ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large mt-2 ">
+                                        <?= $this->helper->formataDateTime($log->created_at) ?>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     <?php

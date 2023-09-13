@@ -74,36 +74,38 @@
                     <?php 
                         foreach($dados["dados"] as $placa){
                     ?>
-                        <div class="row mt-4 border-bottom mt-2">
-                            <div class="col-sm-3">
-                                <p class="pb-1 mb-0 large">
-                                    <?= $placa->descricao ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large">
-                                    <?= $placa->endereco_ip ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-1">
-                                <p class="pb-1 mb-0 large">
-                                    <?= $placa->porta ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large">
-                                    <?= $placa->portaria ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large">
-                                    <?= $this->helper->retornaSituacao($placa->situacao) ?>
-                                </p>
-                            </div>
-                            <div class="col-sm-2">
-                                <p class="pb-1 mb-0 large">
-                                    <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $placa->id ?>">Editar</a>
-                                </p>
+                        <div class="addHoverLine">
+                            <div class="row mt-4 border-bottom mt-2">
+                                <div class="col-sm-3">
+                                    <p class="pb-1 mb-0 large">
+                                        <?= $placa->descricao ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large">
+                                        <?= $placa->endereco_ip ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p class="pb-1 mb-0 large">
+                                        <?= $placa->porta ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large">
+                                        <?= $placa->portaria ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large">
+                                        <?= $this->helper->retornaSituacao($placa->situacao) ?>
+                                    </p>
+                                </div>
+                                <div class="col-sm-2">
+                                    <p class="pb-1 mb-0 large">
+                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $placa->id ?>">Editar</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div class="modal fade" id="modal-<?= $placa->id ?>">
