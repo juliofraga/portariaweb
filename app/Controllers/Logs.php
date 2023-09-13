@@ -12,19 +12,23 @@
 
         public function index(){
             if($this->helper->sessionValidate()){
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                $dtInicio = $form['dataDe'];
-                $dtFim = $form['dataAte'];
-                if(isset($form["limpar"])){
-                    $dtInicio = null;
-                    $dtFim = null;
+                if($_SESSION['pw_tipo_perfil'] == md5("Superadmin") or ($_SESSION['pw_tipo_perfil'] == md5("Administrador") and $_SESSION['pw_exibe_logs_basicos_admin'] == true)){
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    $dtInicio = $form['dataDe'];
+                    $dtFim = $form['dataAte'];
+                    if(isset($form["limpar"])){
+                        $dtInicio = null;
+                        $dtFim = null;
+                    }
+                    $dados = [
+                        'dados' => $this->listaLogs($dtInicio, $dtFim),
+                        'dataDe' => $dtInicio,
+                        'dataAte' => $dtFim
+                    ];
+                    $this->view('/logs/index', $dados);
+                }else{
+                    $this->view('pagenotfound');
                 }
-                $dados = [
-                    'dados' => $this->listaLogs($dtInicio, $dtFim),
-                    'dataDe' => $dtInicio,
-                    'dataAte' => $dtFim
-                ];
-                $this->view('/logs/index', $dados);
             }else{
                 $this->helper->redirectPage("/login/");
             }

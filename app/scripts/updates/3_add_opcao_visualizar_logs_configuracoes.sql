@@ -1,0 +1,1 @@
+INSERT INTO `configuracoes` (`id`, `titulo`, `descricao`, `valor`, `created_at`, `updated_at`) VALUES (NULL, 'Exibir logs para Administrador', 'Com esta opção ativa, os usuários com perfil de Administrador\" poderão acessar a tela de logs básicos do sistema.', '1', '2023-09-13 08:16:01', NULL);

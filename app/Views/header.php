@@ -122,7 +122,7 @@
                         </a>
                     </li>
                     <?php } ?>
-                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin")){ ?>
+                    <?php if($_SESSION['pw_tipo_perfil'] == md5("Superadmin") or ($_SESSION['pw_tipo_perfil'] == md5("Administrador") and $_SESSION['pw_exibe_logs_basicos_admin'] == true)){ ?>
                     <li class="nav-item">
                         <a class="nav-link fonteMenu <?= $helper->verificaLinkAtivo(['logs']) ?>" href="<?= URL ?>/logs">
                             <center>

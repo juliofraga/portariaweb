@@ -43,6 +43,10 @@
         public function ativaLogsErrosPHP(){
             return $this->configuracaoModel->opcaoAtiva(9);
         }
+
+        public function exibeLogsBasicosAdmin(){
+            return $this->configuracaoModel->opcaoAtiva(10);
+        }
         
         public function index(){
             if($this->helper->sessionValidate()){

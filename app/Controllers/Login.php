@@ -163,6 +163,7 @@
             $_SESSION['pw_grava_logs_fe'] = $this->configuracoes->ativaLogsFrontend();
             $_SESSION['pw_grava_logs_erros_db'] = $this->configuracoes->ativaLogsErrosDB();
             $_SESSION['pw_grava_logs_erros_php'] = $this->configuracoes->ativaLogsErrosPHP();
+            $_SESSION['pw_exibe_logs_basicos_admin'] = $this->configuracoes->exibeLogsBasicosAdmin();
 		}
 
         private function bloqueiaUsuario($id){
