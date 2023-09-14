@@ -119,7 +119,6 @@
         public function retornaCpfMotorista($motorista_id)
         {
             if($this->helper->sessionValidate()){
-                
                 $cpf = "";
                 $cpf = $this->motoristaModel->retornaCpfMotorista($motorista_id);
                 if($cpf){

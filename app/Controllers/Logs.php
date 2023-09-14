@@ -36,7 +36,11 @@
 
         public function listaLogs($dtInicio = null, $dtFim = null){
             if($this->helper->sessionValidate()){
-                return $this->logModel->listaLogs($dtInicio, $dtFim, $this->helper->returnDate());
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    return $this->logModel->listaLogs($dtInicio, $dtFim, $this->helper->returnDate());
+                }
             }else{
                 $this->helper->redirectPage("/login/");
             }

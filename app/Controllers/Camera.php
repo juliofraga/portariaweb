@@ -30,57 +30,69 @@
 
         public function novo()
         {
-            $dados = [
-                'portoes' => $this->portariaModel->listaPortarias(),
-            ];
             if($this->helper->sessionValidate()){
-                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Nova Câmera");
-                $this->view('camera/novo', $dados);
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dados = [
+                        'portoes' => $this->portariaModel->listaPortarias(),
+                    ];
+                    if($this->helper->sessionValidate()){
+                        $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Nova Câmera");
+                        $this->view('camera/novo', $dados);
+                    }else{
+                        $this->helper->loginRedirect();
+                    }
+                }
             }else{
-                $this->helper->loginRedirect();
+                $this->helper->redirectPage("/login/");
             }
         }
 
         public function cadastrar()
         {
             if($this->helper->sessionValidate()){
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                $dateTime = $this->helper->returnDateTime();
-                if($this->helper->validateFields($form)){
-                    $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
-                    if($lastInsertId != null){
-                        $this->helper->setReturnMessage(
-                            $this->tipoSuccess,
-                            'Câmera cadastrada com sucesso! Para aplicar a alteração, faça logoff do sistema e entre novamente!',
-                            $this->rotinaCad
-                        );
-                        if($this->criaArquivoCamera($lastInsertId, $form['endereco_ip']) === false){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    $dateTime = $this->helper->returnDateTime();
+                    if($this->helper->validateFields($form)){
+                        $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
+                        if($lastInsertId != null){
                             $this->helper->setReturnMessage(
-                                $this->tipoWarning,
-                                'Câmera cadastrada com sucesso, porém parece que o endereço informado não está correto e a captura de imagens pode não funcionar corretamente. Verifique se foi informado http:// ou https:// no endereço da câmera.',
+                                $this->tipoSuccess,
+                                'Câmera cadastrada com sucesso! Para aplicar a alteração, faça logoff do sistema e entre novamente!',
                                 $this->rotinaCad
                             );
+                            if($this->criaArquivoCamera($lastInsertId, $form['endereco_ip']) === false){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoWarning,
+                                    'Câmera cadastrada com sucesso, porém parece que o endereço informado não está correto e a captura de imagens pode não funcionar corretamente. Verifique se foi informado http:// ou https:// no endereço da câmera.',
+                                    $this->rotinaCad
+                                );
+                            }
+                            $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Câmera");
+                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
+                            $this->helper->redirectPage("/camera/consulta");
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Não foi possível cadastrar a câmera, tente novamente!',
+                                $this->rotinaCad
+                            );
+                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Câmera", "Erro ao gravar no banco de dados");
+                            $this->helper->redirectPage("/camera/novo");
                         }
-                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Câmera");
-                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $lastInsertId, 0, $dateTime);
-                        $this->helper->redirectPage("/camera/consulta");
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            'Não foi possível cadastrar a câmera, tente novamente!',
+                            'Existem campos que não foram preenchidos, verifique novamente!',
                             $this->rotinaCad
                         );
-                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Câmera", "Erro ao gravar no banco de dados");
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Câmera", "Alguns campos não foram preenchidos");
                         $this->helper->redirectPage("/camera/novo");
                     }
-                }else{
-                    $this->helper->setReturnMessage(
-                        $this->tipoError,
-                        'Existem campos que não foram preenchidos, verifique novamente!',
-                        $this->rotinaCad
-                    );
-                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Câmera", "Alguns campos não foram preenchidos");
-                    $this->helper->redirectPage("/camera/novo");
                 }
             }else{
                 $this->helper->loginRedirect();
@@ -108,9 +120,13 @@
         public function inserePortariaCamera($camera_id, $portaria_id, $dateTime, $tipo)
         {
             if($this->helper->sessionValidate()){
-                if($this->cameraModel->inserePortariaCamera($camera_id, $portaria_id, $tipo)){
-                    $this->log->gravaLog($dateTime, $camera_id, "Adicionou", $_SESSION['pw_id'], "câmera a portaria $portaria_id");
-                    $this->log->registraLog($_SESSION['pw_id'], "Câmera", $camera_id, 1, $dateTime);
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    if($this->cameraModel->inserePortariaCamera($camera_id, $portaria_id, $tipo)){
+                        $this->log->gravaLog($dateTime, $camera_id, "Adicionou", $_SESSION['pw_id'], "câmera a portaria $portaria_id");
+                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $camera_id, 1, $dateTime);
+                    }
                 }
             }else{
                 $this->helper->loginRedirect();
@@ -120,26 +136,30 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
-                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Câmera");
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if((!isset($_SESSION["pw_camera_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
-                    $dados = [
-                        'dados' =>  $this->listaCameras(),
-                        'filtro' => null,
-                    ];
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
                 }else{
-                    if($_SESSION["pw_camera_consulta"] == null or isset($form["descricao_ip"])){
-                        $filtro = $form["descricao_ip"]; 
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Câmera");
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if((!isset($_SESSION["pw_camera_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
+                        $dados = [
+                            'dados' =>  $this->listaCameras(),
+                            'filtro' => null,
+                        ];
                     }else{
-                        $filtro = $_SESSION["pw_camera_consulta"];
+                        if($_SESSION["pw_camera_consulta"] == null or isset($form["descricao_ip"])){
+                            $filtro = $form["descricao_ip"]; 
+                        }else{
+                            $filtro = $_SESSION["pw_camera_consulta"];
+                        }
+                        $_SESSION["pw_camera_consulta"] = $filtro;
+                        $dados = [
+                            'dados' =>  $this->listaCamerasPorFiltro($filtro),
+                            'filtro' => $filtro,
+                        ];
                     }
-                    $_SESSION["pw_camera_consulta"] = $filtro;
-                    $dados = [
-                        'dados' =>  $this->listaCamerasPorFiltro($filtro),
-                        'filtro' => $filtro,
-                    ];
+                    $this->view('camera/consulta', $dados);
                 }
-                $this->view('camera/consulta', $dados);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -166,11 +186,15 @@
         public function removeCamerasPortaria($portaria_id)
         {
             if($this->helper->sessionValidate()){
-                if($portaria_id == null){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
-                    $this->cameraModel->removeCamerasPortaria($portaria_id);
-                    $this->log->gravaLog($this->helper->returnDateTime(), $portaria_id, "Removeu", $_SESSION['pw_id'], "Câmera");
+                    if($portaria_id == null){
+                        $this->view('pagenotfound');
+                    }else{
+                        $this->cameraModel->removeCamerasPortaria($portaria_id);
+                        $this->log->gravaLog($this->helper->returnDateTime(), $portaria_id, "Removeu", $_SESSION['pw_id'], "Câmera");
+                    }
                 }
             }else{
                 $this->helper->loginRedirect();
@@ -179,53 +203,59 @@
 
         public function alterar(){
             if($this->helper->sessionValidate()){
-                $dateTime = $this->helper->returnDateTime();
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if(isset($form["update"])){
-                    if($this->updateCamera($form, $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Câmera", null, null);
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if(isset($form["update"])){
+                        if($this->updateCamera($form, $dateTime)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Câmera", null, null);
+                        }
+                    }else if(isset($form["inativar"])){
+                        if($this->ativarInativarCamera($form["id"], "inativar", $dateTime)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Câmera", null, null);
+                        }
+                    }else if(isset($form["ativar"])){
+                        if($this->ativarInativarCamera($form["id"], "ativar", $dateTime)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Câmera", null, null);
+                        }
+                    }else if(isset($form["deletar"])){
+                        if($this->deletarCamera($form["id"])){
+                            $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 2, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Deletou", $_SESSION['pw_id'], "Câmera", null, null);
+                        }
                     }
-                }else if(isset($form["inativar"])){
-                    if($this->ativarInativarCamera($form["id"], "inativar", $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Câmera", null, null);
-                    }
-                }else if(isset($form["ativar"])){
-                    if($this->ativarInativarCamera($form["id"], "ativar", $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Câmera", null, null);
-                    }
-                }else if(isset($form["deletar"])){
-                    if($this->deletarCamera($form["id"])){
-                        $this->log->registraLog($_SESSION['pw_id'], "Câmera", $form["id"], 2, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Deletou", $_SESSION['pw_id'], "Câmera", null, null);
-                    }
+                    $this->helper->redirectPage("/camera/consulta");
                 }
-                $this->helper->redirectPage("/camera/consulta");
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
         private function criaArquivoCamera($camera_id, $endereco){
-            $arquivo = fopen('camera_' . $camera_id . '.php','w'); 
-            if ($arquivo == false) die('Não foi possível criar o arquivo.'); 
-            $array = explode("http://", $endereco);
-            if($array[0] == $endereco){
-                $array = explode("https://", $endereco);
-                if(count($array) == 1){
-                    return false;
+            if($this->helper->sessionValidate()){
+                $arquivo = fopen('camera_' . $camera_id . '.php','w'); 
+                if ($arquivo == false) die('Não foi possível criar o arquivo.'); 
+                $array = explode("http://", $endereco);
+                if($array[0] == $endereco){
+                    $array = explode("https://", $endereco);
+                    if(count($array) == 1){
+                        return false;
+                    }
+                    $endereco = "https://".CREDENCIAIS_CAMERA.$array[1];
+                }else{
+                    $endereco = "http://".CREDENCIAIS_CAMERA.$array[1];
                 }
-                $endereco = "https://".CREDENCIAIS_CAMERA.$array[1];
-            }else{
-                $endereco = "http://".CREDENCIAIS_CAMERA.$array[1];
+                $texto = '<iframe src="'.$endereco.'" height="100%" width="100%" allowfullscreen></iframe>'; 
+                fwrite($arquivo, $texto);
+                $this->log->gravaLog($this->helper->returnDateTime(), $camera_id, "Adicionou", $_SESSION['pw_id'], "Arquivo câmera", null, null);
+                fclose($arquivo);
+                return true;
             }
-            $texto = '<iframe src="'.$endereco.'" height="100%" width="100%" allowfullscreen></iframe>'; 
-            fwrite($arquivo, $texto);
-            $this->log->gravaLog($this->helper->returnDateTime(), $camera_id, "Adicionou", $_SESSION['pw_id'], "Arquivo câmera", null, null);
-            fclose($arquivo);
-            return true;
         }
 
         private function updateCamera($form, $dateTime)

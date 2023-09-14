@@ -35,8 +35,12 @@
                 'complexidade' => $this->configuracoes->complexidadeSenhaAtivo(),
             ];
             if($this->helper->sessionValidate()){
-                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Novo Usuário");
-                $this->view('usuario/novo', $dados);
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Novo Usuário");
+                    $this->view('usuario/novo', $dados);
+                }
             }else{
                 $this->helper->loginRedirect();
             }
@@ -45,67 +49,71 @@
         public function cadastrar()
         {
             if($this->helper->sessionValidate()){
-                $dateTime = $this->helper->returnDateTime();
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if($this->helper->validateFields($form)){
-                    if(!$this->usuarioModel->verificaLogin($form["login"])){
-                        if($form["senha"] == $form["repetesenha"]){
-                            if(strlen($form["senha"]) >= 6){
-                                $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                $lastInsertId = $this->usuarioModel->cadastrarUsuario($form, $dateTime);
-                                if($lastInsertId != null){
-                                    $this->helper->setReturnMessage(
-                                        $this->tipoSuccess,
-                                        'Usuário cadastrado com sucesso!',
-                                        $this->rotinaCad
-                                    );
-                                    $this->log->registraLog($_SESSION['pw_id'], "Usuário", $lastInsertId, 0, $dateTime);
-                                    $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Usuário");
-                                    $this->helper->redirectPage("/usuario/consulta");
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if($this->helper->validateFields($form)){
+                        if(!$this->usuarioModel->verificaLogin($form["login"])){
+                            if($form["senha"] == $form["repetesenha"]){
+                                if(strlen($form["senha"]) >= 6){
+                                    $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
+                                    $lastInsertId = $this->usuarioModel->cadastrarUsuario($form, $dateTime);
+                                    if($lastInsertId != null){
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoSuccess,
+                                            'Usuário cadastrado com sucesso!',
+                                            $this->rotinaCad
+                                        );
+                                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $lastInsertId, 0, $dateTime);
+                                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Usuário");
+                                        $this->helper->redirectPage("/usuario/consulta");
+                                    }else{
+                                        $this->helper->setReturnMessage(
+                                            $this->tipoError,
+                                            'Não foi possível cadastrar o usuário, tente novamente!',
+                                            $this->rotinaCad
+                                        );
+                                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Erro ao gravar no banco de dados");
+                                        $this->helper->redirectPage("/usuario/novo");
+                                    }
                                 }else{
                                     $this->helper->setReturnMessage(
                                         $this->tipoError,
-                                        'Não foi possível cadastrar o usuário, tente novamente!',
+                                        'A senha deve ter no minimo 6 caracteres, tente novamente!',
                                         $this->rotinaCad
                                     );
-                                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Erro ao gravar no banco de dados");
+                                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha com menos de 6 caracteres");
                                     $this->helper->redirectPage("/usuario/novo");
                                 }
                             }else{
                                 $this->helper->setReturnMessage(
                                     $this->tipoError,
-                                    'A senha deve ter no minimo 6 caracteres, tente novamente!',
+                                    'As senhas não conferem, tente novamente!',
                                     $this->rotinaCad
                                 );
-                                $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha com menos de 6 caracteres");
+                                $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha não conferem");
                                 $this->helper->redirectPage("/usuario/novo");
                             }
                         }else{
                             $this->helper->setReturnMessage(
                                 $this->tipoError,
-                                'As senhas não conferem, tente novamente!',
+                                'Não foi possível cadastrar o usuário, já existe um usuário cadastrado no sistema com este login, tente novamente informando outro login!',
                                 $this->rotinaCad
                             );
-                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Senha não conferem");
+                            $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Já existe usuário cadastrado no sistema com o mesmo login");
                             $this->helper->redirectPage("/usuario/novo");
                         }
                     }else{
                         $this->helper->setReturnMessage(
                             $this->tipoError,
-                            'Não foi possível cadastrar o usuário, já existe um usuário cadastrado no sistema com este login, tente novamente informando outro login!',
+                            'Existem campos que não foram preenchidos, verifique novamente!',
                             $this->rotinaCad
                         );
-                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Já existe usuário cadastrado no sistema com o mesmo login");
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Aguns campos não foram preenchidos");
                         $this->helper->redirectPage("/usuario/novo");
                     }
-                }else{
-                    $this->helper->setReturnMessage(
-                        $this->tipoError,
-                        'Existem campos que não foram preenchidos, verifique novamente!',
-                        $this->rotinaCad
-                    );
-                    $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Usuário", "Aguns campos não foram preenchidos");
-                    $this->helper->redirectPage("/usuario/novo");
                 }
             }else{
                 $this->helper->loginRedirect();
@@ -115,26 +123,30 @@
         public function consulta()
         {
             if($this->helper->sessionValidate()){
-                $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Usuário");
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if((!isset($_SESSION["pw_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
-                    $dados = [
-                        'dados' =>  $this->listaUsuarios(),
-                        'nome' => null,
-                    ];
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
                 }else{
-                    if($_SESSION["pw_usuario_consulta"] == null or isset($form["nome_usuario"])){
-                        $nome = $form["nome_usuario"]; 
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Usuário");
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if((!isset($_SESSION["pw_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
+                        $dados = [
+                            'dados' =>  $this->listaUsuarios(),
+                            'nome' => null,
+                        ];
                     }else{
-                        $nome = $_SESSION["pw_usuario_consulta"];
+                        if($_SESSION["pw_usuario_consulta"] == null or isset($form["nome_usuario"])){
+                            $nome = $form["nome_usuario"]; 
+                        }else{
+                            $nome = $_SESSION["pw_usuario_consulta"];
+                        }
+                        $_SESSION["pw_usuario_consulta"] = $nome;
+                        $dados = [
+                            'dados' =>  $this->listaUsuarioPorNome($nome),
+                            'nome' => $nome,
+                        ];
                     }
-                    $_SESSION["pw_usuario_consulta"] = $nome;
-                    $dados = [
-                        'dados' =>  $this->listaUsuarioPorNome($nome),
-                        'nome' => $nome,
-                    ];
+                    $this->view('usuario/consulta', $dados);
                 }
-                $this->view('usuario/consulta', $dados);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -160,28 +172,32 @@
 
         public function alterar($tipo = null){
             if($this->helper->sessionValidate()){
-                $dateTime = $this->helper->returnDateTime();
-                $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-                if(isset($form["update"])){
-                    if($this->updateUsuario($form, $dateTime, $tipo)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Usuário", null, null);
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if(isset($form["update"])){
+                        if($this->updateUsuario($form, $dateTime, $tipo)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Alterou", $_SESSION['pw_id'], "Usuário", null, null);
+                        }
+                    }else if(isset($form["inativar"])){
+                        if($this->ativarInativarUsuario($form, "inativar", $dateTime)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Usuário", null, null);
+                        }
+                    }else if(isset($form["ativar"])){
+                        if($this->ativarInativarUsuario($form, "ativar", $dateTime)){
+                            $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
+                            $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Usuário", null, null);
+                        }
                     }
-                }else if(isset($form["inativar"])){
-                    if($this->ativarInativarUsuario($form, "inativar", $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Inativou", $_SESSION['pw_id'], "Usuário", null, null);
+                    if($tipo == null){
+                        $this->helper->redirectPage("/usuario/consulta");
+                    }else if($tipo == "perfil"){
+                        $this->helper->redirectPage("/usuario/perfil");
                     }
-                }else if(isset($form["ativar"])){
-                    if($this->ativarInativarUsuario($form, "ativar", $dateTime)){
-                        $this->log->registraLog($_SESSION['pw_id'], "Usuário", $form["id"], 1, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["id"], "Ativou", $_SESSION['pw_id'], "Usuário", null, null);
-                    }
-                }
-                if($tipo == null){
-                    $this->helper->redirectPage("/usuario/consulta");
-                }else if($tipo == "perfil"){
-                    $this->helper->redirectPage("/usuario/perfil");
                 }
             }else{
                 $this->helper->loginRedirect();
@@ -273,130 +289,134 @@
         }
 
         private function updateUsuario($form, $dateTime, $tipo){
-            $retorno = false;
-            if(!empty($form["nome"])){
-                $info = $this->usuarioModel->buscaUsuarioPorId($form["id"]);
-                if(($form["nome"] == $info[0]->nome and $form["perfil"] == $info[0]->perfil) and (empty($form["senha"]) and empty($form["repetesenha"]))){
-                    $this->helper->setReturnMessage(
-                        $this->tipoWarning,
-                        'Não foi necessária nenhuma alteração no cadastro do usuário',
-                        $this->rotinaAlt
-                    );
-                }else if(($form["nome"] != $info[0]->nome or $form["perfil"] != $info[0]->perfil) and (empty($form["senha"]) and empty($form["repetesenha"]))){
-                    if($this->usuarioModel->alteraUsuario($form, "nome-perfil", $dateTime)){
+            if($this->helper->sessionValidate()){
+                $retorno = false;
+                if(!empty($form["nome"])){
+                    $info = $this->usuarioModel->buscaUsuarioPorId($form["id"]);
+                    if(($form["nome"] == $info[0]->nome and $form["perfil"] == $info[0]->perfil) and (empty($form["senha"]) and empty($form["repetesenha"]))){
                         $this->helper->setReturnMessage(
-                            $this->tipoSuccess,
-                            'Usuário alterado com sucesso!',
+                            $this->tipoWarning,
+                            'Não foi necessária nenhuma alteração no cadastro do usuário',
                             $this->rotinaAlt
                         );
-                        $retorno = true;
-                    }else{
-                        $this->helper->setReturnMessage(
-                            $this->tipoError,
-                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                            $this->rotinaAlt
-                        );
-                    }
-                }else if((!empty($form["senha"]) and !empty($form["repetesenha"])) or
-                        (empty($form["senha"]) and !empty($form["repetesenha"])) or 
-                        (!empty($form["senha"]) and empty($form["repetesenha"])))
-                {
-                    if($form["senha"] != $form["repetesenha"]){
-                        $this->helper->setReturnMessage(
-                            $this->tipoError,
-                            'Não foi possível alterar o cadastro, as senhas não conferem, tente novamente!',
-                            $this->rotinaAlt
-                        );
-                    }else{
-                        if($this->configuracoes->complexidadeSenhaAtivo()){
-                            if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\w$@]{6,}$/', $form["senha"])){
-                                $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                if($tipo == null){
-                                    if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoSuccess,
-                                            'Usuário alterado com sucesso!',
-                                            $this->rotinaAlt
-                                        );
-                                    }else{
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoError,
-                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                            $this->rotinaAlt
-                                        );
+                    }else if(($form["nome"] != $info[0]->nome or $form["perfil"] != $info[0]->perfil) and (empty($form["senha"]) and empty($form["repetesenha"]))){
+                        if($this->usuarioModel->alteraUsuario($form, "nome-perfil", $dateTime)){
+                            $this->helper->setReturnMessage(
+                                $this->tipoSuccess,
+                                'Usuário alterado com sucesso!',
+                                $this->rotinaAlt
+                            );
+                            $retorno = true;
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                $this->rotinaAlt
+                            );
+                        }
+                    }else if((!empty($form["senha"]) and !empty($form["repetesenha"])) or
+                            (empty($form["senha"]) and !empty($form["repetesenha"])) or 
+                            (!empty($form["senha"]) and empty($form["repetesenha"])))
+                    {
+                        if($form["senha"] != $form["repetesenha"]){
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Não foi possível alterar o cadastro, as senhas não conferem, tente novamente!',
+                                $this->rotinaAlt
+                            );
+                        }else{
+                            if($this->configuracoes->complexidadeSenhaAtivo()){
+                                if(preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\w$@]{6,}$/', $form["senha"])){
+                                    $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
+                                    if($tipo == null){
+                                        if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoSuccess,
+                                                'Usuário alterado com sucesso!',
+                                                $this->rotinaAlt
+                                            );
+                                        }else{
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoError,
+                                                'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                                $this->rotinaAlt
+                                            );
+                                        }
+                                    }else if($tipo == "perfil"){
+                                        if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoSuccess,
+                                                'Usuário alterado com sucesso!',
+                                                $this->rotinaAlt
+                                            );
+                                        }else{
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoError,
+                                                'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                                $this->rotinaAlt
+                                            );
+                                        }
                                     }
-                                }else if($tipo == "perfil"){
-                                    if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoSuccess,
-                                            'Usuário alterado com sucesso!',
-                                            $this->rotinaAlt
-                                        );
-                                    }else{
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoError,
-                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                            $this->rotinaAlt
-                                        );
-                                    }
+                                }else{
+                                    $this->helper->setReturnMessage(
+                                        $this->tipoError,
+                                        'Não foi possível alterar a senha pois ela não atende os requisitos de complexidade, tente novamente!',
+                                        $this->rotinaAlt
+                                    );
                                 }
                             }else{
-                                $this->helper->setReturnMessage(
-                                    $this->tipoError,
-                                    'Não foi possível alterar a senha pois ela não atende os requisitos de complexidade, tente novamente!',
-                                    $this->rotinaAlt
-                                );
-                            }
-                        }else{
-                            if(strlen($form["senha"]) < 6){
-                                $this->helper->setReturnMessage(
-                                    $this->tipoError,
-                                    'Não foi possível alterar o cadastro, as senhas não possuem o mínimo de 6 caracteres!',
-                                    $this->rotinaAlt
-                                );
-                            }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
-                                $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
-                                if($tipo == null){
-                                    if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoSuccess,
-                                            'Usuário alterado com sucesso!',
-                                            $this->rotinaAlt
-                                        );
-                                    }else{
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoError,
-                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                            $this->rotinaAlt
-                                        );
-                                    }
-                                }else if($tipo == "perfil"){
-                                    if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoSuccess,
-                                            'Usuário alterado com sucesso!',
-                                            $this->rotinaAlt
-                                        );
-                                    }else{
-                                        $this->helper->setReturnMessage(
-                                            $this->tipoError,
-                                            'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
-                                            $this->rotinaAlt
-                                        );
+                                if(strlen($form["senha"]) < 6){
+                                    $this->helper->setReturnMessage(
+                                        $this->tipoError,
+                                        'Não foi possível alterar o cadastro, as senhas não possuem o mínimo de 6 caracteres!',
+                                        $this->rotinaAlt
+                                    );
+                                }else if(strlen($form["senha"]) >= 6 and $form["senha"] == $form["repetesenha"]){
+                                    $form["senha"] = password_hash($form["senha"], PASSWORD_DEFAULT);
+                                    if($tipo == null){
+                                        if($this->usuarioModel->alteraUsuario($form, "senha", $dateTime)){
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoSuccess,
+                                                'Usuário alterado com sucesso!',
+                                                $this->rotinaAlt
+                                            );
+                                        }else{
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoError,
+                                                'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                                $this->rotinaAlt
+                                            );
+                                        }
+                                    }else if($tipo == "perfil"){
+                                        if($this->usuarioModel->alteraUsuario($form, "senha-nome", $dateTime)){
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoSuccess,
+                                                'Usuário alterado com sucesso!',
+                                                $this->rotinaAlt
+                                            );
+                                        }else{
+                                            $this->helper->setReturnMessage(
+                                                $this->tipoError,
+                                                'Erro ao alterar usuário, tente novamente, se o problema persistir, entre em contato com o administrador do sistema!',
+                                                $this->rotinaAlt
+                                            );
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+                }else{
+                    $this->helper->setReturnMessage(
+                        $this->tipoError,
+                        'Nome não está preenchido, não foi possível alterar o usuário, tente novamente!',
+                        $this->rotinaCad
+                    );  
                 }
+                return $retorno;
             }else{
-                $this->helper->setReturnMessage(
-                    $this->tipoError,
-                    'Nome não está preenchido, não foi possível alterar o usuário, tente novamente!',
-                    $this->rotinaCad
-                );  
+                $this->helper->loginRedirect();
             }
-            return $retorno;
         }
         
         private function ativarInativarUsuario($form, $acao, $dateTime){
