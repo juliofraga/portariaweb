@@ -200,10 +200,11 @@
         public function retornaCnpjCpf($empresa_id)
         {
             if($this->helper->sessionValidate()){
-                $cnpjCpf = "";
                 $cnpjCpf = $this->empresaModel->retornaCnpjCpf($empresa_id);
                 if($cnpjCpf){
                     $cnpjCpf = $cnpjCpf[0]->cnpj;
+                }else{
+                    $cnpjCpf = "";
                 }
                 echo "<cnpjcpf>" . $cnpjCpf . "</cnpjcpf>";
             }else{

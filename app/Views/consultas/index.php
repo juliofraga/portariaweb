@@ -158,7 +158,7 @@ $helper = new Helpers();
                                 <div class="col-sm-1">
                                     <form action="<?= URL ?>/consultas/detalhada/<?= $consulta->id ?>" method="POST" target="_blank">
                                         <input type="hidden" name="operacao_id" value="<?= $consulta->id ?>">
-                                        <button class="w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
+                                        <button class="addHoverButton w-100 btn btn-secondary btn-sm" name="visualizar" id="visualizar" value="visualizar" type="submit">Visualizar</button>
                                     </form>
                                 </div>
                             </div>

@@ -824,7 +824,7 @@ function buscaCnpjCpf(empresa){
 function retornaCnpjCpf(result){
     var cnpjcpf = result.split("<cnpjcpf>");
     var cnpjcpf2 = cnpjcpf[1].split("</cnpjcpf>");
-    if(cnpjcpf2[0] != "Array"){
+    if(cnpjcpf2[0] != ""){
         document.getElementById('cnpj').value = cnpjcpf2[0];
         cnpjEmpresa = cnpjcpf2[0];
         document.getElementById('cnpj').setAttribute("readonly", true);
@@ -899,7 +899,7 @@ function exibeCpfMotorista(result){
     try{
         var cpf = result.split("<cpfMotorista>");
         var cpf2 = cpf[1].split("</cpfMotorista>");
-        if(cpf2[0] != "Array"){
+        if(cpf2[0] != ""){
             document.getElementById('cpfMotorista').value = cpf2[0];
             document.getElementById('cpfMotorista').setAttribute("readonly", true);
         }else{

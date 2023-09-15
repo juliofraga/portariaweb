@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     <p class="pb-1 mb-0 large">
-                                        <a class="btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $placa->id ?>">Editar</a>
+                                        <a class="addHoverButton btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $placa->id ?>">Editar</a>
                                     </p>
                                 </div>
                             </div>

@@ -11254,6 +11254,10 @@ label{
   font-size: 18px;
 }
 
-.addHoverLine :hover{
+.addHoverLine:hover{
   background-color: #E6E6E6;
+}
+
+.addHoverButton:hover{
+  background-color: #4F4F4F;
 }
