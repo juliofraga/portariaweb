@@ -16,10 +16,10 @@
                         <div class="input-group input-group-outline mb-3">
                             <input type="password" class="form-control" id="pass" name="pass" placeholder="Senha" required>
                         </div>
-                        <div class="form-check form-switch d-flex align-items-center mb-3">
+                        <!--<div class="form-check form-switch d-flex align-items-center mb-3">
                             <input class="form-check-input" type="checkbox" name="keepConnected" id="keepConnected">
                             <label class="form-check-label mb-0 ms-3" for="rememberMe">Lembrar-me</label>
-                        </div>
+                        </div>-->
                         <?php 
                             if(isset($_SESSION["pw_rotina"]) and $_SESSION["pw_tipo"] == 'error'){
                                 echo "<div class='alert alert-danger' role='alert'>";
