@@ -13,7 +13,7 @@
         public function __construct()
         {
             $this->helper = new Helpers();
-            $this->placaModel = $this->model('placaModel');
+            $this->placaModel = $this->model('PlacaModel');
             $this->log = new Logs();
         }
 
