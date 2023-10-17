@@ -25,9 +25,18 @@
 		define('DIR_CAPTURA_IMAGENS', 'C:/xampp/htdocs/portariaweb/public/assets/img/');
 	}else if(SYSTEM_ENVIRONMENT == 'LINUX'){
 		define('LOGS', '/var/www/html/portariaweb/app/Logs/'.date('M_Y').'.txt');
-		define('WKHTMLTOIMAGE_INSTALACAO', '/var/www/html/portariaweb/public/vendor/wkhtmltopdf/bin/wkhtmltoimage');
+		define('WKHTMLTOIMAGE_INSTALACAO', 'wkhtmltoimage');
 		define('DIR_CAPTURA_IMAGENS', '/var/www/html/portariaweb/public/assets/img/');
 	}
 	define('INSTANCIA', 'desenvolvimento');
 	
 ?>
+
+<!--
+
+COMANDOS P/ INSTALAR wkhtmltoimage no Linux:
+# sudo apt install wget
+# wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.de
+# sudo apt install -f ./wkhtmltox_0.12.6.1-2.jammy_amd64.deb
+
+-->

@@ -108,7 +108,7 @@ $helper = new Helpers();
                 <?php if($dados["consulta"] == null or !isset($dados["consulta"])){ ?>
                     <center>Não foram encontrados resultados com os filtros informados, tente novamente informando outros dados!</center>
                 <?php }else{?>
-                    <div class="row mt-2">
+                    <div class="row mt-1">
                         <div class="col-sm-2">
                             <b>ID</b>
                         </div>

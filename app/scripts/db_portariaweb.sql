@@ -109,7 +109,7 @@ CREATE TABLE `empresas` (
   `logradouro` varchar(100) DEFAULT NULL,
   `numero` int(11) DEFAULT NULL,
   `bairro` varchar(100) DEFAULT NULL,
-  `cidade` varchar(100) NOT NULL,
+  `cidade` varchar(100) DEFAULT NULL,
   `estado` char(2) DEFAULT NULL,
   `cep` char(9) DEFAULT NULL,
   `complemento` varchar(100) DEFAULT NULL,
