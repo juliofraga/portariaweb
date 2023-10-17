@@ -11,7 +11,13 @@
 
 	// CONSTANTES DO SISTEMA
 	define('APP', dirname(__FILE__));
-	define('URL','http://localhost/portariaweb');
+	//define('CLIENTE', '');
+	define('INSTANCIA', 'desenvolvimento');
+	if(defined('CLIENTE')){
+		define('URL','http://localhost/' . CLIENTE . '-portariaweb');
+	}else{
+		define('URL','http://localhost/portariaweb');
+	}
 	define('SYSTEM_ENVIRONMENT', 'WINDOWS');
 	define('APP_NOME','Portaria Web');
 	define('APP_VERSAO','1.0.0 - Beta');
@@ -24,12 +30,15 @@
 		define('WKHTMLTOIMAGE_INSTALACAO', 'C:/xampp/htdocs/portariaweb/public/vendor/wkhtmltopdf/bin/wkhtmltoimage');
 		define('DIR_CAPTURA_IMAGENS', 'C:/xampp/htdocs/portariaweb/public/assets/img/');
 	}else if(SYSTEM_ENVIRONMENT == 'LINUX'){
-		define('LOGS', '/var/www/html/portariaweb/app/Logs/'.date('M_Y').'.txt');
+		if(defined('CLIENTE')){
+			define('LOGS', '/var/www/html/' . CLIENTE . '-portariaweb/app/Logs/'.date('M_Y').'.txt');
+			define('DIR_CAPTURA_IMAGENS', '/var/www/html/' . CLIENTE . '-portariaweb/public/assets/img/');
+		}else{
+			define('LOGS', '/var/www/html/portariaweb/app/Logs/'.date('M_Y').'.txt');
+			define('DIR_CAPTURA_IMAGENS', '/var/www/html/portariaweb/public/assets/img/');
+		}
 		define('WKHTMLTOIMAGE_INSTALACAO', 'wkhtmltoimage');
-		define('DIR_CAPTURA_IMAGENS', '/var/www/html/portariaweb/public/assets/img/');
-	}
-	define('INSTANCIA', 'desenvolvimento');
-	
+	}	
 ?>
 
 <!--
