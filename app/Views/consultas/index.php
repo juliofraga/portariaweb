@@ -109,7 +109,7 @@ $helper = new Helpers();
                     <center>Não foram encontrados resultados com os filtros informados, tente novamente informando outros dados!</center>
                 <?php }else{?>
                     <div class="row mt-1">
-                        <div class="col-sm-2">
+                        <div class="col-sm-1">
                             <b>ID</b>
                         </div>
                         <div class="col-sm-2">

@@ -36,7 +36,6 @@
                     if(isset($form["limparFiltros"])){
                         $this->helper->redirectPage("/consultas/");
                     }
-                    $ehOperador = $_SESSION['pw_tipo_perfil'] == md5('Operador') ? true : false;
                     $operadoresSelecionados = null;
                     $portariasSelecionados = null;
                     $tiposSelecionados = null;
@@ -46,7 +45,7 @@
                     $dataDeSelecionada = $this->helper->returnDate();
                     $dataAteSelecionada = $this->helper->returnDate();
                     $portariaOperador = null;
-                    if($ehOperador) {
+                    if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])) {
                         $portariaOperador = [];
                         $returnPortariaOperador = $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador');
                         foreach($returnPortariaOperador as $rpo){
@@ -56,7 +55,7 @@
                     $consulta = $this->operacao->consultaOperacoes($portariaOperador, null, null, null, null, null, $dataDeSelecionada, $dataAteSelecionada);
                     $idFiltro = null;
                     if(isset($form) and $form != null){
-                        if($ehOperador) {
+                        if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])) {
                             $portaria = isset($form["portaria"]) ? $form["portaria"] : $portariaOperador;
                             $portariasSelecionados = isset($form["portaria"]) ? $form["portaria"] : null;
                         }else{
@@ -83,7 +82,7 @@
                         
                     }
                     $dados = [
-                        'portarias' => $ehOperador ? $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador') : $this->portaria->listaPortarias(),
+                        'portarias' => $this->helper->isOperador($_SESSION['pw_tipo_perfil']) ? $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador') : $this->portaria->listaPortarias(),
                         'operadores' => $this->usuario->listaUsuarios('todos'),
                         'operadoresSelecionados' => $operadoresSelecionados,
                         'portariasSelecionadas' => $portariasSelecionados,
@@ -122,7 +121,16 @@
                             'imagens' => $this->operacao->buscaImagensOperacaoPorId($id),
                         ];
                         $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta detalhada ID: $id");
-                        $this->view('consultas/detalhada', $dados);
+                        $returnPortariaOperador = $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador');
+                        $portariaOperador = [];
+                        foreach($returnPortariaOperador as $rpo){
+                            $portariaOperador[] = $rpo->id;
+                        }
+                        if($dados['operacao'] == null OR (!in_array($dados['operacao'][0]->portaria_id, $portariaOperador) and $this->helper->isOperador($_SESSION['pw_tipo_perfil']))){
+                            $this->view('pagenotfound');
+                        }else{
+                            $this->view('consultas/detalhada', $dados);
+                        }
                     }
                 }
             }else{

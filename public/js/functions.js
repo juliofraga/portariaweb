@@ -28,8 +28,6 @@ $(document).ready(function(){
     verificaStatusPlaca();
 });
 
-
-
 function verificaStatusPlaca(){
     console.log('carregando status');
     var statusPlaca = document.getElementById("statusPlaca");

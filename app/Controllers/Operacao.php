@@ -219,7 +219,9 @@
         {
             if($this->helper->sessionValidate()){
                 $tipoOperacao = $this->operacaoModel->retornaTipoOperacao($id);
-                $tipoOperacao = $tipoOperacao[0]->tipo;
+                if($tipoOperacao){
+                    $tipoOperacao = $tipoOperacao[0]->tipo;
+                }                
                 return $this->operacaoModel->consultaOperacaoPorId($id, $tipoOperacao);
             }else{
                 $this->helper->redirectPage("/login/");
