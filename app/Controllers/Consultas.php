@@ -36,6 +36,7 @@
                     if(isset($form["limparFiltros"])){
                         $this->helper->redirectPage("/consultas/");
                     }
+                    $ehOperador = $_SESSION['pw_tipo_perfil'] == md5('Operador') ? true : false;
                     $operadoresSelecionados = null;
                     $portariasSelecionados = null;
                     $tiposSelecionados = null;
@@ -44,12 +45,25 @@
                     $motoristasSelecionados = null;
                     $dataDeSelecionada = $this->helper->returnDate();
                     $dataAteSelecionada = $this->helper->returnDate();
-                    $consulta = $this->operacao->consultaOperacoes(null, null, null, null, null, null, $dataDeSelecionada, $dataAteSelecionada);
+                    $portariaOperador = null;
+                    if($ehOperador) {
+                        $portariaOperador = [];
+                        $returnPortariaOperador = $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador');
+                        foreach($returnPortariaOperador as $rpo){
+                            $portariaOperador[] = $rpo->id;
+                        }
+                    }
+                    $consulta = $this->operacao->consultaOperacoes($portariaOperador, null, null, null, null, null, $dataDeSelecionada, $dataAteSelecionada);
                     $idFiltro = null;
-                    
                     if(isset($form) and $form != null){
-                        $portaria = isset($form["portaria"]) ? $form["portaria"] : null;
-                        $portariasSelecionados = $portaria;
+                        if($ehOperador) {
+                            $portaria = isset($form["portaria"]) ? $form["portaria"] : $portariaOperador;
+                            $portariasSelecionados = isset($form["portaria"]) ? $form["portaria"] : null;
+                        }else{
+                            $portaria = isset($form["portaria"]) ? $form["portaria"] : null;
+                            $portariasSelecionados = $portaria;
+                        }
+
                         $operador = isset($form["operador"]) ? $form["operador"] : null;
                         $operadoresSelecionados = $operador;
                         $tipo = isset($form["tipo"]) ? $form["tipo"] : null;
@@ -69,7 +83,7 @@
                         
                     }
                     $dados = [
-                        'portarias' => $this->portaria->listaPortarias(),
+                        'portarias' => $ehOperador ? $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador') : $this->portaria->listaPortarias(),
                         'operadores' => $this->usuario->listaUsuarios('todos'),
                         'operadoresSelecionados' => $operadoresSelecionados,
                         'portariasSelecionadas' => $portariasSelecionados,
