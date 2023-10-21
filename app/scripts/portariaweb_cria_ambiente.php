@@ -12,8 +12,13 @@ try {
     $dirCliente = "/var/www/html/" . $cliente . "-portariaweb/";
     // inserir verificação se o cliente já existe
     echo "Criando diretório do cliente\n";
-    exec("mkdir " . $dirCliente);
-
+    exec("mkdir " . $dirCliente, $ret, $return);
+    if($return === 1){
+        echo "Não foi possível criar novo cliente, já existe um cliente com este nome.\n";
+        echo "Script encerrado\n";
+        exit;
+    }
+    
     echo "Criando diretórios e arquivos públicos\n";
     exec("mkdir " . $dirCliente . "/public");
     exec("chmod 777 " . $dirCliente . "/public");
@@ -51,7 +56,6 @@ try {
     echo "Atualizando arquivos de configuração\n";
     atualizaArquivos($cliente);
     echo "Arquivos atualizados com sucesso!\n";
-
 
     echo "Script finalizado com sucesso!\n";
 } catch (\Throwable $th) {
