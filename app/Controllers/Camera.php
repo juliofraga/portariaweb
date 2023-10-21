@@ -275,10 +275,13 @@
         private function updateCamera($form, $dateTime)
         {
             if($this->helper->sessionValidate()){
-                $retorno = false;
                 if($this->helper->validateFields($form, "portaria")){
                     $dateTime = $this->helper->returnDateTime();
                     $form["endereco_ip"] = $this->formataEnderecoCamera($form["endereco_ip"], $form["porta"]);
+                    if(!$this->cameraModel->verificaIp($form["endereco_ip"])){
+                        exec('del camera_' . $form["id"] . '.php');
+                        $this->criaArquivoCamera($form["id"], $form["endereco_ip"]);
+                    }
                     if($this->cameraModel->alterarCamera($form, $dateTime)){
                         $this->helper->setReturnMessage(
                             $this->tipoSuccess,
