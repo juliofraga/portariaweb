@@ -22,6 +22,7 @@
 	define('APP_NOME','Portaria Web');
 	define('APP_VERSAO','1.0.0 - Beta');
 	define('CREDENCIAIS_CAMERA', 'admin:13661366v@');
+	define('ENDERECO_CAMERA', 'http://IP:PORTA/ISAPI/streaming/channels/1/picture');
 	define('TIMEZONE', 'America/Sao_Paulo');
 	define('USA_BALANCA', false);
 	define('CONFIGURACOES_ADMIN', [6, 7, 8, 9, 10]);

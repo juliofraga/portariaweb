@@ -58,6 +58,7 @@
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     $dateTime = $this->helper->returnDateTime();
                     if($this->helper->validateFields($form)){
+                        $form["endereco_ip"] = $this->formataEnderecoCamera($form["endereco_ip"], $form["porta"]);
                         $lastInsertId = $this->cameraModel->cadastrarCamera($form, $dateTime);
                         if($lastInsertId != null){
                             $this->helper->setReturnMessage(
@@ -236,6 +237,17 @@
             }
         }
 
+        private function formataEnderecoCamera($ip, $porta){
+            if($this->helper->sessionValidate()){
+                $novoEndereco = ENDERECO_CAMERA;
+                $novoEndereco = str_replace('IP', $ip, $novoEndereco);
+                $novoEndereco = str_replace('PORTA', $porta, $novoEndereco);
+                return $novoEndereco;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function criaArquivoCamera($camera_id, $endereco){
             if($this->helper->sessionValidate()){
                 $arquivo = fopen('camera_' . $camera_id . '.php','w'); 
@@ -255,6 +267,8 @@
                 $this->log->gravaLog($this->helper->returnDateTime(), $camera_id, "Adicionou", $_SESSION['pw_id'], "Arquivo câmera", null, null);
                 fclose($arquivo);
                 return true;
+            }else{
+                $this->helper->loginRedirect();
             }
         }
 
@@ -264,6 +278,7 @@
                 $retorno = false;
                 if($this->helper->validateFields($form, "portaria")){
                     $dateTime = $this->helper->returnDateTime();
+                    $form["endereco_ip"] = $this->formataEnderecoCamera($form["endereco_ip"], $form["porta"]);
                     if($this->cameraModel->alterarCamera($form, $dateTime)){
                         $this->helper->setReturnMessage(
                             $this->tipoSuccess,

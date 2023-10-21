@@ -551,5 +551,20 @@
                 return $log->id_classe;
             }
         }
+
+        public function retornaIPPorta($endereco, $retorno = null){
+                $split = explode('http://', $endereco);
+                $split2 = explode(":", $split[1]);
+                $ip = $split2[0];
+                $split3 = explode("/", $split2[1]);
+                $porta = $split3[0];
+                if($retorno == null){
+                    return $ip . ':' . $porta;
+                }else if($retorno == "ip"){
+                    return $ip;
+                }else if($retorno == "porta"){
+                    return $porta;
+                }
+        }
     } 
 ?>

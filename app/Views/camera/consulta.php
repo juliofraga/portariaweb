@@ -58,7 +58,7 @@
                                 Descrição
                             </div>
                             <div class="col-sm-5">
-                                Endereço
+                                Endereço IP + Porta
                             </div>
                             <div class="col-sm-2">
                                 Portaria
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <p class="pb-1 mb-0 large border-bottom mt-2 ">
-                                        <?= $camera->endereco_ip ?>
+                                        <?= $this->helper->retornaIPPorta($camera->endereco_ip) ?>
                                     </p>
                                 </div>
                                 <div class="col-sm-2">
@@ -121,8 +121,16 @@
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="form-floating mt-3">
-                                                        <input type="text" class="form-control" id="endereco" name="endereco_ip" placeholder="Endereço*" required value="<?= $camera->endereco_ip ?>">
-                                                        <label for="endereco_ip">Endereço*</label>
+                                                        <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $this->helper->retornaIPPorta($camera->endereco_ip, "ip") ?>">
+                                                        <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="form-floating mt-3">
+                                                        <input type="text" class="form-control" id="porta" name="porta" placeholder="Porta*" required  onkeyup="limpaSeNaoNumerico(this);" value="<?= $this->helper->retornaIPPorta($camera->endereco_ip, "porta") ?>">
+                                                        <label for="porta">Porta*</label>
                                                     </div>
                                                 </div>
                                             </div>

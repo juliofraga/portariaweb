@@ -45,10 +45,16 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-10">
                             <div class="form-floating mt-3">
-                                <input type="text" class="form-control" id="endereco" name="endereco_ip" placeholder="Endereço*" required>
-                                <label for="endereco_ip">Endereço*</label>
+                                <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required>
+                                <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-floating mt-3">
+                                <input type="text" class="form-control" id="porta" name="porta" placeholder="Porta*" required  onkeyup="limpaSeNaoNumerico(this);">
+                                <label for="porta">Porta*</label>
                             </div>
                         </div>
                     </div>
