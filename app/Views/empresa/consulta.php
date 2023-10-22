@@ -17,15 +17,15 @@
             <form method="POST" action="<?= URL ?>/empresa/consulta" id="form_busca_empresa" name="form_busca_empresa">
                 <div class="row">
                     <div class="col-sm-5">
-                        <div class="form-floating mb-3 mt-2 mb-5">
+                        <div class="form-floating mb-2 mt-2">
                             <input class="form-control" type="text" id="cnpj_nome" name="cnpj_nome" placeholder="CNPJ, Razão Social ou Nome Fantasia" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
                             <label for="cnpj_nome">CNPJ, Razão Social ou Nome Fantasia</label>
                         </div>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-secondary btn-lg" type="submit" name="buscar">Buscar</button>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-warning btn-lg" type="submit" name="limpar">Limpar</button>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     else if($_SESSION["pw_tipo"] == "warning")
                         $tipo = "warning";
             ?>
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-12">
                         <div class="alert alert-<?= $tipo ?>" role="alert">
                             <?= $_SESSION["pw_mensagem"] ?>
@@ -52,7 +52,7 @@
             <?php
                 if(count($dados["dados"]) > 0){
             ?>
-                    <h6>Empresas Cadastradas</h6>
+                    <h6 class="mt-5">Empresas Cadastradas</h6>
                     <div class="row mt-4">
                         <div class="col-sm-2">
                             CNPJ/CPF
@@ -109,22 +109,22 @@
                                     </div>
                                     <div class="modal-body">
                                         <form method="POST" action="<?= URL ?>/empresa/alterar" id="form_altera_empresa" name="form_altera_empresa">
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <input type="hidden" id="id" name="id" value="<?= $empresa->id ?>" required>
                                                 <div class="col-sm-4">
-                                                    <div class="form-floating">
+                                                    <div class="form-floating mt-3">
                                                         <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ/CPF*" required maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' value="<?= $empresa->cnpj ?>" readonly>
                                                         <label for="cnpj">CNPJ/CPF*</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="form-floating">
+                                                    <div class="form-floating mt-3">
                                                         <input type="text" class="form-control" id="razao_social" name="razao_social" placeholder="Razão Social" maxlength="18" value="<?= $empresa->razao_social ?>">
                                                         <label for="razao_social">Razão Social</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                    <div class="form-floating">
+                                                    <div class="form-floating mt-3">
                                                         <input type="text" class="form-control" id="nome_fantasia" name="nome_fantasia" placeholder="Nome Fantasia*" required maxlength="18" value="<?= $empresa->nome_fantasia ?>">
                                                         <label for="nome_fantasia">Nome Fantasia*</label>
                                                     </div>
@@ -156,7 +156,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-3">
+                                            <div class="row">
                                                 <div class="col-sm-4">
                                                     <div class="form-floating mt-3">
                                                         <select class="form-control" id="estado" name="estado">

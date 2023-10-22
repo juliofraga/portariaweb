@@ -17,15 +17,15 @@
             <form method="POST" action="<?= URL ?>/camera/consulta" id="form_busca_camera" name="form_busca_camera">
                 <div class="row">
                     <div class="col-sm-5">
-                        <div class="form-floating mb-3 mt-2 mb-5">
+                        <div class="form-floating mb-2 mt-2">
                             <input class="form-control" type="text" id="descricao_ip" name="descricao_ip" placeholder="Descrição ou Endereço IP" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
                             <label for="descricao_ip">Descrição ou Endereço IP</label>
                         </div>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-secondary btn-lg" type="submit" name="buscar">Buscar</button>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-warning btn-lg" type="submit" name="limpar">Limpar</button>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                     else if($_SESSION["pw_tipo"] == "warning")
                         $tipo = "warning";
             ?>
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-12">
                         <div class="alert alert-<?= $tipo ?>" role="alert">
                             <?= $_SESSION["pw_mensagem"] ?>
@@ -52,7 +52,7 @@
             <?php
                 if(count($dados["dados"]) > 0){
             ?>
-                    <h6>Câmeras Cadastrada</h6>
+                    <h6 class="mt-5">Câmeras Cadastrada</h6>
                         <div class="row mt-4">
                             <div class="col-sm-2">
                                 Descrição

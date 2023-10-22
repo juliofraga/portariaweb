@@ -38,19 +38,19 @@
                     ?>
                     <div class="row mt-5">
                         <div class="col-sm-4">
-                            <div class="form-floating">
+                            <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="CNPJ/CPF*" required maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)'>
                                 <label for="cnpj">CNPJ/CPF*</label>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="form-floating">
+                            <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="razao_social" name="razao_social" placeholder="Razão Social" maxlength="18">
                                 <label for="razao_social">Razão Social</label>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <div class="form-floating">
+                            <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="nome_fantasia" name="nome_fantasia" placeholder="Nome Fantasia*" required maxlength="18">
                                 <label for="nome_fantasia">Nome Fantasia*</label>
                             </div>
@@ -82,8 +82,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-sm-3">
+                    <div class="row">
+                        <div class="col-sm-4">
                             <div class="form-floating mt-3">
                                 <select class="form-control" id="estado" name="estado">
                                     <option value="">Selecione...</option>
@@ -118,13 +118,13 @@
                                 <label for="estado">Estado</label>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">
                                 <label for="cidade">Cidade</label>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <div class="form-floating mt-3">
                                 <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Bairro">
                                 <label for="bairro">Bairro</label>

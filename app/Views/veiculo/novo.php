@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row">
                         <div class="col-sm-12">
                             <div class="form-floating mt-2">
                                 <select class="form-control w-100" name="empresa" id="empresa" required placeholder="Empresa*">

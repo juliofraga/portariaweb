@@ -65,26 +65,27 @@
                 </div>
                 <div id="operacaoEntrada" style="margin-top:30px; display:none;">
                     <h4>NOVA ENTRADA</h4>
-                    <div class="row mt-4">
+                    <div class="row mt-2">
                         <div class="col-sm-3">
+                            <label for="empresa" class="mt-3">Empresa</label>    
                             <select class="js-example-basic-multiple w-100" name="empresa" id="empresa" onchange="buscaCnpjCpf(this.value)">
                             </select>
-                            <label for="empresa">Empresa</label>
                         </div>
                         <div class="col-sm-3">
+                            <label for="cnpj" class="mt-3">CNPJ / CPF</label>
                             <input type="text" onblur="validaAbrirCancela();" class="form-control w-100" name="cnpj" id="cnpj" maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' >
-                            <label for="cnpj">CNPJ / CPF</label>
                         </div>
                         <div class="col-sm-2">
+                            <label for="placa" class="mt-3">Placa do Veículo</label>
                             <select class="js-example-basic-multiple w-100" name="placa" id="placa" onchange="buscaDescricaoVeiculo(this.value)" >
                             </select>
-                            <label for="placa">Placa do Veículo</label>
                         </div>
                         <div class="col-sm-2">
+                            <label for="descricao" class="mt-3">Descrição do Veículo</label>
                             <input type="text" class="form-control w-100" name="descricao" id="descricao" onblur="validaAbrirCancela();">
-                            <label for="descricao">Descrição do Veículo</label>
                         </div>
                         <div class="col-sm-2">
+                            <label for="tipo" class="mt-3">Tipo do Veículo</label>
                             <select class="form-control w-100" name="tipo" id="tipo" onchange="validaAbrirCancela();">
                                 <option value="">Selecione...</option>    
                                 <option value="1">Carro</option>
@@ -92,18 +93,17 @@
                                 <option value="3">Moto</option>
                                 <option value="4">Outro</option>
                             </select>
-                            <label for="tipo">Tipo do Veículo</label>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row">
                         <div class="col-sm-6">
+                            <label for="motorista" class="mt-3">Nome Motorista</label>
                             <select class="js-example-basic-multiple w-100" name="motorista" id="motorista" onchange="buscaCpfMotorista(this.value)">
                             </select>
-                            <label for="motorista">Nome Motorista</label>
                         </div>
                         <div class="col-sm-6">
+                            <label for="cpfMotorista" class="mt-3">CPF</label>
                             <input type="text" class="form-control w-100" name="cpfMotorista" id="cpfMotorista" onchange="validaAbrirCancela();" maxlength="14" onkeypress='mascaraMutuario(this,cpfCnpj)' onkeyup="validaAbrirCancela();" onblur="validaAbrirCancela();">
-                            <label for="cpfMotorista">CPF</label>
                         </div>
                     </div>
                 </div>
@@ -111,9 +111,9 @@
                     <h4>NOVA SAÍDA</h4>
                     <div class="row mt-4">
                         <div class="col-sm-12">
+                            <label for="veiculo">Veículo</label>
                             <select class="form-select w-100" name="veiculoSaida" id="veiculoSaida" onchange="exibeBtnAbrirCancelaSaida();">
                             </select>
-                            <label for="veiculo">Veículo</label>
                         </div>
                     </div>
                 </div>

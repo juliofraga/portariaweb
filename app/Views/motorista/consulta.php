@@ -10,15 +10,15 @@
             <form method="POST" action="<?= URL ?>/motorista/consulta" id="form_busca_motorista" name="form_busca_motorista">
                 <div class="row">
                     <div class="col-sm-5">
-                        <div class="form-floating mb-3 mt-2 mb-5">
+                        <div class="form-floating mb-3 mt-2">
                             <input class="form-control" type="text" id="filtro" name="filtro" placeholder="Nome do Motorista ou CPF" value="<?= $dados["filtro"] != null ? $dados["filtro"] : '' ?>"/>
                             <label for="filtro">Nome do Motorista ou CPF</label>
                         </div>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-secondary btn-lg" type="submit" name="buscar">Buscar</button>
                     </div>
-                    <div class="col-sm-2 mt-2 mb-5" style="padding-top: 6px;">
+                    <div class="col-sm-2 mt-2" style="padding-top: 6px;">
                         <button class="w-100 btn btn-warning btn-lg" type="submit" name="limpar">Limpar</button>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                     else if($_SESSION["pw_tipo"] == "warning")
                         $tipo = "warning";
             ?>
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col-12">
                         <div class="alert alert-<?= $tipo ?>" role="alert">
                             <?= $_SESSION["pw_mensagem"] ?>
@@ -45,6 +45,7 @@
             <?php
                 if(count($dados["dados"]) > 0){
             ?>
+                    <br>
                     <h6>Motoristas Cadastrados</h6>
                     <div class="row mt-4">
                         <div class="col-sm-4">

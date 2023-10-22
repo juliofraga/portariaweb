@@ -68,7 +68,7 @@
                             <label for="cameraEntrada">Câmeras - Entrada</label>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-2">
                         <div class="col-sm-12">
                             <select class="js-example-basic-multiple w-100" name="cameraSaida[]" id="cameraSaida"  multiple="multiple">
                                 <?php foreach($dados["cameras"] as $camera){ ?>
