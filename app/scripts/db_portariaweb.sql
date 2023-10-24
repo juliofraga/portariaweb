@@ -289,6 +289,19 @@ CREATE TABLE `veiculos` (
   `empresas_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `portaria_ligacao_portaria`
+--
+
+CREATE TABLE `portaria_ligacao_portaria` (
+  `id` int(11) NOT NULL,
+  `portaria_id_1` int(11) NOT NULL,
+  `portaria_id_2` int(11) NOT NULL,
+  `tipo` int(11) NOT NULL COMMENT '0 - Portaria 1 sai em portaria 2\r\n1 - Portaria 2 sai em portaria 1\r\n2 - Ambas saem em ambas'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Índices para tabelas despejadas
 --
@@ -390,6 +403,12 @@ ALTER TABLE `veiculos`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices para tabela `portaria_ligacao_portaria`
+--
+ALTER TABLE `portaria_ligacao_portaria`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT de tabelas despejadas
 --
 
@@ -476,6 +495,13 @@ ALTER TABLE `usuarios`
 --
 ALTER TABLE `veiculos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `portaria_ligacao_portaria`
+--
+ALTER TABLE `portaria_ligacao_portaria`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+COMMIT;
 
 --
 -- Restrições para despejos de tabelas

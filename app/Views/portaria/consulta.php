@@ -9,6 +9,7 @@
                 <li class="breadcrumb-item"><a href="#">Portarias</a></li>
                 <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/novo">Novo</a></li>
                 <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/portaria_usuario">Ligação Portaria x Usuários</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/ligacao_portaria">Ligação Portaria x Portaria</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Consulta</li>
             </ol>
         </nav>

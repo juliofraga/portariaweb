@@ -79,6 +79,7 @@
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/portaria/novo">Novo</a></li>
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/portaria/consulta">Consulta</a></li>
                             <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/portaria/portaria_usuario">Ligação Portaria x Usuários</a></li>
+                            <li><a class="dropdown-item fonteMenu" href="<?= URL ?>/portaria/ligacao_portaria">Ligação Portaria x Portaria</a></li>
                         </ul>
                     </li>
                     <?php } ?>

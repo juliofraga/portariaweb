@@ -10,6 +10,7 @@ $helper = new Helpers();
                 <li class="breadcrumb-item"><a href="#">Portarias</a></li>
                 <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/consulta">Consulta</a></li>
                 <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/novo">Novo</a></li>
+                <li class="breadcrumb-item"><a href="<?= URL ?>/portaria/ligacao_portaria">Ligação Portaria x Portaria</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Ligação Portaria x Usuários</li>
             </ol>
         </nav>

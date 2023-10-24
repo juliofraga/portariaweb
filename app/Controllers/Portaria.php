@@ -252,6 +252,78 @@
             }
         }
 
+        public function ligacao_portaria()
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dados = [
+                        "portarias" => $this->listaPortarias("ativo"),
+                    ];
+                    $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Ligação Portaria x Portaria");
+                    $this->view("portaria/ligacao_portaria", $dados);
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function ligar_portaria_portaria()
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if($this->helper->validateFields($form) and (isset($form["tipo_0"]) or isset($form["tipo_1"]))){
+                        if(!$this->portariaModel->verificaSeLigacaoExiste($form)){
+                            if(isset($form["tipo_0"]) and isset($form["tipo_1"])){
+                                $tipo = 2;
+                            }else if(!isset($form["tipo_0"]) and isset($form["tipo_1"])){
+                                $tipo = 1;
+                            }else if(isset($form["tipo_0"]) and !isset($form["tipo_1"])){
+                                $tipo = 0;
+                            }
+                            if($this->portariaModel->ligaPortariaPortaria($form, $tipo)){
+                                $this->helper->setReturnMessage(
+                                    $this->tipoSuccess,
+                                    "Ligação Portaria x Portaria concluída com sucesso!",
+                                    $this->rotinaCad
+                                );
+                                $this->log->gravaLog($dateTime, $form["portaria_0"], "Adicionou", $_SESSION['pw_id'], "Ligação da portaria " . $form["portaria_0"] . " com a portaria " . $form["portaria_1"]);
+                            }else{
+                                $this->helper->setReturnMessage(
+                                    $this->tipoError,
+                                    "Ocorreu um problema na ligação Portaria x Usuario, tente novamente!",
+                                    $this->rotinaCad
+                                );
+                                $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Erro ao gravar no banco de dados");
+                            }
+                        }else{
+                            $this->helper->setReturnMessage(
+                                $this->tipoError,
+                                'Já existe uma ligação para as portarias selecionadas, verifique novamente!',
+                                $this->rotinaCad
+                            );
+                        }
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            'Existem campos que não foram preenchidos, verifique novamente!',
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Alguns campos não foram preenchidos");
+                    }
+                    $this->helper->redirectPage("/portaria/ligacao_portaria");
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+
         public function listaPortariasPorUsuario($usuario_id, $perfil)
         {
             if($this->helper->sessionValidate()){

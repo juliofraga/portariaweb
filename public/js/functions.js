@@ -1116,3 +1116,47 @@ function gravaLog(funcao){
         }
     });
 }
+
+function exibeCamposLigacaoPortaria(){
+    var portaria_0 = document.getElementById('portaria_0').value;
+    var portaria_1 = document.getElementById('portaria_1').value;
+    var portaria_0_texto = document.getElementById('portaria_0');
+    var portaria_1_texto = document.getElementById('portaria_1');
+    var lb_portaria_1 = document.getElementById('lb_portaria_1');
+    var lb_portaria_2 = document.getElementById('lb_portaria_2');
+    var lbportaria_1 = document.getElementById('lbportaria_1');
+    var lbportaria_2 = document.getElementById('lbportaria_2');
+    if(portaria_0 != '' && portaria_1 != ''){
+        document.getElementById('camposLigacaoPortaria').style.display = 'block';
+        lb_portaria_1.innerHTML = portaria_0_texto.options[portaria_0_texto.selectedIndex].text;
+        lb_portaria_2.innerHTML = portaria_1_texto.options[portaria_1_texto.selectedIndex].text;
+        lbportaria_1.innerHTML = portaria_0_texto.options[portaria_0_texto.selectedIndex].text;
+        lbportaria_2.innerHTML = portaria_1_texto.options[portaria_1_texto.selectedIndex].text;
+    }else{
+        document.getElementById('camposLigacaoPortaria').style.display = 'none';
+    }   
+}
+
+function validaLigacaoPortaria(){
+    var tipo_0 = document.getElementById('tipo_0');
+    var tipo_1 = document.getElementById('tipo_1');
+    var portaria_0 = document.getElementById('portaria_0').value;
+    var portaria_1 = document.getElementById('portaria_1').value;
+    var form = document.getElementById('form_cad_ligacao_portaria');
+
+    document.getElementById('alertaErrorPortariaSelecionada').style.display = 'none';
+    document.getElementById('alertaErrorPortariaIgual').style.display = 'none';
+    document.getElementById('alertaErrorSelecionarOpcao').style.display = 'none';
+
+    if(portaria_0 == "" || portaria_1 == ""){
+        document.getElementById('alertaErrorPortariaSelecionada').style.display = 'block';
+    }else if(tipo_0.checked || tipo_1.checked){
+        if(portaria_0 == portaria_1){
+            document.getElementById('alertaErrorPortariaIgual').style.display = 'block';
+        }else{
+            form.submit();
+        }
+    }else{
+        document.getElementById('alertaErrorSelecionarOpcao').style.display = 'block';
+    }
+}

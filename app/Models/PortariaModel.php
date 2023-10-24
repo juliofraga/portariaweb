@@ -2,10 +2,12 @@
     class PortariaModel
     {
         private $db;
+        public $log;
 
         public function __construct()
         {
             $this->db = new Database();
+            $this->log = new Logs();
         }
 
         public function cadastrarPortaria($dados, $dataHora)
@@ -25,6 +27,7 @@
                     return null;
                 }
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }   
         }
@@ -47,6 +50,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -65,6 +69,7 @@
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -75,6 +80,7 @@
                 $this->db->query("SELECT * FROM portoes_pessoas");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -86,6 +92,7 @@
                 $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id WHERE $filter order by p.descricao ASC");
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -103,6 +110,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             }  
         }
@@ -118,6 +126,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -129,6 +138,7 @@
                 $this->db->bind("id", $portaria_id);
                 $this->db->execQuery();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -145,6 +155,7 @@
                 else
                     return false;
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return false;
             } 
         }
@@ -161,6 +172,7 @@
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
         }
@@ -176,8 +188,44 @@
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
                 return null;
             }
+        }
+
+        public function ligaPortariaPortaria($dados, $tipo)
+        {
+            try {
+                $this->db->query("INSERT INTO portaria_ligacao_portaria(portaria_id_1, portaria_id_2, tipo)VALUES(:portaria_id_1, :portaria_id_2, :tipo)");
+                $this->db->bind("portaria_id_1", $dados["portaria_0"]);
+                $this->db->bind("portaria_id_2", $dados["portaria_1"]);
+                $this->db->bind("tipo", $tipo);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
+
+        public function verificaSeLigacaoExiste($dados)
+        {
+            try {
+                $this->db->query("SELECT * FROM portaria_ligacao_portaria WHERE (portaria_id_1 = :portaria_id_1 AND portaria_id_2 = :portaria_id_2) or (portaria_id_1 = :portaria_id_2 AND portaria_id_2 = :portaria_id_1)");
+                $this->db->bind("portaria_id_1", $dados["portaria_0"]);
+                $this->db->bind("portaria_id_2", $dados["portaria_1"]);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
         }
     }
 ?>
