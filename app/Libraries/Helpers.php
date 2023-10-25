@@ -566,5 +566,28 @@
                     return $porta;
                 }
         }
+
+        public function retornaDescricaoPortaria($portaria_id, $portarias){
+            foreach($portarias as $portaria) {
+                if($portaria->id == $portaria_id){
+                    return $portaria->descricao;
+                }
+            }
+        }
+
+        public function retornaTipoLigacaoPortaria($portaria_id_1, $portaria_id_2, $tipo, $portarias){
+            $portaria_1 = $this->retornaDescricaoPortaria($portaria_id_1, $portarias);
+            $portaria_2 = $this->retornaDescricaoPortaria($portaria_id_2, $portarias);
+            $retorno = "";
+            if($tipo == 0){
+                $retorno = "<li>Portaria " . $portaria_1 . " pode sair na portaria " . $portaria_2 . "</li>";
+            }else if($tipo == 1){
+                $retorno = "<li>Portaria " . $portaria_2 . " pode sair na portaria " . $portaria_1 . "</li>";
+            }else if($tipo == 2){
+                $retorno = "<li>Portaria " . $portaria_1 . " pode sair na portaria " . $portaria_2 . "</li>";
+                $retorno .= "<li>Portaria " . $portaria_2 . " pode sair na portaria " . $portaria_1 . "</li>";
+            }
+            return $retorno;
+        }
     } 
 ?>

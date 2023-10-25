@@ -227,5 +227,16 @@
                 return false;
             } 
         }
+
+        public function listaPortariasLigadas()
+        {
+            try{
+                $this->db->query("SELECT * FROM portaria_ligacao_portaria");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
     }
 ?>

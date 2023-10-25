@@ -111,6 +111,23 @@ $helper = new Helpers();
                                 </div>
                             </form>
                             <hr class="divisor_horizontal">
+                            <?php foreach($dados["portarias_ligadas"] as $portariaLigada){?>
+                                <div class="addHoverLine mt-4">
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <h4><?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_1, $dados["portarias"]) ?> x 
+                                            <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_2, $dados["portarias"]) ?></h4>
+                                        </div>
+                                        <div class="col-sm-5">
+                                            <label><?= $helper->retornaTipoLigacaoPortaria($portariaLigada->portaria_id_1, $portariaLigada->portaria_id_2, $portariaLigada->tipo, $dados["portarias"]) ?></label>
+                                        </div>
+                                        <div class="col-sm-2 mt-2">
+                                            <button class="w-100 btn btn-secondary btn-sm" name="editar" id="editar" value="Editar">Editar</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            <?php } ?>
                             <?php 
                                 $_SESSION["pw_rotina"] = null;
                             ?>

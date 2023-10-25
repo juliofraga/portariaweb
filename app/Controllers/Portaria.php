@@ -260,10 +260,20 @@
                 }else{
                     $dados = [
                         "portarias" => $this->listaPortarias("ativo"),
+                        'portarias_ligadas' => $this->listaPortariasLigadas(),
                     ];
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Ligação Portaria x Portaria");
                     $this->view("portaria/ligacao_portaria", $dados);
                 }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        public function listaPortariasLigadas()
+        {
+            if($this->helper->sessionValidate()){
+                return $this->portariaModel->listaPortariasLigadas();
             }else{
                 $this->helper->loginRedirect();
             }
@@ -322,7 +332,6 @@
                 $this->helper->loginRedirect();
             }
         }
-
 
         public function listaPortariasPorUsuario($usuario_id, $perfil)
         {
