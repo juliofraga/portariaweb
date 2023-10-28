@@ -238,5 +238,38 @@
                 return false;
             } 
         }
+
+        public function atualizaLigacaoPortaria($ligacao_portaria_id, $tipo)
+        {
+            try{
+                $this->db->query("UPDATE portaria_ligacao_portaria SET tipo = :tipo WHERE id = :id");
+                $this->db->bind("tipo", $tipo);
+                $this->db->bind("id", $ligacao_portaria_id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
+
+        public function deletaLigacaoPortaria($ligacao_portaria_id)
+        {
+            try {
+                $this->db->query("DELETE FROM portaria_ligacao_portaria WHERE id = :id");
+                $this->db->bind("id", $ligacao_portaria_id);
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
     }
 ?>

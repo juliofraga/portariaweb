@@ -279,6 +279,35 @@
             }
         }
 
+        public function alterarLigacaoPortaria()
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    $dateTime = $this->helper->returnDateTime();
+                    $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                    if(!isset($form["tipo_0"]) and !isset($form["tipo_1"])) {
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            'É necessario informar o tipo de ligação! Nenhuma alteração foi feita, tente novamente.',
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Alguns campos não foram preenchidos");
+                    }else{
+                        if(isset($form["update"])){
+                            $this->updateLigacaoPortaria($form, $dateTime);
+                        }else if(isset($form["deletar"])){
+                            $this->deletaLigacaoPortaria($form, $dateTime);
+                        }
+                    }
+                    $this->helper->redirectPage("/portaria/ligacao_portaria");
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function ligar_portaria_portaria()
         {
             if($this->helper->sessionValidate()){
@@ -306,7 +335,7 @@
                             }else{
                                 $this->helper->setReturnMessage(
                                     $this->tipoError,
-                                    "Ocorreu um problema na ligação Portaria x Usuario, tente novamente!",
+                                    "Ocorreu um problema na ligação Portaria x Portaria, tente novamente!",
                                     $this->rotinaCad
                                 );
                                 $this->log->gravaLog($dateTime, null, "Tentou adicionar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Erro ao gravar no banco de dados");
@@ -355,6 +384,67 @@
                     $portaria = $this->portariaModel->retornaPortariaPadrao($usuario_id, false);
                 }
                 return $portaria[0]->id;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function updateLigacaoPortaria($form, $dateTime)
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    if(isset($form["tipo_0"]) and isset($form["tipo_1"])){
+                        $tipo = 2;
+                    }else if(!isset($form["tipo_0"]) and isset($form["tipo_1"])){
+                        $tipo = 1;
+                    }else if(isset($form["tipo_0"]) and !isset($form["tipo_1"])){
+                        $tipo = 0;
+                    }
+                    if($this->portariaModel->atualizaLigacaoPortaria($form["id"], $tipo)){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            "Ligação Portaria x Portaria atualizada com sucesso!",
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, $form["portaria_0"], "Alterou", $_SESSION['pw_id'], "Ligação da portaria " . $form["portaria_0"] . " com a portaria " . $form["portaria_1"]);
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            "Ocorreu um problema na ligação Portaria x Portaria, tente novamente!",
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, null, "Tentou alterar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Erro ao gravar no banco de dados");
+                    }
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function deletaLigacaoPortaria($form, $dateTime)
+        {
+            if($this->helper->sessionValidate()){
+                if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
+                    $this->view('pagenotfound');
+                }else{
+                    if($this->portariaModel->deletaLigacaoPortaria($form["id"])){
+                        $this->helper->setReturnMessage(
+                            $this->tipoSuccess,
+                            "Ligação Portaria x Portaria deletada com sucesso!",
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, $form["id"], "Deletou", $_SESSION['pw_id'], "Ligação Portaria", null, null);
+                    }else{
+                        $this->helper->setReturnMessage(
+                            $this->tipoError,
+                            "Ocorreu um problema para deletar a Ligação Portaria x Portaria, tente novamente!",
+                            $this->rotinaCad
+                        );
+                        $this->log->gravaLog($dateTime, null, "Tentou deletar, mas sem sucesso", $_SESSION['pw_id'], "Ligação Portaria x Portaria", "Erro ao gravar no banco de dados");
+                    }
+                }
             }else{
                 $this->helper->loginRedirect();
             }

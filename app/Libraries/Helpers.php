@@ -580,14 +580,26 @@
             $portaria_2 = $this->retornaDescricaoPortaria($portaria_id_2, $portarias);
             $retorno = "";
             if($tipo == 0){
-                $retorno = "<li>Portaria " . $portaria_1 . " pode sair na portaria " . $portaria_2 . "</li>";
+                $retorno = "<li>" . $portaria_1 . " pode sair na " . $portaria_2 . "</li>";
             }else if($tipo == 1){
-                $retorno = "<li>Portaria " . $portaria_2 . " pode sair na portaria " . $portaria_1 . "</li>";
+                $retorno = "<li>" . $portaria_2 . " pode sair na " . $portaria_1 . "</li>";
             }else if($tipo == 2){
-                $retorno = "<li>Portaria " . $portaria_1 . " pode sair na portaria " . $portaria_2 . "</li>";
-                $retorno .= "<li>Portaria " . $portaria_2 . " pode sair na portaria " . $portaria_1 . "</li>";
+                $retorno = "<li>" . $portaria_1 . " pode sair na " . $portaria_2 . "</li>";
+                $retorno .= "<li>" . $portaria_2 . " pode sair na " . $portaria_1 . "</li>";
             }
             return $retorno;
+        }
+
+        public function retornaLigacaoPortariaCheck($tipoLigacao, $campo){
+            if($campo == "tipo_0"){
+                if($tipoLigacao != 1){
+                    return "checked";    
+                }
+            }else if($campo == "tipo_1"){
+                if($tipoLigacao != 0){
+                    return "checked";    
+                }
+            }
         }
     } 
 ?>

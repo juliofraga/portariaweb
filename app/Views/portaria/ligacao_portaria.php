@@ -122,10 +122,70 @@ $helper = new Helpers();
                                             <label><?= $helper->retornaTipoLigacaoPortaria($portariaLigada->portaria_id_1, $portariaLigada->portaria_id_2, $portariaLigada->tipo, $dados["portarias"]) ?></label>
                                         </div>
                                         <div class="col-sm-2 mt-2">
-                                            <button class="w-100 btn btn-secondary btn-sm" name="editar" id="editar" value="Editar">Editar</button>
+                                            <a class="addHoverButton btn btn-secondary btn-sm" style="width: 100%;" data-toggle="modal" data-target="#modal-<?= $portariaLigada->id ?>">Editar</a>
                                         </div>
                                     </div>
                                     <hr>
+                                </div>
+                                <div class="modal fade" id="modal-<?= $portariaLigada->id ?>">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">
+                                                    <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_1, $dados["portarias"]) ?> x 
+                                                    <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_2, $dados["portarias"]) ?>
+                                                </h4>
+                                                <button type="button" class="btn-close" data-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="<?= URL ?>/portaria/alterarLigacaoPortaria" id="form_altera_ligacao_portaria" name="form_altera_ligacao_portaria">
+                                                    <input type="hidden" name="id" value="<?= $portariaLigada->id ?>" 
+                                                    required>
+                                                    <input type="hidden" name="portaria_0" value="<?= $portariaLigada->portaria_id_1 ?>" 
+                                                    required>
+                                                    <input type="hidden" name="portaria_1" value="<?=$portariaLigada->portaria_id_2 ?>" 
+                                                    required>
+                                                    <div class="row mt-1">
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" placeholder="Portaria" value="<?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_1, $dados["portarias"]) ?>" readonly>
+                                                        </div>
+                                                        <label for="portaria">Portaria Ligada 1</label>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="col-sm-12">
+                                                            <input type="text" class="form-control" placeholder="Portaria" value="<?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_2, $dados["portarias"]) ?>" readonly>
+                                                        </div>
+                                                        <label for="portaria">Portaria Ligada 2</label>
+                                                    </div>
+                                                    <div class="col-sm-12 mt-3">
+                                                    <hr>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" id="tipo_0" name="tipo_0" <?= $helper->retornaLigacaoPortariaCheck($portariaLigada->tipo, "tipo_0") ?>>
+                                                                <label class="form-check-label" for="flexSwitchCheckDefault">
+                                                                    <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_1, $dados["portarias"]) ?> pode sair na portaria <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_2, $dados["portarias"]) ?>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-check form-switch">
+                                                                <input class="form-check-input" type="checkbox" id="tipo_1" name="tipo_1" <?= $helper->retornaLigacaoPortariaCheck($portariaLigada->tipo, "tipo_1") ?>>
+                                                                <label class="form-check-label" for="flexSwitchCheckDefault">
+                                                                    <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_2, $dados["portarias"]) ?> pode sair na portaria <?= $helper->retornaDescricaoPortaria($portariaLigada->portaria_id_1, $dados["portarias"]) ?>
+                                                                </label>
+                                                            </div>          
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="inline inline-block">
+                                                            <input type="submit" class="btn btn-secondary" style="margin-top:40px;" name="update" id="update" value="Alterar">
+                                                            <input type="submit" class="btn btn-danger" style="margin-top:40px;" name="deletar" id="deletar" value="Deletar">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php } ?>
                             <?php 
