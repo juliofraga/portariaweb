@@ -34,7 +34,7 @@
         </div>
         <div class="row">
             <div class="col-sm-4">
-                Status da Placa: <label id="statusPlaca"></label>
+                Status da Cancela: <label id="statusPlaca"></label>
             </div>
         </div>
         <div class="resultados_admin">

@@ -105,12 +105,11 @@
             } 
         }
 
-        public function buscaVeiculosParaSaida($portaria_id)
+        public function buscaVeiculosParaSaida($portarias)
         {
             try {
-                echo $portaria_id;
-                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id AND o.portaria_id = :portaria_id AND o.hora_abre_cancela_saida IS NULL AND o.tipo = :tipo");
-                $this->db->bind("portaria_id", $portaria_id);
+                $portarias = $this->formataWhereClause($portarias, "o.portaria_id");
+                $this->db->query("SELECT o.id, v.placa, p.nome_completo FROM operacoes o, veiculos v, pessoas p WHERE o.veiculos_id = v.id AND o.pessoas_id = p.id $portarias AND o.hora_abre_cancela_saida IS NULL AND o.tipo = :tipo");
                 $this->db->bind("tipo", 'N');
                 return $this->db->results();
             } catch (Throwable $th) {
@@ -232,6 +231,22 @@
             try {
                 $this->db->query("SELECT tipo FROM operacoes WHERE id = :id");
                 $this->db->bind("id", $id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            } 
+        }
+
+        public function buscaPortariasLigadas($portaria_id, $tipo)
+        {
+            try {
+                if($tipo == 1){
+                    $this->db->query("SELECT portaria_id_2 FROM portaria_ligacao_portaria WHERE portaria_id_1 = :id and tipo <> 0");
+                }else if($tipo == 2){
+                    $this->db->query("SELECT portaria_id_1 FROM portaria_ligacao_portaria WHERE portaria_id_2 = :id and tipo <> 1");
+                }
+                $this->db->bind("id", $portaria_id);
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);

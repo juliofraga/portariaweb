@@ -189,7 +189,20 @@
                 if($form == null or !isset($form)){
                     echo "<registroOperacao>ERRO</registroOperacao>";
                 }else{
-                    $operacoes = $this->operacaoModel->buscaVeiculosParaSaida($form["portaria"]);
+                    $portarias = [];
+                    $portariaLigada1 = [];
+                    $portariaLigada2 = [];
+                    $portarias[] = $form["portaria"];
+                    $buscaPort1 = $this->operacaoModel->buscaPortariasLigadas($form["portaria"], 1);
+                    foreach($buscaPort1 as $port1){
+                        $portariaLigada1[] = $port1->portaria_id_2;
+                    }
+                    $buscaPort2 = $this->operacaoModel->buscaPortariasLigadas($form["portaria"], 2);
+                    foreach($buscaPort2 as $port2){
+                        $portariaLigada2[] = $port2->portaria_id_1;
+                    }
+                    $portarias = array_merge($portarias, $portariaLigada1, $portariaLigada2);
+                    $operacoes = $this->operacaoModel->buscaVeiculosParaSaida($portarias);
                     foreach($operacoes as $operacao){
                         echo "<registroOperacao>";
                         echo "<id>".$operacao->id;
