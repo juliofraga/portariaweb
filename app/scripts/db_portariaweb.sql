@@ -166,6 +166,7 @@ CREATE TABLE `operacoes` (
   `veiculos_id` int(11) DEFAULT NULL,
   `pessoas_id` int(11) DEFAULT NULL,
   `portaria_id` int(11) NOT NULL,
+  `portaria_saida_id` int(11) DEFAULT NULL,
   `tipo` char(1) NOT NULL DEFAULT 'N' COMMENT 'N - Normal\r\nE - Emergência',
   `obs_emergencia` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

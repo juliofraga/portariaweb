@@ -29,7 +29,6 @@ $(document).ready(function(){
 });
 
 function verificaStatusPlaca(){
-    console.log('carregando status');
     var statusPlaca = document.getElementById("statusPlaca");
     var porta = document.getElementById('porta').value;
     var placa_endereco = "http://"+document.getElementById("endereco_ip_placa").value+":"+porta;
@@ -65,6 +64,7 @@ function verificaStatusPlaca(){
 }
 
 function validaComplexidadeSenha(senha, complexidade){
+    gravaLog('validaComplexidadeSenha');
     if(complexidade == null || complexidade == false){
         let tamanho = senha.length;
         if(tamanho < 6){
@@ -78,6 +78,7 @@ function validaComplexidadeSenha(senha, complexidade){
 }
 
 function comparaSenhas(senhaRepetida, complexidade){
+    gravaLog('comparaSenhas');
     let senha = document.getElementById('senha').value;
     if(senhaRepetida != senha){
         document.getElementById('avisoSenhasNaoConferem').style.display = 'block';
@@ -92,6 +93,7 @@ function comparaSenhas(senhaRepetida, complexidade){
 }
 
 function validaAltaComplexidade(senha, num){
+    gravaLog('validaAltaComplexidade');
     if(num == 0){
         senha = document.getElementById('senha').value;
     }
@@ -136,6 +138,7 @@ function validaAltaComplexidade(senha, num){
 }
 
 function ativaDesativaConfig(num){
+    gravaLog('ativaDesativaConfig');
     var valor = document.getElementById("checkOpcao__"+num).innerHTML;
     if(valor == 'Desativado'){
         document.getElementById("checkOpcao__"+num).innerHTML = 'Ativado';
@@ -148,6 +151,7 @@ function ativaDesativaConfig(num){
 }
 
 function atualizaConfiguracao(id, valor){
+    gravaLog('atualizaConfiguracao');
     var url = document.getElementById('txtUrl').value;
     $.ajax({
         url: url+'/configuracoes/atualizaConfiguracao/'+id+'/'+valor,
@@ -161,6 +165,7 @@ function atualizaConfiguracao(id, valor){
 }
 
 function limpaSeNaoNumerico(valor){
+    gravaLog('limpaSeNaoNumerico');
     if($.isNumeric(valor.value) == false){
         document.getElementById(valor.id).value = "";
     }
@@ -192,7 +197,6 @@ function cepMasc(v){
 }
 
 function cpfCnpj(v){
-
     //Remove tudo o que não é dígito
     v=v.replace(/\D/g,"")
     if(v.length > 11){
@@ -217,6 +221,7 @@ function cpfCnpj(v){
 }
 
 function buscaCep(cep){
+    gravaLog('buscaCep');
     cep = cep.replace('-','');
     var requestURL = "https://viacep.com.br/ws/"+cep+"/json/";
     var request = new XMLHttpRequest();
@@ -295,6 +300,7 @@ function executaOperacaoAbrirCancelaEmergencia(){
 }
 
 function buscaVeiculosParaSaida(){
+    gravaLog('buscaVeiculosParaSaida');
     var url = document.getElementById('txtUrl').value;
     var portaria = document.getElementById('portaria_id').value;
     var listaSaida = document.getElementById("veiculoSaida");
@@ -355,6 +361,7 @@ function exibeEscondeCamera(valor, id){
 }
 
 function validaAbrirCancela(){
+    gravaLog('validaAbrirCancela');
     if(document.getElementById('empresa').value != '' && document.getElementById('cnpj').value.length > 13 && document.getElementById('placa').value != '' && document.getElementById('descricao').value != '' && document.getElementById('tipo').value != '' && document.getElementById('motorista').value != '' && document.getElementById('cpfMotorista').value.length > 13){
         exibeBtnAbrirCancela();
     }else{
@@ -441,6 +448,7 @@ function executaOperacaoFechamentoCancelaEmergencia(){
 }
 
 function registraOperacaoEmergencia(){
+    gravaLog('registraOperacaoEmergencia');
     var url = document.getElementById('txtUrl').value;
     var portaria = document.getElementById('portaria_id').value;
     var usuario = document.getElementById('loginOperador').value;
@@ -474,6 +482,7 @@ function registraOperacaoEmergencia(){
 }
 
 function registraOperacaoSaida(){
+    gravaLog('registraOperacaoSaida');
     var idRegistro = document.getElementById('veiculoSaida').value;
     var url = document.getElementById('txtUrl').value;
     $.ajax({
@@ -623,6 +632,7 @@ function abreCancela(tipo){
 }
 
 function defineRele(rele){
+    gravaLog('defineRele');
     if(rele == "r1"){
         return '1';
     }else if(rele == "r2"){
@@ -655,6 +665,7 @@ function capturaImagens(tipo, operacao){
 }
 
 function registraOperacao(){
+    gravaLog('registraOperacao');
     var url = document.getElementById('txtUrl').value;
     var empresa = document.getElementById('empresa').value;
     var cnpj = document.getElementById('cnpj').value;
@@ -692,6 +703,7 @@ function registraOperacao(){
 }
 
 function fechaCancela(){
+    gravaLog('fechaCancela');
     exibeBtnFecharCancela();
 }
 
@@ -757,18 +769,21 @@ function executaOperacaoFechamentoCancela(){
 }
 
 function redefiniListaEmpresas(){
+    gravaLog('redefiniListaEmpresas');
     var empresa = document.querySelectorAll("#empresa option");
     empresa.forEach(o => o.remove());
     carregaEmpresas();
 }
 
 function exibeBtnAbrirCancela(){
+    gravaLog('exibeBtnAbrirCancela');
     $("#btnAbrirCancela").fadeIn(1000);
     $("#btnAbrirCancela").fadeIn();
     document.getElementById('btnAbrirCancela').removeAttribute("disabled");
 }
 
 function escondeBtnAbrirCancela(){
+    gravaLog('escondeBtnAbrirCancela');
     $("#btnAbrirCancela").fadeOut(1000);
     $("#btnAbrirCancela").fadeOut();
 }
@@ -780,11 +795,13 @@ function exibeBtnFecharCancela(){
 }
 
 function escondeBtnFecharCancela(){
+    gravaLog('escondeBtnFecharCancela');
     $("#btnFecharCancela").fadeOut(1000);
     $("#btnFecharCancela").fadeOut();
 }
 
 function limpaCamposEntrada(){
+    gravaLog('limpaCamposEntrada');
     limpaListaVeiculos();
     limpaListaMotorista();
     document.getElementById('cnpj').value = "";
@@ -797,6 +814,7 @@ function limpaCamposEntrada(){
 }
 
 function buscaCnpjCpf(empresa){
+    gravaLog('buscaCnpjCpf');
     if(empresa == ""){
         limpaCamposEntrada();
     }else{
@@ -820,6 +838,7 @@ function buscaCnpjCpf(empresa){
 }
 
 function retornaCnpjCpf(result){
+    gravaLog('retornaCnpjCpf');
     var cnpjcpf = result.split("<cnpjcpf>");
     var cnpjcpf2 = cnpjcpf[1].split("</cnpjcpf>");
     if(cnpjcpf2[0] != ""){
@@ -835,6 +854,7 @@ function retornaCnpjCpf(result){
 }
 
 function buscaMotorista(empresa){
+    gravaLog('buscaMotorista');
     var url = document.getElementById('txtUrl').value;
     $.ajax({
         url: url+'/motorista/retornaMotoristaPorEmpresa/'+empresa,
@@ -848,6 +868,7 @@ function buscaMotorista(empresa){
 }
 
 function exibeMotorista(result){
+    gravaLog('exibeMotorista');
     limpaListaMotorista();
     var motoristaSelect = document.getElementById("motorista");
     var opcao;
@@ -873,6 +894,7 @@ function exibeMotorista(result){
 }
 
 function buscaCpfMotorista(motorista){
+    gravaLog('buscaCpfMotorista');
     if(motorista == ""){
         document.getElementById('cpfMotorista').value = "";
         document.getElementById('cpfMotorista').removeAttribute("readonly");
@@ -894,6 +916,7 @@ function buscaCpfMotorista(motorista){
 }
 
 function exibeCpfMotorista(result){
+    gravaLog('exibeCpfMotorista');
     try{
         var cpf = result.split("<cpfMotorista>");
         var cpf2 = cpf[1].split("</cpfMotorista>");
@@ -911,11 +934,13 @@ function exibeCpfMotorista(result){
 }
 
 function limpaListaMotorista(){
+    gravaLog('limpaListaMotorista');
     var motorista = document.querySelectorAll("#motorista option");
     motorista.forEach(o => o.remove());
 }
 
 function buscaVeiculos(empresa){
+    gravaLog('buscaVeiculos');
     limpaListaVeiculos();
     var url = document.getElementById('txtUrl').value;
     $.ajax({
@@ -930,6 +955,7 @@ function buscaVeiculos(empresa){
 }
 
 function buscaDescricaoVeiculo(veiculo){
+    gravaLog('buscaDescricaoVeiculo');
     if(veiculo != ""){
         var url = document.getElementById('txtUrl').value;
         $.ajax({
@@ -964,6 +990,7 @@ function buscaDescricaoVeiculo(veiculo){
 }
 
 function bloqueiaCampos(){
+    gravaLog('bloqueiaCampos');
     document.getElementById('descricao').disabled = true;
     document.getElementById('tipo').disabled = true;
     document.getElementById('motorista').disabled = true;
@@ -971,6 +998,7 @@ function bloqueiaCampos(){
 }
 
 function desbloqueiaCampos(){
+    gravaLog('desbloqueiaCampos');
     document.getElementById('descricao').disabled = false;
     document.getElementById('tipo').disabled = false;
     document.getElementById('motorista').disabled = false;
@@ -978,6 +1006,7 @@ function desbloqueiaCampos(){
 }
 
 function selecionaTipoVeiculo(result){
+    gravaLog('selecionaTipoVeiculo');
     var tipo = document.querySelector('#tipo');
     var tipoVeiculo = result.split("<tipoVeiculo>");
     var tipoVeiculo2 = tipoVeiculo[1].split("</tipoVeiculo>");
@@ -993,6 +1022,7 @@ function selecionaTipoVeiculo(result){
 }
 
 function exibeDescricaoVeiculo(result){
+    gravaLog('exibeDescricaoVeiculo');
     try{
         var veiculo = result.split("<veiculo>");
         var veiculo2 = veiculo[1].split("</veiculo>");
@@ -1014,6 +1044,7 @@ function exibeDescricaoVeiculo(result){
 }
 
 function limpaListaVeiculos(){
+    gravaLog('limpaListaVeiculos');
     var placa = document.querySelectorAll("#placa option");
     var tipo = document.querySelector('#tipo');
     placa.forEach(o => o.remove());
@@ -1022,11 +1053,13 @@ function limpaListaVeiculos(){
 }
 
 function limpaListaVeiculosSaida(){
+    gravaLog('limpaListaVeiculosSaida');
     var listaVeiculosSaida = document.querySelectorAll("#veiculoSaida option");
     listaVeiculosSaida.forEach(o => o.remove());
 }
 
 function exibeVeiculo(result){
+    gravaLog('exibeVeiculo');
     var placa = document.getElementById("placa");
     var opcao;
     var veiculo = result.split("<veiculo>");
@@ -1051,6 +1084,7 @@ function exibeVeiculo(result){
 }
 
 function carregaEmpresas(){
+    gravaLog('carregaEmpresas');
     var url = document.getElementById('txtUrl').value;
     
     $.ajax({
@@ -1065,6 +1099,7 @@ function carregaEmpresas(){
 }
 
 function exibeEmpresa(result){
+    gravaLog('exibeEmpresa');
     var empresa = document.getElementById("empresa");
     var opcao;
     var empresaRet = result.split("<empresa>");
@@ -1118,6 +1153,7 @@ function gravaLog(funcao){
 }
 
 function exibeCamposLigacaoPortaria(){
+    gravaLog('exibeCamposLigacaoPortaria');
     var portaria_0 = document.getElementById('portaria_0').value;
     var portaria_1 = document.getElementById('portaria_1').value;
     var portaria_0_texto = document.getElementById('portaria_0');
@@ -1138,6 +1174,7 @@ function exibeCamposLigacaoPortaria(){
 }
 
 function validaLigacaoPortaria(){
+    gravaLog('validaLigacaoPortaria');
     var tipo_0 = document.getElementById('tipo_0');
     var tipo_1 = document.getElementById('tipo_1');
     var portaria_0 = document.getElementById('portaria_0').value;

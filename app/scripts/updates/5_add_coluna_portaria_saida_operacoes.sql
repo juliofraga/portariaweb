@@ -1,0 +1,1 @@
+ALTER TABLE `operacoes` ADD `portaria_saida_id` INT NULL DEFAULT NULL AFTER `portaria_id`;
