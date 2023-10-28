@@ -59,13 +59,19 @@ $tipoOperacaoCancela = [
             <fieldset class="border p-4">
                 <legend class="float-none w-auto p-2">Dados da Operação</legend>
                 <div class="row">
-                    <div class="col col-6">
+                    <div class="col col-12">
                         <label class="tituloConsultaDetalhada">Tipo:</label>
                         <label class="textoConsultaDetalhada"> <?= $tipoOperacao[$dados["operacao"][0]->tipo_operacao] ?></label>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col col-6">
-                        <label class="tituloConsultaDetalhada">Portaria:</label>
+                        <label class="tituloConsultaDetalhada">Portaria Entrada:</label>
                         <label class="textoConsultaDetalhada"> <?= $dados["operacao"][0]->portaria_descricao ?></label>
+                    </div>
+                    <div class="col col-6">
+                        <label class="tituloConsultaDetalhada">Portaria Saída:</label>
+                        <label class="textoConsultaDetalhada"> <?= $dados['portaria_saida'][0]->portaria_saida ?></label>
                     </div>
                 </div>
                 <div class="row">
@@ -74,21 +80,22 @@ $tipoOperacaoCancela = [
                         <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_abre_cancela_entrada) ?></label>
                     </div>
                     <div class="col col-6">
-                        <label class="tituloConsultaDetalhada">Fechamento da cancela (Entrada):</label>
-                        <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_fecha_cancela_entrada) ?></label>
+                        <label class="tituloConsultaDetalhada">Abertura da cancela (Saída):</label>
+                        <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_abre_cancela_saida) ?></label>
                     </div>
                 </div>
                 <?php if($dados["operacao"][0]->tipo_operacao == 'N'){ ?>
                     <div class="row">
                         <div class="col col-6">
-                            <label class="tituloConsultaDetalhada">Abertura da cancela (Saída):</label>
-                            <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_abre_cancela_saida) ?></label>
+                            <label class="tituloConsultaDetalhada">Fechamento da cancela (Entrada):</label>
+                            <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_fecha_cancela_entrada) ?></label>
                         </div>
                         <div class="col col-6">
                             <label class="tituloConsultaDetalhada">Fechamento da cancela (Saída):</label>
                             <label class="textoConsultaDetalhada"> <?= $helper->formataDateTime($dados["operacao"][0]->hora_fecha_cancela_saida) ?></label>
                         </div>
                     </div>
+                    <hr>
                     <div class="row">
                         <div class="col col-12">
                             <label class="tituloConsultaDetalhada">Tempo total do veículo dentro da empresa:</label>

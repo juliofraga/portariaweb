@@ -18,7 +18,7 @@ $helper = new Helpers();
                                 <?php }?>
                             </select>
                         </div>
-                        <label for="portaria">Portaria</label>
+                        <label for="portaria">Portaria Entrada</label>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-floating mt-2">
@@ -125,7 +125,7 @@ $helper = new Helpers();
                             <b>Motorista</b>
                         </div>
                         <div class="col-sm-2">
-                            <b>Portaria</b>
+                            <b>Portaria Entrada</b>
                         </div>
                         <div class="col-sm-1">
                             <b>Tipo</b>

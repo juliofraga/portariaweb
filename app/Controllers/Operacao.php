@@ -81,7 +81,7 @@
                     echo $retornoRegistro;
                 }else{
                     $dateTime = $this->helper->returnDateTime();
-                    if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime)){
+                    if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime, $form["portaria_id"])){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação", $form["idRegistro"], 0, $dateTime);
                         $this->log->gravaLog($dateTime, $form["idRegistro"], "Adicionou", $_SESSION['pw_id'], "Operação - Saída de Veículo");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
@@ -281,6 +281,15 @@
                     }
                     $_SESSION["contImagens"] = $x;
                 }
+            }else{
+                $this->helper->redirectPage("/login/");
+            } 
+        }
+        
+        public function buscaPortariaSaidaPorId($id)
+        {
+            if($this->helper->sessionValidate()){              
+                return $this->operacaoModel->buscaPortariaSaidaPorId($id);
             }else{
                 $this->helper->redirectPage("/login/");
             } 

@@ -119,6 +119,7 @@
                         $dados = [
                             'operacao' => $this->operacao->consultaOperacaoPorId($id),
                             'imagens' => $this->operacao->buscaImagensOperacaoPorId($id),
+                            'portaria_saida' => $this->operacao->buscaPortariaSaidaPorId($id),
                         ];
                         $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta detalhada ID: $id");
                         $returnPortariaOperador = $this->portaria->listaPortariasPorUsuario($_SESSION['pw_id'], 'Operador');

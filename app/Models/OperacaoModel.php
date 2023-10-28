@@ -51,12 +51,13 @@
             } 
         }
 
-        public function registrarSaida($operacao_id, $dateTime)
+        public function registrarSaida($operacao_id, $dateTime, $portaria_id)
         {
             try {
-                $this->db->query("UPDATE operacoes SET hora_abre_cancela_saida = :dateTime WHERE id = :id");
+                $this->db->query("UPDATE operacoes SET hora_abre_cancela_saida = :dateTime, portaria_saida_id = :portaria_id WHERE id = :id");
                 $this->db->bind("id", $operacao_id);
                 $this->db->bind("dateTime", $dateTime);
+                $this->db->bind("portaria_id", $portaria_id);
                 $this->db->execQuery();
                 if($this->db->numRows() > 0)
                     return true;
@@ -247,6 +248,18 @@
                     $this->db->query("SELECT portaria_id_1 FROM portaria_ligacao_portaria WHERE portaria_id_2 = :id and tipo <> 1");
                 }
                 $this->db->bind("id", $portaria_id);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            } 
+        }
+
+        public function buscaPortariaSaidaPorId($operacao_id)
+        {
+            try {
+                $this->db->query("SELECT p.descricao as portaria_saida FROM operacoes o, portoes p WHERE o.portaria_saida_id = p.id AND o.id = :operacao_id");
+                $this->db->bind("operacao_id", $operacao_id);
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);

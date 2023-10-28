@@ -484,10 +484,11 @@ function registraOperacaoEmergencia(){
 function registraOperacaoSaida(){
     gravaLog('registraOperacaoSaida');
     var idRegistro = document.getElementById('veiculoSaida').value;
+    var portaria_id = document.getElementById('portaria_id').value;
     var url = document.getElementById('txtUrl').value;
     $.ajax({
         type: "POST",
-        data: "idRegistro="+idRegistro,
+        data: "idRegistro="+idRegistro+"&portaria_id="+portaria_id,
         url: url+'/operacao/registrarSaida',
         success: function(result){
             var retorno = result.split("<registroOperacao>");

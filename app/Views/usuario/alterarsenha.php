@@ -33,6 +33,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
+                                <input type="hidden" id="txtUrl" value="<?= URL ?>">
                                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha*" required onkeyup="validaComplexidadeSenha(this.value, <?= $complexidadeAtiva ?>);">
                                 <label for="senha">Senha*</label>
                                 <small id="avisoComplexidadeSenha" class="form-text" style="color:red; display:none;">
