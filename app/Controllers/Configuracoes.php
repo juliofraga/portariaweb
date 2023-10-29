@@ -21,7 +21,7 @@
                         'configuracoes' => $this->listaConfiguracoes(),
                     ];
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Configurações");
-                    $this->view('configuracoes', $dados);
+                    $this->view('ferramentas/configuracoes', $dados);
                 }
             }else{
                 $this->helper->loginRedirect();
