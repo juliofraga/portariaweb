@@ -20,6 +20,26 @@
                     </div>
                 </div>
             </form>
+            <?php 
+                if(isset($_SESSION["pw_rotina"])){
+                    if($_SESSION["pw_tipo"] == "error")
+                        $tipo = "danger";
+                    else if($_SESSION["pw_tipo"] == "success")
+                        $tipo = "success";
+                    else if($_SESSION["pw_tipo"] == "warning")
+                        $tipo = "warning";
+            ?>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="alert alert-<?= $tipo ?>" role="alert">
+                                <?= $_SESSION["pw_mensagem"] ?>
+                            </div>
+                        </div>
+                    </div>
+            <?php 
+                } 
+                $_SESSION["pw_rotina"] = null;    
+            ?>
         </div>
     </div>
 </div>
