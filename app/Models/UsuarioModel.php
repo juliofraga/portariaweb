@@ -273,5 +273,18 @@
                 return false;
             }  
         }
+
+        public function buscaUsuarioPorLogin($login)
+        {
+            try {
+                $this->db->query("SELECT * FROM usuarios WHERE login = :login AND situacao = :situacao");
+                $this->db->bind("login", $login);
+                $this->db->bind("situacao", 0);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            }   
+        }
     }
 ?>

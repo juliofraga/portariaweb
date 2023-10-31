@@ -279,6 +279,15 @@
             }
         }
 
+        public function buscaUsuarioPorLogin($login)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->usuarioModel->buscaUsuarioPorLogin($login);
+            }else{
+                $this->view('pagenotfound');
+            }
+        }
+
         private function buscaUsuarioPorId($id)
         {
             if($this->helper->sessionValidate()){
