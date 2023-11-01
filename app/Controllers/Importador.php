@@ -40,7 +40,7 @@
                 $temp_file = $_FILES["arquivo"]["tmp_name"];
                 $arquivo = SimpleXLSX::parse($temp_file);
                 for($i = 0; $i < count($arquivo->rows()); $i++){
-                    if(count($arquivo->rows()[$i]) != 14){
+                    if(count($arquivo->rows()[$i]) != 16){
                         $this->importContError++;
                         $this->importErrorMessage .= "<li>Estão faltando ou sobrando colunas no arquivo, verifique-o novamente!</li>";
                         break;
@@ -53,7 +53,9 @@
                     if(!$loginUsuario = $this->validaLogin($arquivo->rows()[$i][4], $i+1)) continue;
                     if(!$placaVeiculo = $this->validaPlacaVeiculo($arquivo->rows()[$i][5], $i+1)) continue;
                     if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1)) continue;
-                    //continuar da descrição, não está finalizada ainda
+                    if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1)) continue;
+                    if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1)) continue;
+                    //confinutar validação do motorista
                 }
                 if($this->importContError == 0){
                     $mensagem = 'Importação concluída com sucesso!';
@@ -80,7 +82,82 @@
             } 
         }
 
-        private function validaDescricaoVeiculo($descricao, $linha){
+        private function validaMotorista($cpf, $nome, $linha)
+        {
+            $motorista = [];
+            if(empty($cpf)){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi informado CPF do motorista na linha $linha, ajuste e tente novamente.</li>";
+                return false;
+            }
+            if(strpos($cpf, ".") != false){
+                if(strlen($cpf) != 14){
+                    $this->importContError++;
+                    $this->importErrorMessage .= "<li>Formato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                    return false;
+                }else{
+                    if(strpos($cpf, "-") == false){
+                        $this->importContError++;
+                        $this->importErrorMessage .= "<li>Formato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                        return false;
+                    }else{
+                        $array = explode('.', $cpf);
+                        if(strlen($array[0]) != 3 or strlen($array[1]) != 3 or strlen($array[2]) != 6){
+                            $this->importContError++;
+                            $this->importErrorMessage .= "<li>Formato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                            return false;
+                        }else{
+                            $array = explode('-', $cpf);
+                            if(strlen($array[1]) != 2){
+                                $this->importContError++;
+                                $this->importErrorMessage .= "<li>dFormato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                                return false;
+                            }
+                        }
+                    }
+                    array_push($motorista, $cpf);
+                }
+            }else{
+                if(strlen($cpf) != 11){
+                    $this->importContError++;
+                    $this->importErrorMessage .= "<li>eFormato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                    return false;
+                }else{
+                    if(!is_numeric($cpf)){
+                        $this->importContError++;
+                        $this->importErrorMessage .= "<li>fFormato do CPF do motorista inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpf</b></li>";
+                        return false;
+                    }else{
+                        $cpf = $this->helper->formata_cpf_cnpj($cpf);
+                    }
+                }
+            }
+        }
+
+        private function validaTipoVeiculo($tipo, $linha)
+        {
+            $tipos = [
+                'Carro' => 1,
+                'Caminhão' => 2,
+                'Moto' => 3,
+                'Outro' => 4
+            ];
+            $tipo = ucfirst($tipo);
+            if(empty($tipo)){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi informado tipo do veículo na linha $linha, ajuste e tente novamente.</li>";
+                return false;
+            }
+            if(!isset($tipos[$tipo])){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>O tipo do veículo é inválido na linha $linha, os tipos permitidos são: Carro, Caminhão, Moto, Outro. O tipo informado foi <b>$tipo</b>, ajuste e tente novamente</li>";
+                return false;
+            }
+            return $tipos[$tipo];
+        }
+
+        private function validaDescricaoVeiculo($descricao, $linha)
+        {
             if(empty($descricao)){
                 $this->importContError++;
                 $this->importErrorMessage .= "<li>Não foi informada descrição do veículo na linha $linha, ajuste e tente novamente.</li>";
@@ -151,7 +228,10 @@
             if(!isset($array[2])){
                 $hora = $hora . ":00";
             }
-            return $hora;
+            if($skip == true and empty($hora)){
+                return true;
+            }
+            return $hora;            
         }
 
         private function validaData($data, $linha, $skip = false)
@@ -174,13 +254,16 @@
                     return false;
                 }
             }
+            if($skip == true and empty($data)){
+                return true;
+            }
             return $data;
         }
 
-        private function contains_number($string) {
+        private function contains_number($string) 
+        {
             return is_numeric(filter_var($string, FILTER_SANITIZE_NUMBER_INT));
-         }
-
+        }
     }
 
 ?>
