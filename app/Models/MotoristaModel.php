@@ -162,5 +162,18 @@
                 return null;
             }
         }
+
+        public function buscaMotoristaPorCpf($cpf)
+        {
+            try {
+                $this->db->query("SELECT id FROM pessoas WHERE cpf = :cpf and situacao = :situacao");
+                $this->db->bind("cpf", $cpf);
+                $this->db->bind("situacao", 0);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            }
+        }
     }
 ?>

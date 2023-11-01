@@ -147,10 +147,10 @@
             }
         }
 
-        public function listaPortariasPorFiltro($filtro)
+        public function listaPortariasPorFiltro($filtro, $exato = false)
         {
             if($this->helper->sessionValidate()){
-                return $this->portariaModel->listaPortariasPorFiltro($filtro);
+                return $this->portariaModel->listaPortariasPorFiltro($filtro, $exato);
             }else{
                 $this->helper->loginRedirect();
             }

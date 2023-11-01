@@ -197,6 +197,15 @@
             }
         }
 
+        public function buscaMotoristaPorCpf($cpf)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->motoristaModel->buscaMotoristaPorCpf($cpf);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
     }
 
 ?>

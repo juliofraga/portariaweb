@@ -643,5 +643,11 @@
             }
             return $cpf_cnpj_formatado;
         }
-    } 
+
+        public function contains_number($string) 
+        {
+            return is_numeric(filter_var($string, FILTER_SANITIZE_NUMBER_INT));
+        }
+
+    }
 ?>
