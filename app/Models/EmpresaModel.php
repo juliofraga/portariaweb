@@ -108,10 +108,13 @@
             }
         }
 
-        public function listaEmpresasPorFiltro($filtro)
+        public function listaEmpresasPorFiltro($filtro = null)
         {
             try {
                 $filter = "";
+                if($filtro != null){
+                    $filter = $filtro;
+                }
                 $this->db->query("SELECT * FROM empresas WHERE $filter ORDER BY id");
                 return $this->db->results();
             } catch (Throwable $th) {

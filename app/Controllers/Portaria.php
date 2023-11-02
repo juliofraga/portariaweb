@@ -389,6 +389,15 @@
             }
         }
 
+        public function checkPortariasLigadas($portariaEntrada, $portariaSaida)
+        {
+            if($this->helper->sessionValidate()){
+                return $this->portariaModel->checkPortariasLigadas($portariaEntrada, $portariaSaida);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         private function updateLigacaoPortaria($form, $dateTime)
         {
             if($this->helper->sessionValidate()){

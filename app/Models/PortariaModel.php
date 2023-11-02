@@ -274,5 +274,18 @@
                 return false;
             } 
         }
+
+        public function checkPortariasLigadas($portariaEntrada, $portariaSaida)
+        {
+            try{
+                $this->db->query("SELECT id FROM portaria_ligacao_portaria WHERE (portaria_id_1 = :portariaEntrada and portaria_id_2 = :portariaSaida and tipo <> '1') OR (portaria_id_1 = :portariaSaida and portaria_id_2 = :portariaEntrada and tipo <> '0')");
+                $this->db->bind("portariaEntrada", $portariaEntrada);
+                $this->db->bind("portariaSaida", $portariaSaida);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
     }
 ?>

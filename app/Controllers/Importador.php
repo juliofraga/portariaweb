@@ -12,6 +12,7 @@
         public $usuario;
         public $motorista;
         public $portaria;
+        public $empresa;
         private $tipoSuccess = 'success';
         private $tipoError = 'error';
         private $rotina = 'import';
@@ -21,6 +22,7 @@
             require "../public/vendor/simplexlsx/src/SimpleXLSX.php";
             require "Motorista.php";
             require "Portaria.php";
+            require "Empresa.php";
             $this->helper = new Helpers();
             $this->log = new Logs();
             $this->importErrorMessage = '';
@@ -28,6 +30,7 @@
             $this->motorista = new Motorista();
             $this->portaria = new Portaria();
             $this->usuario = $this->portaria->usuario;
+            $this->empresa = new Empresa();
         }
 
         public function index()
@@ -54,17 +57,19 @@
                     
                     if(!$dataEntrada = $this->validaData($arquivo->rows()[$i][0], $i+1)) continue;
                     if(!$horaEntrada = $this->validaHora($arquivo->rows()[$i][1], $i+1)) continue;
+                    if(!$tipoOperacao = $this->validaTipoOperacao($arquivo->rows()[$i][14], $i+1)) continue;
                     if(!$dataSaida = $this->validaData($arquivo->rows()[$i][2], $i+1, true)) continue;
                     if(!$horaSaida = $this->validaHora($arquivo->rows()[$i][3], $i+1, true)) continue;
+                    if(!$this->validaDataHoraSaidaEntrada($dataEntrada, $horaEntrada, $dataSaida, $horaSaida, $i+1)) continue;
                     if(!$loginUsuario = $this->validaLogin($arquivo->rows()[$i][4], $i+1)) continue;
-                    if(!$placaVeiculo = $this->validaPlacaVeiculo($arquivo->rows()[$i][5], $i+1)) continue;
-                    if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1)) continue;
-                    if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1)) continue;
-                    if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1)) continue;
-                    //if(!$empresa = $this->validaEmpresa($arquivo->rows()[$i][10], $arquivo->rows()[$i][11], $i+1)) continue;
+                    if(!$placaVeiculo = $this->validaPlacaVeiculo($arquivo->rows()[$i][5], $i+1, $tipoOperacao)) continue;
+                    if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1, $tipoOperacao)) continue;
+                    if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1, $tipoOperacao)) continue;
+                    if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1, $tipoOperacao)) continue;
+                    if(!$empresa = $this->validaEmpresa($arquivo->rows()[$i][10], $arquivo->rows()[$i][11], $i+1, $tipoOperacao)) continue;
                     if(!$portariaEntrada = $this->validaPortaria($arquivo->rows()[$i][12], 'entrada', $i+1)) continue;
-                    //if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1)) continue;
-                    if(!$tipoOperacao = $this->validaTipoOperacao($arquivo->rows()[$i][14], $i+1)) continue;
+                    if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1, $portariaEntrada, $dataSaida, $tipoOperacao)) continue;
+                    
                     if(!$obsEmergencia = $this->validaObsEmergencia($tipoOperacao, $arquivo->rows()[$i][15], $i+1)) continue;
                 }
                 if($this->importContError == 0){
@@ -91,21 +96,83 @@
             } 
         }
 
-        private function validaPortaria($portaria, $tipo, $linha)
+        private function validaEmpresa($cpfcnpj, $nome, $linha, $ehEmergencia){
+            if($ehEmergencia == 'E'){
+                return true;
+            }
+            $empresa = [];
+            if(empty($cpfcnpj)){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi informado CPF ou CNPJ da empresa na linha $linha, ajuste e tente novamente.</li>";
+                return false;
+            }
+            if((strlen($cpfcnpj) != 11 and strlen($cpfcnpj) != 14) or !is_numeric($cpfcnpj)){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Formato de CPF/CNPJ inválido na linha $linha, ajuste e tente novamente. Valor informado: <b>$cpfcnpj</b></li>";
+                return false;
+            }
+            $cpfcnpj = $this->helper->formata_cpf_cnpj($cpfcnpj);
+            $empresaDados = $this->empresa->listaEmpresasPorFiltro("cnpj = '$cpfcnpj'");
+            if($empresaDados == null and empty($nome)){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi informado o nome da empresa na linha $linha, ajuste e tente novamente.</li>";
+                return false;
+            }
+            if($empresaDados == null){
+                array_push($empresa, null);
+            }else{
+                array_push($empresa, $empresaDados[0]->id);
+            }
+            array_push($empresa, $nome);
+            return $empresa;
+        }
+
+        private function validaDataHoraSaidaEntrada($dataEntrada, $horaEntrada, $dataSaida = false, $horaSaida = false, $linha)
+        {
+            $entrada = $dataEntrada . " " . $horaEntrada;
+            if($dataSaida != 1) {
+                $saida = $dataSaida . " " . $horaSaida;
+                if($entrada >= $saida){
+                    $this->importContError++;
+                    $this->importErrorMessage .= "<li>Datas e Horas inválidas na linha $linha. Data de Saída não pode ser menor ou igual a Data de Entrada. Valores informados, Data de Entrada: <b>$entrada</b>, Data de Saída: <b>$saida</b></li>";
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private function validaPortaria($portaria, $tipo, $linha, $portariaEntrada = false, $dataSaida = false, $ehEmergencia = false)
         {
             if($tipo == "entrada"){
                 if(empty($portaria)){
                     $this->importContError++;
-                    $this->importErrorMessage .= "<li>Não foi informada portaria na linha $linha, ajuste e tente novamente.</li>";
+                    $this->importErrorMessage .= "<li>Não foi informada portaria de entrada na linha $linha, ajuste e tente novamente.</li>";
                     return false;
                 }
-                $portaria = trim($portaria);
-                $portariaDados = $this->portaria->listaPortariasPorFiltro($portaria, true);
-                if($portariaDados == null){
+            }else if($tipo == "saida"){
+                if($dataSaida == 1 and empty($portaria)){
+                    return true;
+                }
+                if($ehEmergencia == 'E'){
+                    return true;
+                }
+                if($dataSaida != 1 and empty($portaria)){
                     $this->importContError++;
-                    $this->importErrorMessage .= "<li>A portaria  informada na linha $linha não existe, a portaria informada foi <b>$portaria</b>, ajuste e tente novamente</li>";
+                    $this->importErrorMessage .= "<li>Não foi informada portaria de saída na linha $linha, ajuste e tente novamente.</li>";
                     return false;
                 }
+            }
+            $portaria = trim($portaria);
+            $portariaDados = $this->portaria->listaPortariasPorFiltro($portaria, true);
+            if($portariaDados == null){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>A portaria  informada na linha $linha não existe, a portaria informada foi <b>$portaria</b>, ajuste e tente novamente</li>";
+                return false;
+            }
+            if(!$this->portaria->checkPortariasLigadas($portariaEntrada, $portariaDados[0]->id) and $portariaDados[0]->id != $portariaEntrada and $tipo == "saida"){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>A portaria de saída informada na linha $linha é inválida, um veículo não tem permissão para sair nessa portaria quando entrar na portaria de entrada informada nesta mesma linha, ajuste e tente novamente</li>";
+                return false;
             }
             return $portariaDados[0]->id;
         }
@@ -146,8 +213,11 @@
             return $tipos[$tipo];
         }
 
-        private function validaMotorista($cpf, $nome, $linha)
+        private function validaMotorista($cpf, $nome, $linha, $ehEmergencia)
         {
+            if($ehEmergencia == 'E'){
+                return true;
+            }
             $motorista = [];
             if(empty($cpf)){
                 $this->importContError++;
@@ -220,8 +290,11 @@
             return $motorista;
         }
 
-        private function validaTipoVeiculo($tipo, $linha)
+        private function validaTipoVeiculo($tipo, $linha, $ehEmergencia)
         {
+            if($ehEmergencia == 'E'){
+                return true;
+            }
             $tipos = [
                 'Carro' => 1,
                 'Caminhão' => 2,
@@ -242,8 +315,11 @@
             return $tipos[$tipo];
         }
 
-        private function validaDescricaoVeiculo($descricao, $linha)
+        private function validaDescricaoVeiculo($descricao, $linha, $ehEmergencia)
         {
+            if($ehEmergencia == 'E'){
+                return true;
+            }
             if(empty($descricao)){
                 $this->importContError++;
                 $this->importErrorMessage .= "<li>Não foi informada descrição do veículo na linha $linha, ajuste e tente novamente.</li>";
@@ -252,8 +328,11 @@
             return $descricao;
         }
 
-        private function validaPlacaVeiculo($placa, $linha)
+        private function validaPlacaVeiculo($placa, $linha, $ehEmergencia)
         {
+            if($ehEmergencia == 'E'){
+                return true;
+            }
             if(empty($placa)){
                 $this->importContError++;
                 $this->importErrorMessage .= "<li>Não foi informada placa do veículo na linha $linha, ajuste e tente novamente.</li>";

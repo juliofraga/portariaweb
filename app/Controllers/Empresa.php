@@ -164,7 +164,7 @@
         public function listaEmpresasPorFiltro($filtro)
         {
             if($this->helper->sessionValidate()){
-                return $this->empresaModel->listaEmpresasPorFiltro();
+                return $this->empresaModel->listaEmpresasPorFiltro($filtro);
             }else{
                 $this->helper->loginRedirect();
             }
