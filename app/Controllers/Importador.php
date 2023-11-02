@@ -69,8 +69,8 @@
                     if(!$empresa = $this->validaEmpresa($arquivo->rows()[$i][10], $arquivo->rows()[$i][11], $i+1, $tipoOperacao)) continue;
                     if(!$portariaEntrada = $this->validaPortaria($arquivo->rows()[$i][12], 'entrada', $i+1)) continue;
                     if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1, $portariaEntrada, $dataSaida, $tipoOperacao)) continue;
-                    
                     if(!$obsEmergencia = $this->validaObsEmergencia($tipoOperacao, $arquivo->rows()[$i][15], $i+1)) continue;
+
                 }
                 if($this->importContError == 0){
                     $mensagem = 'Importação concluída com sucesso!';
