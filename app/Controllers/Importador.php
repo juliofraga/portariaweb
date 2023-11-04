@@ -61,7 +61,7 @@
                     if(!$dataSaida = $this->validaData($arquivo->rows()[$i][2], $i+1, true)) continue;
                     if(!$horaSaida = $this->validaHora($arquivo->rows()[$i][3], $i+1, true)) continue;
                     if(!$this->validaDataHoraSaidaEntrada($dataEntrada, $horaEntrada, $dataSaida, $horaSaida, $i+1)) continue;
-                    if(!$loginUsuario = $this->validaLogin($arquivo->rows()[$i][4], $i+1)) continue;
+                    if(!$usuarioId = $this->validaLogin($arquivo->rows()[$i][4], $i+1)) continue;
                     if(!$placaVeiculo = $this->validaPlacaVeiculo($arquivo->rows()[$i][5], $i+1, $tipoOperacao)) continue;
                     if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1, $tipoOperacao)) continue;
                     if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1, $tipoOperacao)) continue;
@@ -70,7 +70,14 @@
                     if(!$portariaEntrada = $this->validaPortaria($arquivo->rows()[$i][12], 'entrada', $i+1)) continue;
                     if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1, $portariaEntrada, $dataSaida, $tipoOperacao)) continue;
                     if(!$obsEmergencia = $this->validaObsEmergencia($tipoOperacao, $arquivo->rows()[$i][15], $i+1)) continue;
-
+                    if($tipoOperacao == "E"){
+                        $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
+                    }else if($tipoOperacao == "N"){
+                        $this->registraOperacaoEntrada();
+                        if(strpos($dataSaida, "/") != false ){
+                            $this->registraOperacaoSaida();
+                        }
+                    }
                 }
                 if($this->importContError == 0){
                     $mensagem = 'Importação concluída com sucesso!';
@@ -96,7 +103,35 @@
             } 
         }
 
-        private function validaEmpresa($cpfcnpj, $nome, $linha, $ehEmergencia){
+        private function registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia)
+        {
+            /*$content = http_build_query(array(
+                'field1' => 'Value1',
+                'field2' => 'Value2',
+                'field3' => 'Value3',
+            ));
+                
+            $context = stream_context_create(array(
+                'http' => array(
+                    'method' => 'POST',
+                    'content' => $content,
+                )
+            ));    
+            $result = file_get_contents('http://exemplo/make_action.php', null, $context);*/
+        }
+
+        private function registraOperacaoSaida()
+        {
+
+        }
+
+        private function registraOperacaoEntrada()
+        {
+
+        }
+
+        private function validaEmpresa($cpfcnpj, $nome, $linha, $ehEmergencia)
+        {
             if($ehEmergencia == 'E'){
                 return true;
             }
@@ -121,7 +156,7 @@
             if($empresaDados == null){
                 array_push($empresa, null);
             }else{
-                array_push($empresa, $empresaDados[0]->id);
+                array_push($empresa, $empresaDados[0]->cnpj);
             }
             array_push($empresa, $nome);
             return $empresa;
@@ -284,7 +319,7 @@
                 }
                 array_push($motorista, null);
             }else{
-                array_push($motorista, $motoristaDados[0]->id);
+                array_push($motorista, $motoristaDados[0]->cpf);
             }
             array_push($motorista, $nome);
             return $motorista;
