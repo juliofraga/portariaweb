@@ -105,19 +105,26 @@
 
         private function registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia)
         {
-            /*$content = http_build_query(array(
-                'field1' => 'Value1',
-                'field2' => 'Value2',
-                'field3' => 'Value3',
+            $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
+            $content = http_build_query(array(
+                'dataHoraEntrada' => $dataHoraEntrada,
+                'portaria_id' => $portariaEntrada,
+                'usuario_id' => $usuarioId,
+                'observacao' => $obsEmergencia,
+                'session_id' => $_SESSION['pw_session_id']
             ));
                 
             $context = stream_context_create(array(
                 'http' => array(
                     'method' => 'POST',
                     'content' => $content,
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n"
+                    . "Content-Length: " . strlen($content) . "\r\n",
                 )
-            ));    
-            $result = file_get_contents('http://exemplo/make_action.php', null, $context);*/
+            ));
+            $url = URL . '/operacao/registrarOperacaoEmergencia';
+            $result = file_get_contents($url, false, $context);
+            //não ta funcionando ainda, verificar
         }
 
         private function registraOperacaoSaida()

@@ -10,7 +10,10 @@
             date_default_timezone_set(TIMEZONE);   
         }
 
-        public function sessionValidate(){
+        public function sessionValidate($session_id = null){
+            if($session_id != null and $session_id == $_SESSION['pw_session_id']){
+                return true;
+            }
             if(isset($_SESSION['pw_session_id'])){
                 $hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
                 $ip = $_SERVER['REMOTE_ADDR'];
@@ -647,6 +650,13 @@
         public function contains_number($string) 
         {
             return is_numeric(filter_var($string, FILTER_SANITIZE_NUMBER_INT));
+        }
+
+        public function formataDataHoraDBMode($data, $hora)
+        { 
+            $array = explode("/", $data);
+            $newDate = $array[2] . "-" . $array[1] . "-" . $array[0] . " " . $hora;
+            return $newDate;
         }
 
     }

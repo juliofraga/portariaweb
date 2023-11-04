@@ -131,13 +131,17 @@
 
         public function registrarOperacaoEmergencia()
         {
-            if($this->helper->sessionValidate()){
+            if($this->helper->sessionValidate() or (isset($_POST['session_id']) and $this->helper->sessionValidate($_POST['session_id']))){
                 $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($form == null or !isset($form)){
                     echo $retornoRegistro;
                 }else{
-                    $dateTime = $this->helper->returnDateTime();
+                    if(isset($form["dataHoraEntrada"])){
+                        $dateTime = $form["dataHoraEntrada"];
+                    }else{
+                        $dateTime = $this->helper->returnDateTime();
+                    }
                     $lastInsertId = $this->operacaoModel->registraOperacaoEmergencia($form, $dateTime);
                     if($lastInsertId){
                         $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
@@ -155,7 +159,7 @@
                 }
             }else{
                 $this->helper->redirectPage("/login/");
-            } 
+            }
         }
 
         public function fechaCancelaEmergencia()
