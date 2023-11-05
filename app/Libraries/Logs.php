@@ -12,15 +12,15 @@
 
 
         // Registra logs
-        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime)
+        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime, $ehImport = false)
         {
             $this->logModel->registraLog($usuario, $classe, $id_classe, $acao, $dateTime);
         }
 
-        public function gravaLog($dateTime, $classe_id = null, $acao, $usuario, $classe = null, $motivo = null, $tela = null)
+        public function gravaLog($dateTime, $classe_id = null, $acao, $usuario, $classe = null, $motivo = null, $tela = null, $ehImport = false)
         {
             
-            if(isset($_SESSION['pw_grava_logs_be']) and $_SESSION['pw_grava_logs_be']){
+            if((isset($_SESSION['pw_grava_logs_be']) and $_SESSION['pw_grava_logs_be']) or $ehImport){
                 $texto = "";
                 if($acao == "Adicionou" or $acao == "Alterou" or $acao == "Inativou" or $acao == "Ativou" or $acao == "Removeu" or $acao == "Deletou"){
                     $texto = "[$dateTime] - Usuário ID $usuario $acao $classe ID: $classe_id\n";

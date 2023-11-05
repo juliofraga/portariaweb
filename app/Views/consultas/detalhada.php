@@ -71,7 +71,7 @@ $tipoOperacaoCancela = [
                     </div>
                     <div class="col col-6">
                         <label class="tituloConsultaDetalhada">Portaria Saída:</label>
-                        <label class="textoConsultaDetalhada"> <?= $dados['portaria_saida'][0]->portaria_saida ?></label>
+                        <label class="textoConsultaDetalhada"> <?= isset($dados['portaria_saida'][0]->portaria_saida) ? $dados['portaria_saida'][0]->portaria_saida : '' ?></label>
                     </div>
                 </div>
                 <div class="row">

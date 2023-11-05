@@ -73,7 +73,7 @@
                     if($tipoOperacao == "E"){
                         $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
                     }else if($tipoOperacao == "N"){
-                        $this->registraOperacaoEntrada();
+                        $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada);
                         if(strpos($dataSaida, "/") != false ){
                             $this->registraOperacaoSaida();
                         }
@@ -103,36 +103,61 @@
             } 
         }
 
+        private function registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada)
+        {
+            $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
+            $session = [
+                'pw_session_id' => $_SESSION['pw_session_id'],
+                'pw_id' => $_SESSION['pw_id']
+            ];
+            $postData = http_build_query(array(
+                'dataHoraEntrada' => $dataHoraEntrada,
+                'cnpj' => $empresa[1],
+                'empresa' => $empresa[0],
+                'placa' => $placaVeiculo,
+                'descricao' => $descricaoVeiculo,
+                'tipo' => $tipoVeiculo,
+                'usuario' => $usuarioId,
+                'portaria' => $portariaEntrada,
+                'session' => $session,
+                'ehImport' => true
+            ));          
+            $ch = curl_init();
+            $url = URL . '/operacao/registrarEntrada';
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $server_output = curl_exec($ch);
+            curl_close ($ch);
+        }
+
         private function registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia)
         {
             $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
-            $content = http_build_query(array(
+            $session = [
+                'pw_session_id' => $_SESSION['pw_session_id'],
+                'pw_id' => $_SESSION['pw_id']
+            ];
+            $postData = http_build_query(array(
                 'dataHoraEntrada' => $dataHoraEntrada,
                 'portaria_id' => $portariaEntrada,
                 'usuario_id' => $usuarioId,
                 'observacao' => $obsEmergencia,
-                'session_id' => $_SESSION['pw_session_id']
-            ));
-                
-            $context = stream_context_create(array(
-                'http' => array(
-                    'method' => 'POST',
-                    'content' => $content,
-                    'header' => "Content-type: application/x-www-form-urlencoded\r\n"
-                    . "Content-Length: " . strlen($content) . "\r\n",
-                )
-            ));
+                'session' => $session,
+                'ehImport' => true
+            ));          
+            $ch = curl_init();
             $url = URL . '/operacao/registrarOperacaoEmergencia';
-            $result = file_get_contents($url, false, $context);
-            //não ta funcionando ainda, verificar
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $server_output = curl_exec($ch);
+            curl_close ($ch);
         }
 
         private function registraOperacaoSaida()
-        {
-
-        }
-
-        private function registraOperacaoEntrada()
         {
 
         }

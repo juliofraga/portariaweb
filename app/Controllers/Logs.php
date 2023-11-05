@@ -46,8 +46,8 @@
             }
         }
         
-        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime){
-            if($this->helper->sessionValidate()){
+        public function registraLog($usuario, $classe, $id_classe, $acao, $dateTime, $ehImport = false){
+            if($this->helper->sessionValidate() or $ehImport){
                 $this->logModel->registraLog($usuario, $classe, $id_classe, $acao, $dateTime);
             }else{
                 $this->helper->redirectPage("/login/");

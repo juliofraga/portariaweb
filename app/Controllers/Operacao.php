@@ -35,12 +35,18 @@
 
         public function registrarEntrada()
         {
-            if($this->helper->sessionValidate()){
+            if(isset($_POST["ehImport"]) and $_POST["ehImport"] == true){
+                $ehImport = true;
+            }else{
+                $ehImport = false;
+            }
+            if($this->helper->sessionValidate() or $ehImport){
                 $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($form == null or !isset($form)){
                     echo $retornoRegistro;
                 }else{
+                    // Falta lidar com classes empresa, veiculo e motorista no que diz respeito a sessions
                     if(!$this->empresa->verificaEmpresa($form["cnpj"])){
                         $form["empresa"] = $this->empresa->cadastrar($form["cnpj"], $form["empresa"], "registro");
                     }
@@ -51,18 +57,29 @@
                     if(!$this->motorista->verificaMotorista($form["motorista"])){
                         $form["motorista"] = $this->motorista->cadastrar($form["motorista"], $form["cpfMotorista"], $form["placa"]);
                     }
-                    $dateTime = $this->helper->returnDateTime();
+                    if($ehImport){
+                        $dateTime = $form["dataHoraEntrada"];
+                    }else{
+                        $dateTime = $this->helper->returnDateTime();
+                    }
                     $lastInsertId = $this->operacaoModel->registrarOperacao($dateTime, $form["usuario"], $form["placa"], $form["motorista"], $form["portaria"]);
                     if($lastInsertId != null){
-                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $lastInsertId, 0, $dateTime);
-                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Operação - Entrada de Veículo");
+                        if(isset($form["ehImport"])){
+                            $userId = $form["session"]["pw_id"];
+                        }else{
+                            $userId = $_SESSION['pw_id'];
+                        }
+                        $this->log->registraLog($userId, "Operação", $lastInsertId, 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $userId, "Operação - Entrada de Veículo");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         echo "<idOperacao>$lastInsertId</idOperacao>";
-                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
-                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
+                        if(!$ehImport){
+                            for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                                $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
+                            }
+                            $_SESSION['infoCapturaImagem'] = null;
+                            $_SESSION["contImagens"] = null;
                         }
-                        $_SESSION['infoCapturaImagem'] = null;
-                        $_SESSION["contImagens"] = null;
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
@@ -131,28 +148,40 @@
 
         public function registrarOperacaoEmergencia()
         {
-            if($this->helper->sessionValidate() or (isset($_POST['session_id']) and $this->helper->sessionValidate($_POST['session_id']))){
+            if(isset($_POST["ehImport"]) and $_POST["ehImport"] == true){
+                $ehImport = true;
+            }else{
+                $ehImport = false;
+            }
+            if($this->helper->sessionValidate() or $ehImport){
                 $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($form == null or !isset($form)){
                     echo $retornoRegistro;
                 }else{
-                    if(isset($form["dataHoraEntrada"])){
+                    if($ehImport){
                         $dateTime = $form["dataHoraEntrada"];
                     }else{
                         $dateTime = $this->helper->returnDateTime();
                     }
                     $lastInsertId = $this->operacaoModel->registraOperacaoEmergencia($form, $dateTime);
                     if($lastInsertId){
-                        $this->log->registraLog($_SESSION['pw_id'], "Operação Emergencial", $lastInsertId, 0, $dateTime);
-                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $_SESSION['pw_id'], "Operação - Emergência");
+                        if(isset($form["ehImport"])){
+                            $userId = $form["session"]["pw_id"];
+                        }else{
+                            $userId = $_SESSION['pw_id'];
+                        }
+                        $this->log->registraLog($userId, "Operação Emergencial", $lastInsertId, 0, $dateTime, $ehImport);
+                        $this->log->gravaLog($dateTime, $lastInsertId, "Adicionou", $userId, "Operação - Emergência", $ehImport);
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
                         echo "<idOperacaoEmergencia>" . $lastInsertId . "</idOperacaoEmergencia>";
-                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
-                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
+                        if(!$ehImport){
+                            for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                                $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $lastInsertId);
+                            }
+                            $_SESSION['infoCapturaImagem'] = null;
+                            $_SESSION["contImagens"] = null;
                         }
-                        $_SESSION['infoCapturaImagem'] = null;
-                        $_SESSION["contImagens"] = null;
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
