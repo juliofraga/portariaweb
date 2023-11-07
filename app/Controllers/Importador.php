@@ -13,6 +13,7 @@
         public $motorista;
         public $portaria;
         public $empresa;
+        public $veiculo;
         private $tipoSuccess = 'success';
         private $tipoError = 'error';
         private $rotina = 'import';
@@ -22,7 +23,7 @@
             require "../public/vendor/simplexlsx/src/SimpleXLSX.php";
             require "Motorista.php";
             require "Portaria.php";
-            require "Empresa.php";
+            require "Veiculo.php";
             $this->helper = new Helpers();
             $this->log = new Logs();
             $this->importErrorMessage = '';
@@ -30,6 +31,7 @@
             $this->motorista = new Motorista();
             $this->portaria = new Portaria();
             $this->usuario = $this->portaria->usuario;
+            $this->veiculo = new Veiculo();
             $this->empresa = new Empresa();
         }
 
@@ -65,14 +67,16 @@
                     if(!$placaVeiculo = $this->validaPlacaVeiculo($arquivo->rows()[$i][5], $i+1, $tipoOperacao)) continue;
                     if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1, $tipoOperacao)) continue;
                     if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1, $tipoOperacao)) continue;
-                    if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1, $tipoOperacao)) continue;
                     if(!$empresa = $this->validaEmpresa($arquivo->rows()[$i][10], $arquivo->rows()[$i][11], $i+1, $tipoOperacao)) continue;
+                    if(!$this->validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $i+1)) continue;
+                    if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1, $tipoOperacao, $placaVeiculo)) continue;
                     if(!$portariaEntrada = $this->validaPortaria($arquivo->rows()[$i][12], 'entrada', $i+1)) continue;
                     if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1, $portariaEntrada, $dataSaida, $tipoOperacao)) continue;
                     if(!$obsEmergencia = $this->validaObsEmergencia($tipoOperacao, $arquivo->rows()[$i][15], $i+1)) continue;
                     if($tipoOperacao == "E"){
                         $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
                     }else if($tipoOperacao == "N"){
+                        // DEVE ENVIAR O ID DO VEÍCULO AO INVÉS DA PLACA, AJUSTAR isso
                         $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada);
                         if(strpos($dataSaida, "/") != false ){
                             $this->registraOperacaoSaida();
@@ -112,11 +116,12 @@
             ];
             $postData = http_build_query(array(
                 'dataHoraEntrada' => $dataHoraEntrada,
-                'cnpj' => $empresa[1],
-                'empresa' => $empresa[0],
+                'cnpj' => $empresa['cnpj'],
+                'empresa' => $empresa['id'],
                 'placa' => $placaVeiculo,
                 'descricao' => $descricaoVeiculo,
                 'tipo' => $tipoVeiculo,
+                'motorista' => $motorista,
                 'usuario' => $usuarioId,
                 'portaria' => $portariaEntrada,
                 'session' => $session,
@@ -162,6 +167,19 @@
 
         }
 
+        private function validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $linha)
+        {
+            if(!$this->veiculo->verificaPlaca($placaVeiculo)){
+                $placaVeiculo = $this->veiculo->cadastrar($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa["id"], "registro");
+                if(!$placaVeiculo){
+                    $this->importContError++;
+                    $this->importErrorMessage .= "<li>Veículo inválido na linha $linha, tente novamente.</li>";
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private function validaEmpresa($cpfcnpj, $nome, $linha, $ehEmergencia)
         {
             if($ehEmergencia == 'E'){
@@ -186,11 +204,11 @@
                 return false;
             }
             if($empresaDados == null){
-                array_push($empresa, null);
-            }else{
-                array_push($empresa, $empresaDados[0]->cnpj);
+                $this->empresa->cadastrar($cpfcnpj, $nome, "registro");
+                $empresaDados = $this->empresa->listaEmpresasPorFiltro("cnpj = '$cpfcnpj'");
             }
-            array_push($empresa, $nome);
+            $empresa["id"] = $empresaDados[0]->id;
+            $empresa["cnpj"] = $empresaDados[0]->cnpj;
             return $empresa;
         }
 
@@ -280,12 +298,11 @@
             return $tipos[$tipo];
         }
 
-        private function validaMotorista($cpf, $nome, $linha, $ehEmergencia)
+        private function validaMotorista($cpf, $nome, $linha, $ehEmergencia, $placaVeiculo)
         {
             if($ehEmergencia == 'E'){
                 return true;
             }
-            $motorista = [];
             if(empty($cpf)){
                 $this->importContError++;
                 $this->importErrorMessage .= "<li>Não foi informado CPF do motorista na linha $linha, ajuste e tente novamente.</li>";
@@ -349,12 +366,11 @@
                     $this->importErrorMessage .= "<li>Não foi informado nome do motorista na linha $linha, ajuste e tente novamente.</li>";
                     return false;
                 }
-                array_push($motorista, null);
+                $motorista_id = $this->motorista->cadastrar($nome, $cpf, $placaVeiculo);
             }else{
-                array_push($motorista, $motoristaDados[0]->cpf);
+                $motorista_id = $motoristaDados[0]->id;
             }
-            array_push($motorista, $nome);
-            return $motorista;
+            return $motorista_id;
         }
 
         private function validaTipoVeiculo($tipo, $linha, $ehEmergencia)

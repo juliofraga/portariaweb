@@ -43,24 +43,24 @@
             if($this->helper->sessionValidate() or $ehImport){
                 $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+                
                 if($form == null or !isset($form)){
                     echo $retornoRegistro;
                 }else{
-                    // Falta lidar com classes empresa, veiculo e motorista no que diz respeito a sessions
-                    if(!$this->empresa->verificaEmpresa($form["cnpj"])){
-                        $form["empresa"] = $this->empresa->cadastrar($form["cnpj"], $form["empresa"], "registro");
-                    }
-                    if(!$this->veiculo->verificaVeiculoPorId($form["placa"])){
-                        $form["placa"] = $this->veiculo->cadastrar($form["placa"], $form["descricao"], $form["tipo"], $form["empresa"], "registro");
-                    }
+                    if(!$ehImport){
+                        if(!$this->empresa->verificaEmpresa($form["cnpj"])){
+                            $form["empresa"] = $this->empresa->cadastrar($form["cnpj"], $form["empresa"], "registro");
+                        }
+                        if(!$this->veiculo->verificaVeiculoPorId($form["placa"])){
+                            $form["placa"] = $this->veiculo->cadastrar($form["placa"], $form["descricao"], $form["tipo"], $form["empresa"], "registro");
+                        }
 
-                    if(!$this->motorista->verificaMotorista($form["motorista"])){
-                        $form["motorista"] = $this->motorista->cadastrar($form["motorista"], $form["cpfMotorista"], $form["placa"]);
-                    }
-                    if($ehImport){
-                        $dateTime = $form["dataHoraEntrada"];
-                    }else{
+                        if(!$this->motorista->verificaMotorista($form["motorista"])){
+                            $form["motorista"] = $this->motorista->cadastrar($form["motorista"], $form["cpfMotorista"], $form["placa"]);
+                        }
                         $dateTime = $this->helper->returnDateTime();
+                    }else{
+                        $dateTime = $form["dataHoraEntrada"];
                     }
                     $lastInsertId = $this->operacaoModel->registrarOperacao($dateTime, $form["usuario"], $form["placa"], $form["motorista"], $form["portaria"]);
                     if($lastInsertId != null){
