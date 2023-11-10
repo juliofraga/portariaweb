@@ -115,6 +115,20 @@
             }
         }
 
+        public function retornaIDPOrPlaca($placa, $ehImport = false)
+        {
+            if($this->helper->sessionValidate() or $ehImport){
+                $veiculo = $this->veiculoModel->retornaIDPOrPlaca($placa);
+                if($veiculo){
+                    return $veiculo[0]->id;
+                }else{
+                    return null;
+                }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
         public function novo()
         {
             $dados = [

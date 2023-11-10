@@ -61,6 +61,7 @@
                         $dateTime = $this->helper->returnDateTime();
                     }else{
                         $dateTime = $form["dataHoraEntrada"];
+                        $form["placa"] = $this->veiculo->retornaIDPOrPlaca($form["placa"], $ehImport);
                     }
                     $lastInsertId = $this->operacaoModel->registrarOperacao($dateTime, $form["usuario"], $form["placa"], $form["motorista"], $form["portaria"]);
                     if($lastInsertId != null){

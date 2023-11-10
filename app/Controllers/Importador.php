@@ -76,7 +76,6 @@
                     if($tipoOperacao == "E"){
                         $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
                     }else if($tipoOperacao == "N"){
-                        // DEVE ENVIAR O ID DO VEÍCULO AO INVÉS DA PLACA, AJUSTAR isso
                         $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada);
                         if(strpos($dataSaida, "/") != false ){
                             $this->registraOperacaoSaida();
@@ -366,7 +365,8 @@
                     $this->importErrorMessage .= "<li>Não foi informado nome do motorista na linha $linha, ajuste e tente novamente.</li>";
                     return false;
                 }
-                $motorista_id = $this->motorista->cadastrar($nome, $cpf, $placaVeiculo);
+                $veiculo_id = $this->veiculo->retornaIDPOrPlaca($placaVeiculo, true);
+                $motorista_id = $this->motorista->cadastrar($nome, $cpf, $veiculo_id);
             }else{
                 $motorista_id = $motoristaDados[0]->id;
             }

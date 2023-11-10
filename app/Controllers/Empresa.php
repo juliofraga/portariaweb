@@ -69,7 +69,8 @@
             if($this->helper->sessionValidate()){
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 $dateTime = $this->helper->returnDateTime();
-                if((!empty($form["cnpj"]) and !empty($form["nome_fantasia"])) or ($tipo == "registro")){
+                // TESTAR CONDIÇÃO ABAIXO
+                if((isset($form["cnpj"]) and ((!empty($form["cnpj"]) and !empty($form["nome_fantasia"])))) or ($tipo == "registro")){
                     if(!$this->verificaEmpresa($form["cnpj"]) and !$this->verificaEmpresa($cnpj)){
                         if($tipo == "registro"){
                             $form = [

@@ -186,5 +186,17 @@
                 return null;
             }
         }
+
+        public function retornaIDPOrPlaca($placa)
+        {
+            try {
+                $this->db->query("SELECT id FROM veiculos WHERE placa = :placa");
+                $this->db->bind("placa", $placa);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            }
+        }
     }
 ?>
