@@ -76,10 +76,11 @@
                     if($tipoOperacao == "E"){
                         $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
                     }else if($tipoOperacao == "N"){
-                        $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada);
-                        if(strpos($dataSaida, "/") != false ){
-                            $this->registraOperacaoSaida();
+                        $operacao_id = $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada, $i+1);
+                        if(strpos($dataSaida, "/") != false and $operacao_id != false){
+                            $this->registraOperacaoSaida($operacao_id, $dataSaida, $horaSaida, $portariaSaida, $i+1);
                         }
+                        // FALTA IMPLEMENTAR VERIFICAÇÃO SE A IMPORTAÇÃO JÁ NÃO FOI FEITA ANTERIORMENTE
                     }
                 }
                 if($this->importContError == 0){
@@ -106,7 +107,36 @@
             } 
         }
 
-        private function registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada)
+        private function registraOperacaoSaida($operacao_id, $dataSaida, $horaSaida, $portariaSaida, $linha)
+        {
+            $dataHoraSaida = $this->helper->formataDataHoraDBMode($dataSaida, $horaSaida);
+            $session = [
+                'pw_session_id' => $_SESSION['pw_session_id'],
+                'pw_id' => $_SESSION['pw_id']
+            ];
+            $postData = http_build_query(array(
+                'dataHoraSaida' => $dataHoraSaida,
+                'idRegistro' => $operacao_id,
+                'portaria_id' => $portariaSaida,
+                'session' => $session,
+                'ehImport' => true
+            ));          
+            $ch = curl_init();
+            $url = URL . '/operacao/registrarSaida';
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $server_output = curl_exec($ch);
+            if(strpos($server_output, "SUCESSO") == false){
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi possível salvar no banco de dados o registro da linha $linha referente a operação de saída, tente novamente.</li>";
+                return false;
+            }
+            curl_close ($ch);
+        }
+
+        private function registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada, $linha)
         {
             $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
             $session = [
@@ -133,6 +163,15 @@
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $server_output = curl_exec($ch);
+            if(strpos($server_output, "SUCESSO") != false){
+                $retorno = explode("<idOperacao>", $server_output);
+                $retorno = explode("</idOperacao>", $retorno[1]);
+                return $retorno[0];
+            }else{
+                $this->importContError++;
+                $this->importErrorMessage .= "<li>Não foi possível salvar o registro da linha $linha no banco de dados, tente novamente.</li>";
+                return false;
+            }
             curl_close ($ch);
         }
 
@@ -159,11 +198,6 @@
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $server_output = curl_exec($ch);
             curl_close ($ch);
-        }
-
-        private function registraOperacaoSaida()
-        {
-
         }
 
         private function validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $linha)

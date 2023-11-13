@@ -92,22 +92,35 @@
 
         public function registrarSaida()
         {
-            if($this->helper->sessionValidate()){
+            if(isset($_POST["ehImport"]) and $_POST["ehImport"] == true){
+                $ehImport = true;
+            }else{
+                $ehImport = false;
+            }
+            if($this->helper->sessionValidate() or $ehImport){
                 $retornoRegistro = "<registroOperacao>ERRO</registroOperacao>";
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if($form == null or !isset($form)){
                     echo $retornoRegistro;
                 }else{
-                    $dateTime = $this->helper->returnDateTime();
+                    if($ehImport){
+                        $dateTime = $form["dataHoraSaida"];
+                        $userId = $form["session"]["pw_id"];
+                    }else{
+                        $dateTime = $this->helper->returnDateTime();
+                        $userId = $_SESSION['pw_id'];
+                    }
                     if($this->operacaoModel->registrarSaida($form["idRegistro"], $dateTime, $form["portaria_id"])){
-                        $this->log->registraLog($_SESSION['pw_id'], "Operação", $form["idRegistro"], 0, $dateTime);
-                        $this->log->gravaLog($dateTime, $form["idRegistro"], "Adicionou", $_SESSION['pw_id'], "Operação - Saída de Veículo");
+                        $this->log->registraLog($userId, "Operação", $form["idRegistro"], 0, $dateTime);
+                        $this->log->gravaLog($dateTime, $form["idRegistro"], "Adicionou", $userId, "Operação - Saída de Veículo");
                         echo "<registroOperacao>SUCESSO</registroOperacao>";
-                        for($x = 0; $x < $_SESSION["contImagens"]; $x++){
-                            $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $form["idRegistro"]);
+                        if(!$ehImport){
+                            for($x = 0; $x < $_SESSION["contImagens"]; $x++){
+                                $this->operacaoModel->salvaImagemOperacao($_SESSION['infoCapturaImagem'][$x]['path'], $dateTime, $_SESSION['infoCapturaImagem'][$x]['abreFecha'], $_SESSION['infoCapturaImagem'][$x]['tipo'], $form["idRegistro"]);
+                            }
+                            $_SESSION['infoCapturaImagem'] = null;
+                            $_SESSION["contImagens"] = null;
                         }
-                        $_SESSION['infoCapturaImagem'] = null;
-                        $_SESSION["contImagens"] = null;
                     }else{
                         echo "<registroOperacao>ERRO</registroOperacao>";
                     }
