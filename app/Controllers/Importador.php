@@ -14,6 +14,7 @@
         public $portaria;
         public $empresa;
         public $veiculo;
+        public $operacao;
         private $tipoSuccess = 'success';
         private $tipoError = 'error';
         private $rotina = 'import';
@@ -21,18 +22,19 @@
         public function __construct()
         {
             require "../public/vendor/simplexlsx/src/SimpleXLSX.php";
-            require "Motorista.php";
             require "Portaria.php";
-            require "Veiculo.php";
+            require "Operacao.php";
             $this->helper = new Helpers();
             $this->log = new Logs();
+            $this->operacao = new Operacao();
             $this->importErrorMessage = '';
             $this->importContError = 0;
             $this->motorista = new Motorista();
             $this->portaria = new Portaria();
             $this->usuario = $this->portaria->usuario;
-            $this->veiculo = new Veiculo();
+            $this->veiculo = $this->operacao->veiculo;
             $this->empresa = new Empresa();
+            
         }
 
         public function index()
@@ -68,19 +70,37 @@
                     if(!$descricaoVeiculo = $this->validaDescricaoVeiculo($arquivo->rows()[$i][6], $i+1, $tipoOperacao)) continue;
                     if(!$tipoVeiculo = $this->validaTipoVeiculo($arquivo->rows()[$i][7], $i+1, $tipoOperacao)) continue;
                     if(!$empresa = $this->validaEmpresa($arquivo->rows()[$i][10], $arquivo->rows()[$i][11], $i+1, $tipoOperacao)) continue;
-                    if(!$this->validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $i+1)) continue;
+                    if(!$this->validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $i+1, $tipoOperacao)) continue;
                     if(!$motorista = $this->validaMotorista($arquivo->rows()[$i][8], $arquivo->rows()[$i][9], $i+1, $tipoOperacao, $placaVeiculo)) continue;
                     if(!$portariaEntrada = $this->validaPortaria($arquivo->rows()[$i][12], 'entrada', $i+1)) continue;
                     if(!$portariaSaida = $this->validaPortaria($arquivo->rows()[$i][13], 'saida', $i+1, $portariaEntrada, $dataSaida, $tipoOperacao)) continue;
                     if(!$obsEmergencia = $this->validaObsEmergencia($tipoOperacao, $arquivo->rows()[$i][15], $i+1)) continue;
                     if($tipoOperacao == "E"){
-                        $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
+                        if(!$this->operacao->verificaSeOperacaoEmergenciaJaRegistrada($dataEntrada, $horaEntrada, $portariaEntrada)){
+                            $this->registrarOperacaoEmergencia($dataEntrada, $horaEntrada, $usuarioId, $portariaEntrada, $obsEmergencia);
+                        }else{
+                            $this->importContError++;
+                            $this->importErrorMessage .= "<li>Operação da linha " . ($i+1). " já foi registrada anteriormente, esta linha foi desconsiderada</li>";
+                        }
                     }else if($tipoOperacao == "N"){
+                        if(strpos($dataSaida, "/") == false){
+                            if($this->operacao->verificaSeOperacaoEntradaJaRegistrada($dataEntrada, $horaEntrada, $placaVeiculo, $motorista, $portariaEntrada)){
+                                $this->importContError++;
+                                $this->importErrorMessage .= "<li>Operação da linha " . ($i+1). " já foi registrada anteriormente, esta linha foi desconsiderada</li>";
+                                continue;
+                            }
+                        }else{
+                            // FALTA IMPLEMENTAR FUNÇÃO ABAIXO
+                            if($this->operacao->verificaSeOperacaoJaRegistrada()){
+                                $this->importContError++;
+                                $this->importErrorMessage .= "<li>Operação da linha " . ($i+1). " já foi registrada anteriormente, esta linha foi desconsiderada</li>";
+                                continue;
+                            }
+                        }
                         $operacao_id = $this->registraOperacaoEntrada($dataEntrada, $horaEntrada, $empresa, $placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $motorista, $usuarioId, $portariaEntrada, $i+1);
                         if(strpos($dataSaida, "/") != false and $operacao_id != false){
                             $this->registraOperacaoSaida($operacao_id, $dataSaida, $horaSaida, $portariaSaida, $i+1);
                         }
-                        // FALTA IMPLEMENTAR VERIFICAÇÃO SE A IMPORTAÇÃO JÁ NÃO FOI FEITA ANTERIORMENTE
                     }
                 }
                 if($this->importContError == 0){
@@ -200,8 +220,11 @@
             curl_close ($ch);
         }
 
-        private function validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $linha)
+        private function validaVeiculo($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa, $linha, $ehEmergencia)
         {
+            if($ehEmergencia == 'E'){
+                return true;
+            }
             if(!$this->veiculo->verificaPlaca($placaVeiculo)){
                 $placaVeiculo = $this->veiculo->cadastrar($placaVeiculo, $descricaoVeiculo, $tipoVeiculo, $empresa["id"], "registro");
                 if(!$placaVeiculo){

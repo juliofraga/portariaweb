@@ -659,5 +659,12 @@
             return $newDate;
         }
 
+        public function exibeSomenteIPCamera($endereco)
+        {
+            $array = explode("://", $endereco);
+            $array2 = explode(":", $array[1]);
+            return $array2[0];
+        }
+
     }
 ?>

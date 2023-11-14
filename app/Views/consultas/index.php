@@ -141,7 +141,7 @@ $helper = new Helpers();
                                     <?= $helper->formataDateTime($consulta->hora_abre_cancela_entrada) ?>
                                 </div>
                                 <div class="col-sm-2">
-                                    <?= $helper->formataDateTime($consulta->hora_fecha_cancela_saida) ?>
+                                    <?= $helper->formataDateTime($consulta->hora_abre_cancela_saida) ?>
                                 </div>
                                 <div class="col-sm-1">
                                     <?= $consulta->placa ?>

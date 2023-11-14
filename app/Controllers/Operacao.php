@@ -342,6 +342,36 @@
             } 
         }
 
+        public function verificaSeOperacaoEmergenciaJaRegistrada($dataEntrada, $horaEntrada, $portariaEntrada)
+        {
+            if($this->helper->sessionValidate()){   
+                $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
+                return $this->operacaoModel->verificaSeOperacaoEmergenciaJaRegistrada($dataHoraEntrada, $portariaEntrada);
+            }else{
+                $this->helper->redirectPage("/login/");
+            }
+        }
+
+        public function verificaSeOperacaoEntradaJaRegistrada($dataEntrada, $horaEntrada, $placaVeiculo, $motorista, $portariaEntrada)
+        {
+            if($this->helper->sessionValidate()){
+                $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
+                $veiculo = $this->veiculo->retornaIDPOrPlaca($placaVeiculo, true);
+                return $this->operacaoModel->verificaSeOperacaoEntradaJaRegistrada($dataHoraEntrada, $veiculo, $motorista, $portariaEntrada);
+            }else{
+                $this->helper->redirectPage("/login/");
+            }
+        }
+
+        public function verificaSeOperacaoJaRegistrada()
+        {
+            if($this->helper->sessionValidate()){   
+                return false;
+            }else{
+                $this->helper->redirectPage("/login/");
+            }
+        }
+
     }
 
 ?>

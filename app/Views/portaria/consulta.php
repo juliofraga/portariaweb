@@ -95,7 +95,8 @@
                                             $cameras = "";
                                             foreach($dados["dados"] as $camera){
                                                 if($portaria->id == $camera->id){
-                                                    $cameras .= "$camera->camera ($camera->ip_camera) - ";
+                                                    
+                                                    $cameras .= "$camera->camera (" . $helper->exibeSomenteIPCamera($camera->ip_camera) . ") - ";
                                                 }
                                             }
                                             $cameras = substr($cameras, 0, -2);

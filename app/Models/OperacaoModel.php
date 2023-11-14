@@ -267,6 +267,44 @@
             } 
         }
 
+        public function verificaSeOperacaoEmergenciaJaRegistrada($dataHoraEntrada, $portariaEntrada)
+        {
+            try {
+                $this->db->query("SELECT id FROM operacoes WHERE hora_abre_cancela_entrada = :dataHoraEntrada AND portaria_id = :portariaEntrada AND tipo = :tipo");
+                $this->db->bind("dataHoraEntrada", $dataHoraEntrada);
+                $this->db->bind("portariaEntrada", $portariaEntrada);
+                $this->db->bind("tipo", "E");
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            } 
+        }
+
+        public function verificaSeOperacaoEntradaJaRegistrada($dataHoraEntrada, $veiculo, $motorista, $portariaEntrada)
+        {
+            try {
+                $this->db->query("SELECT id FROM operacoes WHERE hora_abre_cancela_entrada = :dataHoraEntrada AND veiculos_id = :veiculo AND pessoas_id = :motorista AND portaria_id = :portariaEntrada AND tipo = :tipo");
+                $this->db->bind("dataHoraEntrada", $dataHoraEntrada);
+                $this->db->bind("portariaEntrada", $portariaEntrada);
+                $this->db->bind("veiculo", $veiculo);
+                $this->db->bind("motorista", $motorista);
+                $this->db->bind("tipo", "N");
+                $this->db->execQuery();
+                if($this->db->numRows() > 0)
+                    return true;
+                else
+                    return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return null;
+            } 
+        }
+
         private function formataWhereClause($valores, $field)
         {
             $retorno = "AND $field IN (";
