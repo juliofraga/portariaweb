@@ -90,8 +90,7 @@
                                 continue;
                             }
                         }else{
-                            // FALTA IMPLEMENTAR FUNÇÃO ABAIXO
-                            if($this->operacao->verificaSeOperacaoJaRegistrada()){
+                            if($this->operacao->verificaSeOperacaoJaRegistrada($dataEntrada, $horaEntrada, $dataSaida, $horaSaida, $placaVeiculo, $motorista, $portariaEntrada, $portariaSaida)){
                                 $this->importContError++;
                                 $this->importErrorMessage .= "<li>Operação da linha " . ($i+1). " já foi registrada anteriormente, esta linha foi desconsiderada</li>";
                                 continue;

@@ -363,10 +363,13 @@
             }
         }
 
-        public function verificaSeOperacaoJaRegistrada()
+        public function verificaSeOperacaoJaRegistrada($dataEntrada, $horaEntrada, $dataSaida, $horaSaida, $placaVeiculo, $motorista, $portariaEntrada, $portariaSaida)
         {
             if($this->helper->sessionValidate()){   
-                return false;
+                $dataHoraEntrada = $this->helper->formataDataHoraDBMode($dataEntrada, $horaEntrada);
+                $dataHoraSaida = $this->helper->formataDataHoraDBMode($dataSaida, $horaSaida);
+                $veiculo = $this->veiculo->retornaIDPOrPlaca($placaVeiculo, true);
+                return $this->operacaoModel->verificaSeOperacaoJaRegistrada($dataHoraEntrada, $dataHoraSaida, $veiculo, $motorista, $portariaEntrada, $portariaSaida);
             }else{
                 $this->helper->redirectPage("/login/");
             }

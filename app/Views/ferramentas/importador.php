@@ -19,6 +19,11 @@
                         <button class="w-50 btn btn-warning btn-md" name="importar" id="importar" value="importar">Importar</button>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-sm-4">
+                        <a class="btn btn-secondary btn-md w-50" href="<?= URL ?>/documentos/importador.xlsx" target="_blank">Baixar Arquivo Modelo</a>
+                    </div>
+                </div>
             </form>
             <?php 
                 if(isset($_SESSION["pw_rotina"])){
