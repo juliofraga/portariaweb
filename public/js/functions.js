@@ -955,30 +955,43 @@ function buscaVeiculos(empresa){
     });
 }
 
+function validaPlacaVeiculo(placa){
+    const regexPlaca = /^[a-zA-Z]{3}-[0-9]{1}[A-z0-9]{1}[0-9]{2}$/;
+    if(regexPlaca.test(placa)){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function buscaDescricaoVeiculo(veiculo){
     gravaLog('buscaDescricaoVeiculo');
     if(veiculo != ""){
-        var url = document.getElementById('txtUrl').value;
-        $.ajax({
-            url: url+'/veiculo/retornaDescricaoTipoVeiculo/'+veiculo,
-            success: function(result){
-                var liberarEntrada = result.split("<veiculoPodeEntrar>");
-                liberarEntrada = liberarEntrada[1].split("</veiculoPodeEntrar>");
-                if(liberarEntrada[0] == "Sim"){
-                    desbloqueiaCampos();
-                    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
-                    exibeDescricaoVeiculo(result);
-                    selecionaTipoVeiculo(result);
-                    
-                }else{
-                    document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'block';
-                    bloqueiaCampos();
+        if(validaPlacaVeiculo(veiculo) == false){
+            alert('placa invalida');
+        }else{
+            var url = document.getElementById('txtUrl').value;
+            $.ajax({
+                url: url+'/veiculo/retornaDescricaoTipoVeiculo/'+veiculo,
+                success: function(result){
+                    var liberarEntrada = result.split("<veiculoPodeEntrar>");
+                    liberarEntrada = liberarEntrada[1].split("</veiculoPodeEntrar>");
+                    if(liberarEntrada[0] == "Sim"){
+                        desbloqueiaCampos();
+                        document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'none';
+                        exibeDescricaoVeiculo(result);
+                        selecionaTipoVeiculo(result);
+                        
+                    }else{
+                        document.getElementById('alertaErrorVeiculoNaoPodeEntrar').style.display = 'block';
+                        bloqueiaCampos();
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Veículo não encontrado');
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log('Veículo não encontrado');
-            }
-        });
+            });
+        }
     }else{
         document.getElementById('descricao').value = "";
         document.getElementById('tipo').selectedIndex = "";
