@@ -1,26 +1,26 @@
 <?php
 
     class Paginacao{
-        private $primeiraPagina;
         private $paginaAtual;
-        private $ultimaPagina;
         private $totalRegistros;
         private $paginaEsquerda;
         private $paginaDireita;
         private $paginaCentro;
-        private $numRegPagina = 3;
+        private $numRegPagina = NUM_REG_PAGINA;
         private $totalPaginas;
+        private $url;
 
-        public function __construct($totalRegistros, $paginaAtual)
+        public function __construct($totalRegistros, $paginaAtual, $url)
         {
             $this->totalRegistros = $totalRegistros;
             $this->paginaAtual = $paginaAtual;
             $this->calculaTotalPaginas();
+            $this->url = $url;
             if($this->paginaAtual == 1){
                 $this->paginaEsquerda = $this->paginaAtual;
                 $this->paginaCentro = $this->paginaAtual + 1;
                 $this->paginaDireita = $this->paginaAtual + 2;
-            }else if(($this->totalPaginas > $this->paginaAtual + 1) and ($this->totalPaginas <= $this->paginaAtual)){
+            }else if($this->totalPaginas >= $this->paginaAtual and $this->totalPaginas < $this->paginaAtual + 1){
                 $this->paginaEsquerda = $this->paginaAtual - 2;
                 $this->paginaCentro = $this->paginaAtual - 1;
                 $this->paginaDireita = $this->paginaAtual;
@@ -33,6 +33,7 @@
 
         public function view()
         {
+            $res = $this->paginaAtual % $this->numRegPagina;
             echo '
                 <div class="row mt-5">
                     <div class="col-sm-12">
@@ -41,22 +42,22 @@
                                 <li class="page-item">
                                 ';
             if($this->paginaAtual != 1){
-                echo '              <a class="page-link" href="#" aria-label="Primeira">
+                echo '              <a class="page-link" href="' . $this->url . '/1" aria-label="Primeira">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Primeira</span>
                                     </a>';
             }
             echo '              </li>
-                                <li class="page-item ' . $this->setActive($this->paginaEsquerda) . '"><a class="page-link" href="#">' . $this->paginaEsquerda . '</a></li>';
+                                <li class="page-item ' . $this->setActive($this->paginaEsquerda) . '"><a class="page-link" href="' . $this->url . '/' . $this->paginaEsquerda . '">' . $this->paginaEsquerda . '</a></li>';
             if($this->totalPaginas > 1){
-                echo '          <li class="page-item ' . $this->setActive($this->paginaCentro) . '"><a class="page-link" href="#">' . $this->paginaCentro . '</a></li>';
+                echo '          <li class="page-item ' . $this->setActive($this->paginaCentro) . '"><a class="page-link" href="' . $this->url . '/' . $this->paginaCentro . '">' . $this->paginaCentro . '</a></li>';
             }
             if($this->totalPaginas > 2){
-                echo '          <li class="page-item ' . $this->setActive($this->paginaDireita) . '"><a class="page-link" href="#">' . $this->paginaDireita . '</a></li>';
+                echo '          <li class="page-item ' . $this->setActive($this->paginaDireita) . '"><a class="page-link" href="' . $this->url . '/' . $this->paginaDireita . '">' . $this->paginaDireita . '</a></li>';
             }
-            if($this->totalPaginas > 3){
+            if($this->totalPaginas > 3 and !($this->totalPaginas >= $this->paginaAtual and $this->totalPaginas < $this->paginaAtual + 1)){
                 echo '          <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Última">
+                                    <a class="page-link" href="' . $this->url . '/' . $this->totalPaginas . '" aria-label="Última">
                                         <span class="sr-only">Última</span>    
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
@@ -79,11 +80,10 @@
         private function calculaTotalPaginas()
         {
             $calc = (int)$this->totalRegistros / $this->numRegPagina;
-            $perc = $this->totalRegistros % $this->numRegPagina;
-            if($perc > 0){
-                $calc + 1;
-            }
-            $this->totalPaginas = $calc;
+            $perc = $this->totalRegistros % $this->numRegPagina;    
+            $calc = $calc + $perc;
+            $array = explode(".", $calc);
+            $this->totalPaginas = $array[0];
         }
 
     }

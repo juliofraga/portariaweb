@@ -26,6 +26,7 @@
 	define('TIMEZONE', 'America/Sao_Paulo');
 	define('USA_BALANCA', false);
 	define('CONFIGURACOES_ADMIN', [6, 7, 8, 9, 10]);
+	define('NUM_REG_PAGINA', 3);
 	if(SYSTEM_ENVIRONMENT == 'WINDOWS'){
 		define('LOGS', 'C:/xampp/htdocs/portariaweb/app/Logs/'.date('M_Y').'.txt');
 		define('WKHTMLTOIMAGE_INSTALACAO', 'C:/xampp/htdocs/portariaweb/public/vendor/wkhtmltopdf/bin/wkhtmltoimage');

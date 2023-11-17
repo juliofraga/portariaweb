@@ -184,7 +184,8 @@
                 </div>
             <?php } ?>
             <?php
-                $paginacao = new Paginacao($dados['totalCameras'], $dados['paginaAtual']); 
+                $url = URL . '/camera/consulta';
+                $paginacao = new Paginacao($dados['totalCameras'], $dados['paginaAtual'], $url); 
                 $paginacao->view(); 
             ?>
         </div>
