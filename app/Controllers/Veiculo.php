@@ -109,7 +109,8 @@
 
         public function verificaVeiculoPorId($veiculo_id){
             if($this->helper->sessionValidate()){
-                return $this->veiculoModel->verificaVeiculoPorId($veiculo_id);
+                $retorno = $this->veiculoModel->verificaVeiculoPorId($veiculo_id);
+                return $retorno;
             }else{
                 $this->helper->loginRedirect();
             }
@@ -237,9 +238,10 @@
             }
         }
 
-        public function retornaDescricaoTipoVeiculo($veiculo_id)
+        public function retornaDescricaoTipoVeiculo($veiculo_placa)
         {
             if($this->helper->sessionValidate()){
+                $veiculo_id = $this->retornaIDPOrPlaca($veiculo_placa);
                 if(!$this->veiculoModel->veiculoPodeEntrar($veiculo_id)){
                     $veiculo = $this->veiculoModel->retornaDescricaoTipoVeiculo($veiculo_id);
                     if($veiculo){

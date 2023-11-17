@@ -134,7 +134,7 @@
             }
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
@@ -146,6 +146,8 @@
                         $dados = [
                             'dados' =>  $this->listaCameras(),
                             'filtro' => null,
+                            'totalCameras' => $this->numeroTotalCameras(),
+                            'paginaAtual' => $pag
                         ];
                     }else{
                         if($_SESSION["pw_camera_consulta"] == null or isset($form["descricao_ip"])){
@@ -157,6 +159,8 @@
                         $dados = [
                             'dados' =>  $this->listaCamerasPorFiltro($filtro),
                             'filtro' => $filtro,
+                            'totalCameras' => $this->numeroTotalCameras(),
+                            'paginaAtual' => $pag
                         ];
                     }
                     $this->view('camera/consulta', $dados);
@@ -232,6 +236,16 @@
                     }
                     $this->helper->redirectPage("/camera/consulta");
                 }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalCameras()
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->cameraModel->numeroTotalCameras();
+                return $num[0]->totalCameras;
             }else{
                 $this->helper->loginRedirect();
             }

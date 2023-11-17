@@ -51,8 +51,10 @@
                         if(!$this->empresa->verificaEmpresa($form["cnpj"])){
                             $form["empresa"] = $this->empresa->cadastrar($form["cnpj"], $form["empresa"], "registro");
                         }
-                        if(!$this->veiculo->verificaVeiculoPorId($form["placa"])){
+                        if(!$this->veiculo->verificaPlaca($form["placa"])){
                             $form["placa"] = $this->veiculo->cadastrar($form["placa"], $form["descricao"], $form["tipo"], $form["empresa"], "registro");
+                        }else{
+                            $form["placa"] = $this->veiculo->retornaIDPOrPlaca($form["placa"]);
                         }
 
                         if(!$this->motorista->verificaMotorista($form["motorista"])){

@@ -183,6 +183,10 @@
                     </div>
                 </div>
             <?php } ?>
+            <?php
+                $paginacao = new Paginacao($dados['totalCameras'], $dados['paginaAtual']); 
+                $paginacao->view(); 
+            ?>
         </div>
     </div>
 </div>

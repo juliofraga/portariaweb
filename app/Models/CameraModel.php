@@ -186,5 +186,16 @@
                 return null;
             }  
         }
+
+        public function numeroTotalCameras()
+        {
+            try {
+                $this->db->query("SELECT count(id) as totalCameras FROM cameras");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
     }
 ?>

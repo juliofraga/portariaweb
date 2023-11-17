@@ -71,14 +71,17 @@
                             <select class="js-example-basic-multiple w-100" name="empresa" id="empresa" onchange="buscaCnpjCpf(this.value)">
                             </select>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <label for="cnpj" class="mt-3">CNPJ / CPF</label>
                             <input type="text" onblur="validaAbrirCancela();" class="form-control w-100" name="cnpj" id="cnpj" maxlength="18" onkeypress='mascaraMutuario(this,cpfCnpj)' >
                         </div>
-                        <div class="col-sm-2">
-                            <label for="placa" class="mt-3">Placa do Veículo</label>
+                        <div class="col-sm-3">
+                            <label for="placa" class="mt-3">Placa do Veículo <i>(AAA-0X00)</i></label>
                             <select class="js-example-basic-multiple w-100" name="placa" id="placa" onchange="buscaDescricaoVeiculo(this.value)" >
                             </select>
+                            <small id="avisoPlacaVeiculoForaPadrao" class="form-text" style="color:red; display:none;">
+                                A placa está fora do padrão, digite novamente. Padrão aceito: AAA-0X00    
+                            </small>
                         </div>
                         <div class="col-sm-2">
                             <label for="descricao" class="mt-3">Descrição do Veículo</label>

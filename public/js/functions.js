@@ -968,8 +968,10 @@ function buscaDescricaoVeiculo(veiculo){
     gravaLog('buscaDescricaoVeiculo');
     if(veiculo != ""){
         if(validaPlacaVeiculo(veiculo) == false){
-            alert('placa invalida');
+            document.getElementById('avisoPlacaVeiculoForaPadrao').style.display = 'block';
+            bloqueiaCampos();
         }else{
+            document.getElementById('avisoPlacaVeiculoForaPadrao').style.display = 'none';
             var url = document.getElementById('txtUrl').value;
             $.ajax({
                 url: url+'/veiculo/retornaDescricaoTipoVeiculo/'+veiculo,
@@ -1092,7 +1094,7 @@ function exibeVeiculo(result){
         // Cria elemento option no select
         opcao = document.createElement("option");
         opcao.text = placaRetorno[0];
-        opcao.value = id[0];
+        opcao.value = placaRetorno[0];
         placa.options.add(opcao);
     }
 }

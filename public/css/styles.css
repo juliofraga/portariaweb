@@ -4584,8 +4584,8 @@ textarea.form-control-lg {
 }
 .page-item.active .page-link {
   z-index: 3;
-  color: #fff;
-  background-color: #380B61;
+  color: black;
+  background-color: #ffc107;
   border-color: #380B61;
 }
 .page-item.disabled .page-link {
