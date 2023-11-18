@@ -33,7 +33,6 @@
 
         public function view()
         {
-            $res = $this->paginaAtual % $this->numRegPagina;
             echo '
                 <div class="row mt-5">
                     <div class="col-sm-12">
@@ -78,12 +77,13 @@
         }
 
         private function calculaTotalPaginas()
-        {
+        {            
+            //precisa ajustar
             $calc = (int)$this->totalRegistros / $this->numRegPagina;
-            $perc = $this->totalRegistros % $this->numRegPagina;    
-            $calc = $calc + $perc;
-            $array = explode(".", $calc);
-            $this->totalPaginas = $array[0];
+            if($calc > 0.0 and $calc < 1.0){
+                $calc = (int)$calc;
+            }
+            $this->totalPaginas = $calc;
         }
 
     }

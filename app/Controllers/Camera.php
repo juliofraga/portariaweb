@@ -140,11 +140,14 @@
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
+                    $pag = (int)$pag;
+                    $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                    $iniReg--;
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Câmera");
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     if((!isset($_SESSION["pw_camera_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                         $dados = [
-                            'dados' =>  $this->listaCameras(),
+                            'dados' =>  $this->listaCameras(null, $iniReg),
                             'filtro' => null,
                             'totalCameras' => $this->numeroTotalCameras(),
                             'paginaAtual' => $pag
@@ -170,10 +173,10 @@
             }
         }
 
-        public function listaCameras($attr = null)
+        public function listaCameras($attr = null, $pag)
         {
             if($this->helper->sessionValidate()){
-                return $this->cameraModel->listaCameras($attr);
+                return $this->cameraModel->listaCameras($attr, $pag);
             }else{
                 $this->helper->loginRedirect();
             }

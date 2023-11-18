@@ -96,10 +96,11 @@
             } 
         }
 
-        public function listaCameras($attr = null)
+        public function listaCameras($attr = null, $pag)
         {
             try {
-                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id");
+                $numReg = NUM_REG_PAGINA;
+                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
