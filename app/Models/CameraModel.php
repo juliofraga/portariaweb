@@ -108,11 +108,12 @@
             }
         }
 
-        public function listaCamerasPorFiltro($filtro)
+        public function listaCamerasPorFiltro($filtro, $pag)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filter = "c.descricao like '%". $filtro . "%' or c.endereco_ip like '%" . $filtro . "%'";
-                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id WHERE $filter");
+                $this->db->query("SELECT c.*, p.descricao as portaria FROM cameras c LEFT JOIN camera_has_portaria cp ON c.id = cp.camera_id LEFT JOIN portoes p ON cp.portaria_id = p.id WHERE $filter LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -188,10 +189,14 @@
             }  
         }
 
-        public function numeroTotalCameras()
+        public function numeroTotalCameras($filtro = null)
         {
             try {
-                $this->db->query("SELECT count(id) as totalCameras FROM cameras");
+                $filter = ';';
+                if($filtro != null){
+                    $filter = "WHERE descricao like '%". $filtro . "%' or endereco_ip like '%" . $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalCameras FROM cameras $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);

@@ -20,6 +20,14 @@
                 $this->paginaEsquerda = $this->paginaAtual;
                 $this->paginaCentro = $this->paginaAtual + 1;
                 $this->paginaDireita = $this->paginaAtual + 2;
+            }else if($this->totalPaginas == 2){
+                if($this->paginaAtual == 1){
+                    $this->paginaEsquerda = $this->paginaAtual;
+                    $this->paginaCentro = $this->paginaAtual + 1;
+                }else if($this->paginaAtual == 2){
+                    $this->paginaEsquerda = $this->paginaAtual - 1;
+                    $this->paginaCentro = $this->paginaAtual;
+                }
             }else if($this->totalPaginas >= $this->paginaAtual and $this->totalPaginas < $this->paginaAtual + 1){
                 $this->paginaEsquerda = $this->paginaAtual - 2;
                 $this->paginaCentro = $this->paginaAtual - 1;
@@ -40,7 +48,7 @@
                             <ul class="pagination">
                                 <li class="page-item">
                                 ';
-            if($this->paginaAtual != 1){
+            if($this->paginaAtual != 1 and $this->totalPaginas > 3){
                 echo '              <a class="page-link" href="' . $this->url . '/1" aria-label="Primeira">
                                     <span aria-hidden="true">&laquo;</span>
                                     <span class="sr-only">Primeira</span>
@@ -78,11 +86,12 @@
 
         private function calculaTotalPaginas()
         {            
-            //precisa ajustar
-            $calc = (int)$this->totalRegistros / $this->numRegPagina;
-            if($calc > 0.0 and $calc < 1.0){
-                $calc = (int)$calc;
+            $calc = $this->totalRegistros / $this->numRegPagina;
+            if(!is_int($calc)){
+                $array = explode('.', $calc);
+                $numPag = $array[0];
             }
+            $calc = $numPag + 1;
             $this->totalPaginas = $calc;
         }
 

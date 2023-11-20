@@ -160,9 +160,9 @@
                         }
                         $_SESSION["pw_camera_consulta"] = $filtro;
                         $dados = [
-                            'dados' =>  $this->listaCamerasPorFiltro($filtro),
+                            'dados' =>  $this->listaCamerasPorFiltro($filtro, $iniReg),
                             'filtro' => $filtro,
-                            'totalCameras' => $this->numeroTotalCameras(),
+                            'totalCameras' => $this->numeroTotalCameras($filtro),
                             'paginaAtual' => $pag
                         ];
                     }
@@ -182,10 +182,10 @@
             }
         }
 
-        public function listaCamerasPorFiltro($filtro)
+        public function listaCamerasPorFiltro($filtro, $pag)
         {
             if($this->helper->sessionValidate()){
-                return $this->cameraModel->listaCamerasPorFiltro($filtro);
+                return $this->cameraModel->listaCamerasPorFiltro($filtro, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -244,10 +244,10 @@
             }
         }
 
-        private function numeroTotalCameras()
+        private function numeroTotalCameras($filtro = null)
         {
             if($this->helper->sessionValidate()){
-                $num = $this->cameraModel->numeroTotalCameras();
+                $num = $this->cameraModel->numeroTotalCameras($filtro);
                 return $num[0]->totalCameras;
             }else{
                 $this->helper->loginRedirect();
