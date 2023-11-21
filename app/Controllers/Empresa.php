@@ -36,14 +36,19 @@
             } 
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
+                $pag = (int)$pag;
+                $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                $iniReg--;
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if((!isset($_SESSION["pw_empresa_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
-                        'dados' =>  $this->listaEmpresas(),
+                        'dados' =>  $this->listaEmpresas(null, $iniReg),
                         'filtro' => null,
+                        'totalEmpresas' => $this->numeroTotalEmpresas(),
+                        'paginaAtual' => $pag
                     ];
                 }else{
                     if($_SESSION["pw_empresa_consulta"] == null or isset($form["cnpj_nome"])){
@@ -53,8 +58,10 @@
                     }
                     $_SESSION["pw_empresa_consulta"] = $filtro;
                     $dados = [
-                        'dados' =>  $this->listaEmpresasPorFiltro($filtro),
+                        'dados' =>  $this->listaEmpresasPorFiltro($filtro, $iniReg),
                         'filtro' => $filtro,
+                        'totalEmpresas' => $this->numeroTotalEmpresas($filtro),
+                        'paginaAtual' => $pag
                     ];
                 }
                 $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Empresa");
@@ -136,7 +143,7 @@
             }
         }
 
-        public function listaEmpresas($attr = null)
+        public function listaEmpresas($attr = null, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
                 if($attr == "listaPainel"){
@@ -154,17 +161,17 @@
                         }
                     }
                 }else{
-                    return $this->empresaModel->listaEmpresas($attr);
+                    return $this->empresaModel->listaEmpresas($attr, $pag, $origem);
                 }
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaEmpresasPorFiltro($filtro)
+        public function listaEmpresasPorFiltro($filtro, $pag = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->empresaModel->listaEmpresasPorFiltro($filtro);
+                return $this->empresaModel->listaEmpresasPorFiltro($filtro, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -280,6 +287,16 @@
                     );
                 }
                 return $retorno;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalEmpresas($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->empresaModel->numeroTotalEmpresas($filtro);
+                return $num[0]->totalEmpresas;
             }else{
                 $this->helper->loginRedirect();
             }

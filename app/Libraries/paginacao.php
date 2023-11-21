@@ -90,9 +90,11 @@
             if(!is_int($calc)){
                 $array = explode('.', $calc);
                 $numPag = $array[0];
+                $numPag = $numPag + 1;
+            }else{
+                $numPag = $calc;
             }
-            $calc = $numPag + 1;
-            $this->totalPaginas = $calc;
+            $this->totalPaginas = $numPag;
         }
 
     }

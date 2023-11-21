@@ -92,11 +92,16 @@
             }  
         }
 
-        public function listaEmpresas($attr = null)
+        public function listaEmpresas($attr = null, $pag = null, $origem = null)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 if($attr == null){
-                    $this->db->query("SELECT * FROM empresas ORDER BY id");
+                    if($origem == null){
+                        $this->db->query("SELECT * FROM empresas ORDER BY id LIMIT $pag, $numReg");
+                    }else if($origem == 'consulta'){
+                        $this->db->query("SELECT * FROM empresas ORDER BY id");
+                    }
                 }else if($attr == "ativas"){
                     $this->db->query("SELECT * FROM empresas WHERE situacao = :situacao ORDER BY id");
                     $this->db->bind("situacao", 0);
@@ -108,14 +113,15 @@
             }
         }
 
-        public function listaEmpresasPorFiltro($filtro = null)
+        public function listaEmpresasPorFiltro($filtro = null, $pag = null)
         {
             try {
-                $filter = "";
+                $numReg = NUM_REG_PAGINA;
+                $filter = '';
                 if($filtro != null){
-                    $filter = $filtro;
+                    $filter = "WHERE cnpj like '%". $filtro . "%' or razao_social like '%" . $filtro . "%' or nome_fantasia like '%". $filtro . "%'";
                 }
-                $this->db->query("SELECT * FROM empresas WHERE $filter ORDER BY id");
+                $this->db->query("SELECT * FROM empresas $filter ORDER BY id LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -168,6 +174,21 @@
                 $this->log->gravaLogDBError($th);
                 return null;
             }
+        }
+
+        public function numeroTotalEmpresas($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE cnpj like '%". $filtro . "%' or razao_social like '%" . $filtro . "%' or nome_fantasia like '%". $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalEmpresas FROM empresas $filter");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
         }
 
     }

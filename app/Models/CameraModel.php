@@ -192,7 +192,7 @@
         public function numeroTotalCameras($filtro = null)
         {
             try {
-                $filter = ';';
+                $filter = '';
                 if($filtro != null){
                     $filter = "WHERE descricao like '%". $filtro . "%' or endereco_ip like '%" . $filtro . "%'";
                 }

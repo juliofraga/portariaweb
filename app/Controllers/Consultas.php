@@ -92,7 +92,7 @@
                         'motoristasSelecionados' => $motoristasSelecionados,
                         'dataDeSelecionada' => $dataDeSelecionada,
                         'dataAteSelecionada' => $dataAteSelecionada,
-                        'empresas' => $this->empresa->listaEmpresas(),
+                        'empresas' => $this->empresa->listaEmpresas(null, null, 'consulta'),
                         'veiculos' => $this->veiculo->listaVeiculos(),
                         'motoristas' => $this->motorista->listaMotoristas(),
                         'consulta' => $consulta,

@@ -73,12 +73,12 @@
                     ?>
                         <div class="addHoverLine">
                             <div class="row mt-4">
-                                <div class="col-sm-3">
+                                <div class="col-sm-2">
                                     <p class="pb-1 mb-0 large border-bottom mt-2 ">
                                         <?= $empresa->cnpj ?>
                                     </p>
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <p class="pb-1 mb-0 large border-bottom mt-2 ">
                                         <?= $empresa->razao_social ?>
                                     </p>
@@ -245,14 +245,29 @@
                         $_SESSION["pw_rotina"] = null;
                     ?>
             <?php }else{ ?>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-warning" role="alert">
-                            Não há empresas cadastradas no sistema ainda.
+                <?php if($dados["totalEmpresas"] > 0){ ?>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                Nenhum registro encontrado.
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php }else{ ?>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                Não há empresas cadastradas no sistema ainda.
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
             <?php } ?>
+            <?php
+                $url = URL . '/empresa/consulta';
+                $paginacao = new Paginacao($dados['totalEmpresas'], $dados['paginaAtual'], $url); 
+                $paginacao->view(); 
+            ?>
         </div>
     </div>
 </div>
