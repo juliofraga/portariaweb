@@ -88,10 +88,15 @@
             }  
         }
 
-        public function listaVeiculos($attr = null)
+        public function listaVeiculos($attr = null, $pag = null, $origem = null)
         {
             try {
-                $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id");
+                $numReg = NUM_REG_PAGINA;
+                if($origem == null){
+                    $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id");
+                }else if($origem == 'consulta'){
+                    $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id LIMIT $pag, $numReg");
+                }
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -197,6 +202,21 @@
                 $this->log->gravaLogDBError($th);
                 return null;
             }
+        }
+
+        public function numeroTotalVeiculos($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE descricao like '%". $filtro . "%' or placa like '%" . $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalVeiculos FROM veiculos $filter");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
         }
     }
 ?>

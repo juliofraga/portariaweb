@@ -143,16 +143,21 @@
             } 
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
+                $pag = (int)$pag;
+                $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                $iniReg--;
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Veículo");
                 if((!isset($_SESSION["pw_veiculo_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
-                        'dados' =>  $this->listaVeiculos(),
+                        'dados' =>  $this->listaVeiculos(null, $iniReg, 'consulta'),
                         'filtro' => null,
                         'empresas' => $this->empresa->listaEmpresas("ativas"),
+                        'totalVeiculos' => $this->numeroTotalVeiculos(),
+                        'paginaAtual' => $pag
                     ];
                 }else{
                     if($_SESSION["pw_veiculo_consulta"] == null or isset($form["descricao_placa"])){
@@ -173,10 +178,10 @@
             } 
         }
 
-        public function listaVeiculos($attr = null)
+        public function listaVeiculos($attr = null, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->veiculoModel->listaVeiculos();
+                return $this->veiculoModel->listaVeiculos($attr, $pag, $origem);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -328,6 +333,16 @@
                     );
                 }
                 return $retorno;
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalVeiculos($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->veiculoModel->numeroTotalVeiculos($filtro);
+                return $num[0]->totalVeiculos;
             }else{
                 $this->helper->loginRedirect();
             }
