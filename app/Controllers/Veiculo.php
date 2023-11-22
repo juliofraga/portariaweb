@@ -167,9 +167,11 @@
                     }
                     $_SESSION["pw_veiculo_consulta"] = $filtro;
                     $dados = [
-                        'dados' =>  $this->listaVeiculosPorFiltro($filtro),
+                        'dados' =>  $this->listaVeiculosPorFiltro($filtro, $iniReg),
                         'filtro' => $filtro,
                         'empresas' => $this->empresa->listaEmpresas("ativas"),
+                        'totalVeiculos' => $this->numeroTotalVeiculos($filtro),
+                        'paginaAtual' => $pag
                     ];
                 }
                 $this->view('veiculo/consulta', $dados);
@@ -187,10 +189,10 @@
             }
         }
 
-        public function listaVeiculosPorFiltro($filtro)
+        public function listaVeiculosPorFiltro($filtro, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->veiculoModel->listaVeiculosPorFiltro($filtro);
+                return $this->veiculoModel->listaVeiculosPorFiltro($filtro, $pag);
             }else{
                 $this->helper->loginRedirect();
             }

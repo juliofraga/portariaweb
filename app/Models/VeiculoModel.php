@@ -104,11 +104,12 @@
             }
         }
 
-        public function listaVeiculosPorFiltro($filtro)
+        public function listaVeiculosPorFiltro($filtro, $pag = null)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filter = "and (v.descricao like '%".$filtro."%' or v.placa like '%".$filtro."%')";
-                $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id $filter");
+                $this->db->query("SELECT v.*, e.nome_fantasia FROM veiculos v, empresas e WHERE v.empresas_id = e.id $filter LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
