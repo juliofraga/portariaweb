@@ -65,10 +65,15 @@
             }  
         }
 
-        public function listaMotoristas($attr = null)
+        public function listaMotoristas($pag = null, $origem = null)
         {
             try {
-                $this->db->query("SELECT * FROM pessoas");
+                $numReg = NUM_REG_PAGINA;
+                if($origem == null){
+                    $this->db->query("SELECT * FROM pessoas");
+                }else if($origem = 'consulta'){
+                    $this->db->query("SELECT * FROM pessoas LIMIT $pag, $numReg");
+                }
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -76,11 +81,12 @@
             }
         }
 
-        public function listaMotoristasPorFiltro($filtro)
+        public function listaMotoristasPorFiltro($filtro, $pag = null)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filter = "nome_completo like '%".$filtro."%' or cpf like '%".$filtro."%'";
-                $this->db->query("SELECT * FROM pessoas WHERE $filter");
+                $this->db->query("SELECT * FROM pessoas WHERE $filter LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -174,6 +180,21 @@
                 $this->log->gravaLogDBError($th);
                 return null;
             }
+        }
+
+        public function numeroTotalMotoristas($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE nome_completo like '%". $filtro . "%' or cpf like '%" . $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalMotoristas FROM pessoas $filter");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
         }
     }
 ?>

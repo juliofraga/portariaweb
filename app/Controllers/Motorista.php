@@ -42,15 +42,20 @@
             }  
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
                 $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Motorista");
+                $pag = (int)$pag;
+                $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                $iniReg--;
                 $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                 if((!isset($_SESSION["pw_motorista_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                     $dados = [
-                        'dados' =>  $this->listaMotoristas(),
+                        'dados' =>  $this->listaMotoristas($iniReg, 'consulta'),
                         'filtro' => null,
+                        'totalMotoristas' => $this->numeroTotalMotoristas(),
+                        'paginaAtual' => $pag
                     ];
                 }else{
                     if($_SESSION["pw_motorista_consulta"] == null or isset($form["filtro"])){
@@ -60,8 +65,10 @@
                     }
                     $_SESSION["pw_motorista_consulta"] = $filtro;
                     $dados = [
-                        'dados' =>  $this->listaMotoristasPorFiltro($filtro),
+                        'dados' =>  $this->listaMotoristasPorFiltro($filtro, $iniReg),
                         'filtro' => $filtro,
+                        'totalMotoristas' => $this->numeroTotalMotoristas($filtro),
+                        'paginaAtual' => $pag
                     ];
                 }
                 $this->view('motorista/consulta', $dados);
@@ -70,19 +77,19 @@
             } 
         }
 
-        public function listaMotoristas($attr = null)
+        public function listaMotoristas($pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->motoristaModel->listaMotoristas();
+                return $this->motoristaModel->listaMotoristas($pag, $origem);
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaMotoristasPorFiltro($filtro)
+        public function listaMotoristasPorFiltro($filtro, $pag = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->motoristaModel->listaMotoristasPorFiltro($filtro);
+                return $this->motoristaModel->listaMotoristasPorFiltro($filtro, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -201,6 +208,16 @@
         {
             if($this->helper->sessionValidate()){
                 return $this->motoristaModel->buscaMotoristaPorCpf($cpf);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalMotoristas($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->motoristaModel->numeroTotalMotoristas($filtro);
+                return $num[0]->totalMotoristas;
             }else{
                 $this->helper->loginRedirect();
             }
