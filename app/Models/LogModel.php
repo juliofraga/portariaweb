@@ -25,8 +25,9 @@
         }
 
         // Retorna os logs registrados
-        public function listaLogs($dtInicio = null, $dtFim = null, $today){
+        public function listaLogs($dtInicio = null, $dtFim = null, $today, $pag){
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filtroData = " AND l.created_at >= '" . $today . " 00:00:01'";
                 if($dtInicio != null and $dtFim != null){
                     $filtroData = " AND l.created_at >= '" . $dtInicio . "' AND l.created_at <= '" . $dtFim . "'";
@@ -46,8 +47,9 @@
                 LEFT JOIN placas pl ON l.id_classe = pl.id 
                 LEFT JOIN portoes por ON l.id_classe = por.id 
                 LEFT JOIN usuarios usu ON l.id_classe = usu.id
-                WHERE l.id > 1 $filtroData
-                ORDER BY l.created_at DESC");
+                WHERE l.id > 0 $filtroData
+                ORDER BY l.created_at DESC
+                LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 return null;
@@ -81,6 +83,24 @@
                 return $this->db->results();
             }catch (Throwable $th) {
                 return null;
+            } 
+        }
+
+        public function numeroTotalLogs($dtInicio = null, $dtFim = null, $today)
+        {
+            try {
+                $filtroData = " AND created_at >= '" . $today . " 00:00:01'";
+                if($dtInicio != null and $dtFim != null){
+                    $filtroData = " AND created_at >= '" . $dtInicio . "' AND created_at <= '" . $dtFim . "'";
+                }else if($dtInicio != null and $dtFim == null){
+                    $filtroData = " AND created_at >= '" . $dtInicio . "'";
+                }else if($dtInicio == null and $dtFim != null){
+                    $filtroData = " AND created_at <= '" . $dtFim . "'";
+                }
+                $this->db->query("SELECT count(id) as totalLogs FROM logs WHERE id > 0 $filtroData");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                return false;
             } 
         }
     }

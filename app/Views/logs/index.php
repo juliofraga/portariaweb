@@ -91,14 +91,29 @@
                         }
                     ?>
             <?php }else{ ?>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="alert alert-warning" role="alert">
-                                Não há logs registrados no sistema ainda.
+                    <?php if($dados["totalLogs"] > 0){ ?>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-warning" role="alert">
+                                    Nenhum registro encontrado.
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php }else{ ?>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-warning" role="alert">
+                                    Não há logs registrados no sistema ainda.
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
             <?php } ?>
+            <?php
+                $url = URL . '/logs';
+                $paginacao = new Paginacao($dados['totalLogs'], $dados['paginaAtual'], $url); 
+                $paginacao->view(); 
+            ?>
         </div>
     </div>
 </div>

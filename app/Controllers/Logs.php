@@ -10,20 +10,33 @@
             $this->helper = new Helpers(); 
         }
 
-        public function index(){
+        public function index($pag = 1){
             if($this->helper->sessionValidate()){
+                $pag = (int)$pag;
+                $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                $iniReg--;
                 if($_SESSION['pw_tipo_perfil'] == md5("Superadmin") or ($_SESSION['pw_tipo_perfil'] == md5("Administrador") and $_SESSION['pw_exibe_logs_basicos_admin'] == true)){
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     $dtInicio = $form['dataDe'];
                     $dtFim = $form['dataAte'];
+                    if($dtInicio == null and $_SESSION["pw_log_dtDe"] != null){
+                        $dtInicio = $_SESSION["pw_log_dtDe"];
+                    }
+                    if($dtFim == null and $_SESSION["pw_log_dtAte"] != null){
+                        $dtFim = $_SESSION["pw_log_dtAte"];
+                    }
                     if(isset($form["limpar"])){
                         $dtInicio = null;
                         $dtFim = null;
                     }
+                    $_SESSION["pw_log_dtDe"] = $dtInicio;
+                    $_SESSION["pw_log_dtAte"] = $dtFim;
                     $dados = [
-                        'dados' => $this->listaLogs($dtInicio, $dtFim),
+                        'dados' => $this->listaLogs($dtInicio, $dtFim, $iniReg),
                         'dataDe' => $dtInicio,
-                        'dataAte' => $dtFim
+                        'dataAte' => $dtFim,
+                        'totalLogs' => $this->numeroTotalLogs($dtInicio, $dtFim),
+                        'paginaAtual' => $pag
                     ];
                     $this->view('/logs/index', $dados);
                 }else{
@@ -34,12 +47,12 @@
             }
         }
 
-        public function listaLogs($dtInicio = null, $dtFim = null){
+        public function listaLogs($dtInicio = null, $dtFim = null, $pag){
             if($this->helper->sessionValidate()){
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
-                    return $this->logModel->listaLogs($dtInicio, $dtFim, $this->helper->returnDate());
+                    return $this->logModel->listaLogs($dtInicio, $dtFim, $this->helper->returnDate(), $pag);
                 }
             }else{
                 $this->helper->redirectPage("/login/");
@@ -67,6 +80,16 @@
                 }
             }else{
                 $this->helper->redirectPage("/login/");
+            }
+        }
+
+        private function numeroTotalLogs($dtInicio = null, $dtFim = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->logModel->numeroTotalLogs($dtInicio, $dtFim, $this->helper->returnDate());
+                return $num[0]->totalLogs;
+            }else{
+                $this->helper->loginRedirect();
             }
         }
     }
