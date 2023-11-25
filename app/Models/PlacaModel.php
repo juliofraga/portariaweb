@@ -84,10 +84,11 @@
             }  
         }
 
-        public function listaPlacas($attr = null)
+        public function listaPlacas($attr = null, $pag)
         {
             try {
-                $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id");
+                $numReg = NUM_REG_PAGINA;
+                $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -107,11 +108,12 @@
             }
         }
 
-        public function listaPlacasPorFiltro($filtro)
+        public function listaPlacasPorFiltro($filtro, $pag)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filter = "pl.descricao like '%". $filtro . "%' or pl.endereco_ip like '%" . $filtro . "%'";
-                $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id WHERE $filter order by pl.descricao ASC");
+                $this->db->query("SELECT pl.*, p.descricao as portaria FROM placas pl LEFT JOIN portoes p on p.placas_id = pl.id WHERE $filter order by pl.descricao ASC LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -147,6 +149,21 @@
                     return true;
                 else
                     return false;
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
+
+        public function numeroTotalPlacas($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE descricao like '%". $filtro . "%' or endereco_ip like '%" . $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalPlacas FROM placas $filter");
+                return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
                 return false;

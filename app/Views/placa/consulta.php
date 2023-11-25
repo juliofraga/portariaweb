@@ -206,14 +206,29 @@
                         $_SESSION["pw_rotina"] = null;
                     ?>
             <?php }else{ ?>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-warning" role="alert">
-                            Não há placas cadastradas no sistema ainda.
+                <?php if($dados["totalPlacas"] > 0){ ?>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                Nenhum registro encontrado.
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php }else{ ?>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="alert alert-warning" role="alert">
+                                Não há placas cadastradas no sistema ainda.
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
             <?php } ?>
+            <?php
+                $url = URL . '/placa/consulta';
+                $paginacao = new Paginacao($dados['totalPlacas'], $dados['paginaAtual'], $url); 
+                $paginacao->view(); 
+            ?>
         </div>
     </div>
 </div>

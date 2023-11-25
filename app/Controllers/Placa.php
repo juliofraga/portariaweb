@@ -93,18 +93,23 @@
             }
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
+                    $pag = (int)$pag;
+                    $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                    $iniReg--;
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Placa");
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     if((!isset($_SESSION["pw_placa_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                         $dados = [
-                            'dados' =>  $this->listaPlacas(),
+                            'dados' =>  $this->listaPlacas(null, $iniReg),
                             'filtro' => null,
+                            'totalPlacas' => $this->numeroTotalPlacas(),
+                            'paginaAtual' => $pag
                         ];
                     }else{
                         if($_SESSION["pw_placa_consulta"] == null or isset($form["descricao_ip"])){
@@ -114,8 +119,10 @@
                         }
                         $_SESSION["pw_placa_consulta"] = $filtro;
                         $dados = [
-                            'dados' =>  $this->listaPlacasPorFiltro($filtro),
+                            'dados' =>  $this->listaPlacasPorFiltro($filtro, $iniReg),
                             'filtro' => $filtro,
+                            'totalPlacas' => $this->numeroTotalPlacas($filtro),
+                            'paginaAtual' => $pag
                         ];
                     }
                     $this->view('placa/consulta', $dados);
@@ -125,19 +132,19 @@
             }
         }
 
-        public function listaPlacas($attr = null)
+        public function listaPlacas($attr = null, $pag)
         {
             if($this->helper->sessionValidate()){
-                return $this->placaModel->listaPlacas($attr);
+                return $this->placaModel->listaPlacas($attr, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaPlacasPorFiltro($filtro)
+        public function listaPlacasPorFiltro($filtro, $pag)
         {
             if($this->helper->sessionValidate()){
-                return $this->placaModel->listaPlacasPorFiltro($filtro);
+                return $this->placaModel->listaPlacasPorFiltro($filtro, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -182,6 +189,16 @@
                     }
                     $this->helper->redirectPage("/placa/consulta");
                 }
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalPlacas($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->placaModel->numeroTotalPlacas($filtro);
+                return $num[0]->totalPlacas;
             }else{
                 $this->helper->loginRedirect();
             }
