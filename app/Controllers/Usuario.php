@@ -120,18 +120,23 @@
             }
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
+                    $pag = (int)$pag;
+                    $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                    $iniReg--;
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Usuário");
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     if((!isset($_SESSION["pw_usuario_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                         $dados = [
-                            'dados' =>  $this->listaUsuarios(),
+                            'dados' =>  $this->listaUsuarios(null, $iniReg, "consulta"),
                             'nome' => null,
+                            'totalUsuarios' => $this->numeroTotalUsuarios(),
+                            'paginaAtual' => $pag
                         ];
                     }else{
                         if($_SESSION["pw_usuario_consulta"] == null or isset($form["nome_usuario"])){
@@ -141,8 +146,10 @@
                         }
                         $_SESSION["pw_usuario_consulta"] = $nome;
                         $dados = [
-                            'dados' =>  $this->listaUsuarioPorNome($nome),
+                            'dados' =>  $this->listaUsuarioPorNome($nome, $iniReg),
                             'nome' => $nome,
+                            'totalUsuarios' => $this->numeroTotalUsuarios($nome),
+                            'paginaAtual' => $pag
                         ];
                     }
                     $this->view('usuario/consulta', $dados);
@@ -152,19 +159,19 @@
             }
         }
 
-        public function listaUsuarios($attr = null)
+        public function listaUsuarios($attr = null, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->usuarioModel->listaUsuarios($attr);
+                return $this->usuarioModel->listaUsuarios($attr, $pag, $origem);
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaUsuarioPorNome($nome)
+        public function listaUsuarioPorNome($nome, $pag)
         {
             if($this->helper->sessionValidate()){
-                return $this->usuarioModel->listaUsuarioPorNome($nome);
+                return $this->usuarioModel->listaUsuarioPorNome($nome, $pag);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -285,6 +292,16 @@
                 return $this->usuarioModel->buscaUsuarioPorLogin($login);
             }else{
                 $this->view('pagenotfound');
+            }
+        }
+
+        private function numeroTotalUsuarios($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->usuarioModel->numeroTotalUsuarios($filtro);
+                return $num[0]->totalUsuarios;
+            }else{
+                $this->helper->loginRedirect();
             }
         }
 

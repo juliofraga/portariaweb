@@ -169,11 +169,16 @@
             }
         }
 
-        public function listaUsuarios($attr = null)
+        public function listaUsuarios($attr = null, $pag = null, $origem = null)
         {
             try {
                 if($attr == null){
-                    $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC");
+                    $limite = "";
+                    if($origem == "consulta"){
+                        $numReg = NUM_REG_PAGINA;
+                        $limite = "LIMIT $pag, $numReg";
+                    }
+                    $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' order by nome ASC $limite");
                 }else if($attr == "todos"){
                     $this->db->query("SELECT * FROM usuarios order by nome ASC");
                 }else if($attr == "operador"){
@@ -188,11 +193,12 @@
             }
         }
 
-        public function listaUsuarioPorNome($nome)
+        public function listaUsuarioPorNome($nome, $pag)
         {
             try {
+                $numReg = NUM_REG_PAGINA;
                 $filter = "nome like '%". $nome . "%'";
-                $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' and $filter order by nome ASC");
+                $this->db->query("SELECT * FROM usuarios WHERE perfil <> 'Superadmin' and $filter order by nome ASC LIMIT $pag, $numReg");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -285,6 +291,21 @@
                 $this->log->gravaLogDBError($th);
                 return null;
             }   
+        }
+
+        public function numeroTotalUsuarios($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE nome like '%". $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalUsuarios FROM usuarios $filter");
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
         }
     }
 ?>
