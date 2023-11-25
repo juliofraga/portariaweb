@@ -659,8 +659,11 @@
             return $newDate;
         }
 
-        public function exibeSomenteIPCamera($endereco)
+        public function exibeSomenteIPCamera($endereco = null)
         {
+            if($endereco == null){
+                return null;
+            }
             $array = explode("://", $endereco);
             $array2 = explode(":", $array[1]);
             return $array2[0];

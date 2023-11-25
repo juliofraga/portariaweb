@@ -102,20 +102,25 @@
             }
         }
 
-        public function consulta()
+        public function consulta($pag = 1)
         {
             if($this->helper->sessionValidate()){
                 if($this->helper->isOperador($_SESSION['pw_tipo_perfil'])){
                     $this->view('pagenotfound');
                 }else{
+                    $pag = (int)$pag;
+                    $iniReg = (($pag - 1) * NUM_REG_PAGINA) + 1;
+                    $iniReg--;
                     $form = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
                     $this->log->gravaLog($this->helper->returnDateTime(), null, "Abriu tela", $_SESSION['pw_id'], null, null, "Consulta Portaria");
                     if((!isset($_SESSION["pw_portaria_consulta"])) and($form == null or !isset($form)) or ($form != null and isset($form["limpar"]))){
                         $dados = [
-                            'dados' =>  $this->listaPortarias("todos"),
+                            'dados' =>  $this->listaPortarias("todos", $iniReg, "consulta"),
                             'filtro' => null,
                             "placas" => $this->placa->listaPlacasDisponiveis(),
                             "cameras" => $this->camera->listaCamerasDisponiveis(),
+                            'totalPortarias' => $this->numeroTotalPortarias(),
+                            'paginaAtual' => $pag
                         ];
                     }else{
                         if($_SESSION["pw_portaria_consulta"] == null or isset($form["descricao"])){
@@ -125,10 +130,12 @@
                         }
                         $_SESSION["pw_portaria_consulta"] = $filtro;
                         $dados = [
-                            'dados' =>  $this->listaPortariasPorFiltro($filtro),
+                            'dados' =>  $this->listaPortariasPorFiltro($filtro, false, $iniReg, "consulta"),
                             'filtro' => $filtro,
                             "placas" => $this->placa->listaPlacasDisponiveis(),
                             "cameras" => $this->camera->listaCamerasDisponiveis(),
+                            'totalPortarias' => $this->numeroTotalPortarias($filtro),
+                            'paginaAtual' => $pag
                         ];
                     }
                     $this->view('portaria/consulta', $dados);
@@ -138,19 +145,19 @@
             }
         }
 
-        public function listaPortarias($attr = null)
+        public function listaPortarias($attr = null, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->portariaModel->listaPortarias($attr);
+                return $this->portariaModel->listaPortarias($attr, $pag, $origem);
             }else{
                 $this->helper->loginRedirect();
             }
         }
 
-        public function listaPortariasPorFiltro($filtro, $exato = false)
+        public function listaPortariasPorFiltro($filtro, $exato = false, $pag = null, $origem = null)
         {
             if($this->helper->sessionValidate()){
-                return $this->portariaModel->listaPortariasPorFiltro($filtro, $exato);
+                return $this->portariaModel->listaPortariasPorFiltro($filtro, $exato, $pag, $origem);
             }else{
                 $this->helper->loginRedirect();
             }
@@ -393,6 +400,16 @@
         {
             if($this->helper->sessionValidate()){
                 return $this->portariaModel->checkPortariasLigadas($portariaEntrada, $portariaSaida);
+            }else{
+                $this->helper->loginRedirect();
+            }
+        }
+
+        private function numeroTotalPortarias($filtro = null)
+        {
+            if($this->helper->sessionValidate()){
+                $num = $this->portariaModel->numeroTotalPortarias($filtro);
+                return $num[0]->totalPortarias;
             }else{
                 $this->helper->loginRedirect();
             }

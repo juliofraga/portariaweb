@@ -55,7 +55,7 @@
             }
         }
 
-        public function listaPortarias($attr = null)
+        public function listaPortarias($attr = null, $pag = null, $origem = null)
         {
             try {
                 
@@ -65,7 +65,12 @@
                     $this->db->query("SELECT * FROM portoes WHERE situacao = :situacao order by descricao ASC");
                     $this->db->bind("situacao", 0);
                 }else if($attr == "todos"){
-                    $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id order by p.descricao ASC");
+                    $limite = "";
+                    if($origem == "consulta"){
+                        $numReg = NUM_REG_PAGINA;
+                        $limite = "LIMIT $pag, $numReg";
+                    }
+                    $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id order by p.descricao ASC $limite");
                 }
                 return $this->db->results();
             } catch (Throwable $th) {
@@ -85,14 +90,19 @@
             }
         }
 
-        public function listaPortariasPorFiltro($filtro, $exato = false)
+        public function listaPortariasPorFiltro($filtro, $exato = false, $pag = null, $origem = null)
         {
             try {
                 $filter = "p.descricao like '%". $filtro . "%'";
                 if($exato == true){
                     $filter = "p.descricao = '". $filtro . "'";
                 }
-                $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id WHERE $filter order by p.descricao ASC");
+                $limite = "";
+                if($origem == "consulta"){
+                    $numReg = NUM_REG_PAGINA;
+                    $limite = "LIMIT $pag, $numReg";
+                }
+                $this->db->query("SELECT p.*, pl.descricao as placa, pl.endereco_ip as ip_placa, c.descricao as camera, c.endereco_ip as ip_camera, c.id as camera_id, cp.entrada_saida FROM portoes p LEFT JOIN placas pl ON p.placas_id = pl.id LEFT JOIN camera_has_portaria cp ON cp.portaria_id = p.id LEFT JOIN cameras c ON cp.camera_id = c.id WHERE $filter order by p.descricao ASC $limite");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
@@ -281,6 +291,21 @@
                 $this->db->query("SELECT id FROM portaria_ligacao_portaria WHERE (portaria_id_1 = :portariaEntrada and portaria_id_2 = :portariaSaida and tipo <> '1') OR (portaria_id_1 = :portariaSaida and portaria_id_2 = :portariaEntrada and tipo <> '0')");
                 $this->db->bind("portariaEntrada", $portariaEntrada);
                 $this->db->bind("portariaSaida", $portariaSaida);
+                return $this->db->results();
+            } catch (Throwable $th) {
+                $this->log->gravaLogDBError($th);
+                return false;
+            } 
+        }
+
+        public function numeroTotalPortarias($filtro = null)
+        {
+            try {
+                $filter = '';
+                if($filtro != null){
+                    $filter = "WHERE descricao like '%". $filtro . "%'";
+                }
+                $this->db->query("SELECT count(id) as totalPortarias FROM portoes $filter");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
