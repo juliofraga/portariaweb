@@ -252,7 +252,7 @@
                 return false;
             }
             $cpfcnpj = $this->helper->formata_cpf_cnpj($cpfcnpj);
-            $empresaDados = $this->empresa->listaEmpresasPorFiltro("cnpj = '$cpfcnpj'");
+            $empresaDados = $this->empresa->listaEmpresasPorFiltro($cpfcnpj);
             if($empresaDados == null and empty($nome)){
                 $this->importContError++;
                 $this->importErrorMessage .= "<li>Não foi informado o nome da empresa na linha $linha, ajuste e tente novamente.</li>";
@@ -260,7 +260,7 @@
             }
             if($empresaDados == null){
                 $this->empresa->cadastrar($cpfcnpj, $nome, "registro");
-                $empresaDados = $this->empresa->listaEmpresasPorFiltro("cnpj = '$cpfcnpj'");
+                $empresaDados = $this->empresa->listaEmpresasPorFiltro($cpfcnpj);
             }
             $empresa["id"] = $empresaDados[0]->id;
             $empresa["cnpj"] = $empresaDados[0]->cnpj;

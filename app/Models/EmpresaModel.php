@@ -121,7 +121,11 @@
                 if($filtro != null){
                     $filter = "WHERE cnpj like '%". $filtro . "%' or razao_social like '%" . $filtro . "%' or nome_fantasia like '%". $filtro . "%'";
                 }
-                $this->db->query("SELECT * FROM empresas $filter ORDER BY id LIMIT $pag, $numReg");
+                $limite = "";
+                if($pag != null){
+                    $limite = "LIMIT $pag, $numReg";
+                }
+                $this->db->query("SELECT * FROM empresas $filter ORDER BY id $limite");
                 return $this->db->results();
             } catch (Throwable $th) {
                 $this->log->gravaLogDBError($th);
