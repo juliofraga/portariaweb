@@ -44,6 +44,7 @@
                         <div class="col-sm-12">
                             <div class="form-floating mt-3">
                                 <input type="hidden" class="form-control" id="id" name="id" required value="<?= $dados['usuario'][0]->id ?>">
+                                <input type="hidden" id="txtUrl" value="<?= URL ?>">
                                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome*" required value="<?= $dados['usuario'][0]->nome ?>">
                                 <label for="nome">Nome*</label>
                             </div>

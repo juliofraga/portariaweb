@@ -42,6 +42,7 @@
                     <div class="row mt-5">
                         <div class="col-sm-12">
                             <div class="form-floating">
+                                <input type="hidden" id="txtUrl" value="<?= URL ?>">
                                 <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome completo*" required>
                                 <label for="nome">Nome completo*</label>
                             </div>
