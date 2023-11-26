@@ -88,7 +88,7 @@
         {            
             $calc = $this->totalRegistros / $this->numRegPagina;
             if(!is_int($calc)){
-                $array = explode('.', $calc);
+                $array = explode(".", $calc);
                 $numPag = $array[0];
                 $numPag = $numPag + 1;
             }else{
