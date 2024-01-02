@@ -130,7 +130,7 @@
                                             <div class="row">
                                                 <div class="col-sm-9">
                                                     <div class="form-floating mt-3">
-                                                        <input type="text" class="form-control" id="endereco_ip" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $placa->endereco_ip ?>">
+                                                        <input type="text" class="form-control" id="endereco_ip_<?= $placa->id ?>" name="endereco_ip" placeholder="Endereço IP (xxx.xxx.xxx.xxx)*" required value="<?= $placa->endereco_ip ?>" onkeyup="formataIpAddress(<?= $placa->id ?>)">
                                                         <label for="endereco_ip">Endereço IP (xxx.xxx.xxx.xxx)*</label>
                                                     </div>
                                                 </div>

@@ -31,36 +31,39 @@ $(document).ready(function(){
 function verificaStatusPlaca(){
     var statusPlaca = document.getElementById("statusPlaca");
     var porta = document.getElementById('porta').value;
-    var placa_endereco = "http://"+document.getElementById("endereco_ip_placa").value+":"+porta;
-    statusPlaca.innerHTML = "<b>Carregando status</b>";
-    var seg = 1;
-    var carregandoStatus = setInterval(() => {
-        if(seg==1){
-            statusPlaca.innerHTML = "<div><b>Carregando status.</b></div>";
-        }else if(seg==2){
-            statusPlaca.innerHTML = "<div><b>Carregando status..</b></div>";
-        }else if(seg==3){
-            statusPlaca.innerHTML = "<div><b>Carregando status...</b></div>";
-        }
-        if(seg == 3){
-            seg = 0;
-        }else{
-            seg++;
-        }
-    }, 500);
-    setInterval(() => {
-        clearInterval(carregandoStatus);
-        var request = new XMLHttpRequest();
-        request.open('GET', placa_endereco);
-        request.responseType = 'json';
-        request.send();
-        request.onload = function() {
-            statusPlaca.innerHTML = "<div style='color:green'><b>Online</b></div>";
-        }
-        request.onerror = function(){
-            statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
-        }
-    }, 10000);
+    var elementoPlaca = document.getElementById("endereco_ip_placa");
+    if(document.body.contains(elementoPlaca)){
+        var placa_endereco = "http://"+elementoPlaca.value+":"+porta;
+        statusPlaca.innerHTML = "<b>Carregando status</b>";
+        var seg = 1;
+        var carregandoStatus = setInterval(() => {
+            if(seg==1){
+                statusPlaca.innerHTML = "<div><b>Carregando status.</b></div>";
+            }else if(seg==2){
+                statusPlaca.innerHTML = "<div><b>Carregando status..</b></div>";
+            }else if(seg==3){
+                statusPlaca.innerHTML = "<div><b>Carregando status...</b></div>";
+            }
+            if(seg == 3){
+                seg = 0;
+            }else{
+                seg++;
+            }
+        }, 500);
+        setInterval(() => {
+            clearInterval(carregandoStatus);
+            var request = new XMLHttpRequest();
+            request.open('GET', placa_endereco);
+            request.responseType = 'json';
+            request.send();
+            request.onload = function() {
+                statusPlaca.innerHTML = "<div style='color:green'><b>Online</b></div>";
+            }
+            request.onerror = function(){
+                statusPlaca.innerHTML = "<div style='color:red'><b>Offline</b></div>";
+            }
+        }, 10000);
+    }
 }
 
 function validaComplexidadeSenha(senha, complexidade){
@@ -1212,4 +1215,8 @@ function validaLigacaoPortaria(){
     }else{
         document.getElementById('alertaErrorSelecionarOpcao').style.display = 'block';
     }
+}
+
+function formataIpAddress(id){
+    $('#endereco_ip_'+id).mask('999.999.999.999');
 }
