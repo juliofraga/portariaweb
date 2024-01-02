@@ -30,10 +30,10 @@ $(document).ready(function(){
 
 function verificaStatusPlaca(){
     var statusPlaca = document.getElementById("statusPlaca");
-    var porta = document.getElementById('porta').value;
+    var elementoPorta = document.getElementById('porta');
     var elementoPlaca = document.getElementById("endereco_ip_placa");
     if(document.body.contains(elementoPlaca)){
-        var placa_endereco = "http://"+elementoPlaca.value+":"+porta;
+        var placa_endereco = "http://"+elementoPlaca.value+":"+elementoPorta.value;
         statusPlaca.innerHTML = "<b>Carregando status</b>";
         var seg = 1;
         var carregandoStatus = setInterval(() => {
@@ -1219,4 +1219,28 @@ function validaLigacaoPortaria(){
 
 function formataIpAddress(id){
     $('#endereco_ip_'+id).mask('999.999.999.999');
+}
+
+function aplicaMobileChanges(){
+    if(isMobile()){
+        document.querySelector('#modalImagensOperacao').classList.remove('modal-content');
+    }else{
+        document.querySelector('#modalImagensOperacao').classList.add('modal-content');
+    }
+}
+
+function isMobile() {
+    if( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+    )
+    {
+       return true; 
+    } else {
+       return false;
+    }
 }

@@ -30,6 +30,11 @@ $tipoOperacaoCancela = [
         margin-left: -200px;
     }
 </style>
+<script>
+    $( document ).ready(function() {
+        aplicaMobileChanges();
+    });
+</script>
 <div id="conteudo" class="mb-5">
     <div class="container conteudo_consulta">
         <div class="resultados_admin mt-2">
@@ -124,7 +129,7 @@ $tipoOperacaoCancela = [
                         <div class="col col-6">
                             <figure>
                                 <a href="#" data-toggle="modal" data-target="#modal-<?= $imagem->id ?>">
-                                    <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem responsiva">
+                                    <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem operação">
                                 </a>
                                 <figcaption>
                                     <?= $tipoOperacaoCancela[$imagem->tipo_operacao] ?> (<?= $tipoCancela[$imagem->tipo] ?>)
@@ -133,13 +138,13 @@ $tipoOperacaoCancela = [
                         </div>
                         <div class="modal fade" id="modal-<?= $imagem->id ?>" tabindex="-1" role="dialog" style="z-index: 1100;" data-backdrop="static">
                             <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
+                                <div id="modalImagensOperacao">
                                     <div class="modal-header">
                                         <h4 class="modal-title"><?= $tipoOperacaoCancela[$imagem->tipo_operacao] ?> (<?= $tipoCancela[$imagem->tipo] ?>)</h4>
                                         <button type="button" class="btn-close" data-dismiss="modal"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem responsiva">
+                                        <img src="<?= $helper->formataUrlImagem($imagem->url_imagem) ?>" class="img-fluid" alt="Imagem operação">
                                     </div>
                                 </div>
                             </div>
